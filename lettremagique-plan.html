@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LettreMagique — Business Plan Complet</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --paper2: #ede8dc;
+    --accent: #c84b2f;
+    --accent2: #2d6a4f;
+    --accent3: #e9c46a;
+    --muted: #7a7468;
+    --rule: #c8c0b0;
+    --white: #fdfaf4;
+    --code-bg: #1a1a1a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: 'Lora', Georgia, serif; font-size: 16px; line-height: 1.75; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
+
+  .sidebar { position: fixed; left: 0; top: 0; width: 220px; height: 100vh; background: var(--ink); padding: 32px 20px; z-index: 100; display: flex; flex-direction: column; border-right: 3px solid var(--accent); }
+  .sidebar-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--white); letter-spacing: -0.5px; margin-bottom: 6px; }
+  .sidebar-logo span { color: var(--accent); }
+  .sidebar-tagline { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 36px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+  .nav-section { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; margin-top: 16px; }
+  .nav-item { display: block; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; color: #888; text-decoration: none; padding: 5px 8px; border-radius: 3px; transition: all 0.2s; margin-bottom: 2px; }
+  .nav-item:hover { color: var(--white); background: #1a1a1a; padding-left: 14px; }
+  .nav-item.active { color: var(--white); }
+  .sidebar-footer { margin-top: auto; font-family: 'DM Mono', monospace; font-size: 9px; color: #444; text-align: center; padding-top: 20px; border-top: 1px solid #222; }
+
+  .main { margin-left: 220px; min-height: 100vh; }
+
+  .hero { background: var(--ink); color: var(--white); padding: 80px 64px 64px; position: relative; overflow: hidden; }
+  .hero::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 4px; background: repeating-linear-gradient(90deg, var(--accent) 0, var(--accent) 20px, transparent 20px, transparent 24px); }
+  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 24px; }
+  .hero-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(48px, 6vw, 80px); line-height: 0.9; letter-spacing: -3px; margin-bottom: 8px; }
+  .hero-title .highlight { color: var(--accent); font-style: italic; }
+  .hero-subtitle { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: #666; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 40px; }
+  .hero-stats { display: flex; gap: 48px; flex-wrap: wrap; margin-top: 48px; padding-top: 40px; border-top: 1px solid #222; }
+  .hero-stat-value { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 36px; color: var(--accent3); line-height: 1; letter-spacing: -1px; }
+  .hero-stat-label { font-family: 'DM Mono', monospace; font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
+  .hero-bg-text { position: absolute; right: -20px; top: 20px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 200px; color: #111; letter-spacing: -10px; pointer-events: none; user-select: none; line-height: 1; }
+
+  .section { padding: 72px 64px; border-bottom: 1px solid var(--rule); position: relative; }
+  .section:nth-child(even) { background: var(--white); }
+  .section-header { display: flex; align-items: baseline; gap: 20px; margin-bottom: 48px; }
+  .section-number { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); font-weight: 500; }
+  .section-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 32px; letter-spacing: -1px; line-height: 1.1; }
+  .section-title em { color: var(--accent); font-style: normal; }
+
+  .pull-quote { border-left: 4px solid var(--accent); padding: 20px 28px; margin: 32px 0; background: var(--paper2); }
+  .pull-quote p { font-family: 'Lora', serif; font-style: italic; font-size: 20px; color: var(--ink); line-height: 1.5; }
+  .pull-quote cite { display: block; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 10px; font-style: normal; }
+
+  .data-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 28px 0; }
+  .data-table th { font-family: 'DM Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); padding: 10px 16px; text-align: left; border-bottom: 2px solid var(--ink); background: var(--paper2); }
+  .data-table td { padding: 12px 16px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .data-table tr:hover td { background: var(--paper2); }
+  .data-table .num { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--accent); }
+  .data-table .strong { font-family: 'Syne', sans-serif; font-weight: 700; }
+
+  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2px; margin: 32px 0; border: 2px solid var(--ink); }
+  .metric-card { background: var(--white); padding: 28px 24px; border-right: 1px solid var(--rule); }
+  .metric-card:last-child { border-right: none; }
+  .metric-card-value { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -2px; line-height: 1; color: var(--ink); }
+  .metric-card-value.accent { color: var(--accent); }
+  .metric-card-value.green { color: var(--accent2); }
+  .metric-card-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 8px; }
+  .metric-card-note { font-size: 12px; color: var(--muted); margin-top: 6px; font-style: italic; }
+
+  .timeline { position: relative; margin: 40px 0; }
+  .timeline::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: var(--rule); }
+  .timeline-item { display: flex; gap: 28px; margin-bottom: 32px; position: relative; }
+  .timeline-marker { flex-shrink: 0; width: 50px; height: 50px; background: var(--ink); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; position: relative; z-index: 1; border: 3px solid var(--paper); }
+  .timeline-marker.accent { background: var(--accent); }
+  .timeline-marker.green { background: var(--accent2); }
+  .timeline-content { flex: 1; padding-top: 10px; }
+  .timeline-day { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+  .timeline-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+  .timeline-tasks { list-style: none; margin-top: 10px; }
+  .timeline-tasks li { font-family: 'DM Mono', monospace; font-size: 12px; color: #555; padding: 3px 0; display: flex; align-items: flex-start; gap: 8px; }
+  .timeline-tasks li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 32px 0; }
+  .tech-card { border: 1.5px solid var(--rule); padding: 20px; position: relative; transition: border-color 0.2s; }
+  .tech-card:hover { border-color: var(--ink); }
+  .tech-card-layer { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+  .tech-card-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 6px; }
+  .tech-card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .tech-badge { position: absolute; top: 12px; right: 12px; font-family: 'DM Mono', monospace; font-size: 9px; background: var(--paper2); color: var(--muted); padding: 3px 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .tech-badge.free { background: #e8f5e9; color: var(--accent2); }
+
+  .callout { border: 2px solid var(--ink); padding: 24px 28px; margin: 28px 0; position: relative; }
+  .callout::before { content: attr(data-label); position: absolute; top: -12px; left: 20px; background: var(--paper); padding: 0 8px; font-family: 'DM Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--ink); }
+  .section:nth-child(even) .callout::before { background: var(--white); }
+  .callout.warning { border-color: var(--accent); }
+  .callout.warning::before { color: var(--accent); }
+  .callout.success { border-color: var(--accent2); }
+  .callout.success::before { color: var(--accent2); }
+
+  .matrix { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 13px; }
+  .matrix th { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; padding: 12px 16px; text-align: center; border-bottom: 2px solid var(--ink); background: var(--paper2); }
+  .matrix th:first-child { text-align: left; }
+  .matrix td { padding: 12px 16px; border-bottom: 1px solid var(--rule); text-align: center; }
+  .matrix td:first-child { text-align: left; font-family: 'Syne', sans-serif; font-weight: 600; }
+  .matrix tr.us td { background: #f0f7f4; }
+  .matrix tr.us td:first-child { color: var(--accent2); }
+  .check { color: var(--accent2); font-size: 16px; }
+  .cross { color: #ccc; font-size: 16px; }
+  .partial { color: var(--accent3); font-size: 16px; }
+
+  .proj-row { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+  .proj-month { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); width: 60px; text-align: right; flex-shrink: 0; }
+  .proj-bar-wrap { flex: 1; height: 28px; background: var(--paper2); position: relative; }
+  .proj-bar { height: 100%; background: var(--ink); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; transition: width 1s ease; }
+  .proj-bar.active { background: var(--accent); }
+  .proj-bar.target { background: var(--accent2); }
+  .proj-bar-val { font-family: 'DM Mono', monospace; font-size: 11px; color: white; white-space: nowrap; }
+  .proj-clients { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); width: 120px; text-align: right; flex-shrink: 0; }
+
+  .risk-tag { display: inline-block; font-family: 'DM Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; padding: 2px 8px; }
+  .risk-high { background: #fde8e4; color: var(--accent); }
+  .risk-med { background: #fdf3e7; color: #c76b1a; }
+  .risk-low { background: #e8f5e9; color: var(--accent2); }
+
+  .funnel-step { display: flex; align-items: stretch; gap: 0; margin-bottom: 4px; }
+  .funnel-num { width: 48px; background: var(--ink); color: var(--white); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; flex-shrink: 0; }
+  .funnel-body { flex: 1; border: 1px solid var(--rule); border-left: none; padding: 16px 20px; display: flex; align-items: center; gap: 20px; }
+  .funnel-channel { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; min-width: 110px; }
+  .funnel-action { font-size: 13px; flex: 1; line-height: 1.5; }
+  .funnel-metric { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin: 24px 0; }
+  .styled-list { list-style: none; margin: 16px 0; }
+  .styled-list li { padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 14px; display: flex; align-items: flex-start; gap: 12px; }
+  .styled-list li:last-child { border-bottom: none; }
+  .styled-list li .li-icon { color: var(--accent); font-weight: 700; flex-shrink: 0; }
+
+  p { margin-bottom: 16px; font-size: 15px; }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin: 28px 0 12px; letter-spacing: -0.5px; }
+  h4 { font-family: 'DM Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin: 20px 0 8px; }
+  strong { font-weight: 600; }
+  em { font-style: italic; color: var(--accent); }
+
+  .scroll-progress { position: fixed; top: 0; left: 220px; right: 0; height: 3px; background: var(--rule); z-index: 200; }
+  .scroll-progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.1s; }
+
+  .footer { background: var(--ink); color: #555; padding: 48px 64px; font-family: 'DM Mono', monospace; font-size: 11px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .footer-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px; color: var(--white); letter-spacing: -1px; margin-bottom: 8px; }
+  .footer-brand span { color: var(--accent); }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .scroll-progress { left: 0; }
+    .section { padding: 48px 24px; }
+    .hero { padding: 48px 24px; }
+    .two-col { grid-template-columns: 1fr; }
+    .hero-bg-text { display: none; }
+    .footer { flex-direction: column; gap: 12px; }
+    .funnel-body { flex-direction: column; align-items: flex-start; gap: 6px; }
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .hero > * { animation: fadeUp 0.6s ease both; }
+  .hero > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero > *:nth-child(2) { animation-delay: 0.2s; }
+  .hero > *:nth-child(3) { animation-delay: 0.3s; }
+  .hero > *:nth-child(4) { animation-delay: 0.4s; }
+  .hero > *:nth-child(5) { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress"><div class="scroll-progress-bar" id="progressBar"></div></div>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">Lettre<span>Magique</span></div>
+  <div class="sidebar-tagline">Business Plan v1.0</div>
+  <div class="nav-section">01 — Marché</div>
+  <a href="#marche" class="nav-item">Taille & demande</a>
+  <a href="#probleme" class="nav-item">Le problème</a>
+  <a href="#concurrence" class="nav-item">Concurrence vérifiée</a>
+  <a href="#positionnement" class="nav-item">Positionnement</a>
+  <div class="nav-section">02 — Produit</div>
+  <a href="#mvp" class="nav-item">Scope MVP</a>
+  <a href="#technique" class="nav-item">Stack technique</a>
+  <a href="#roadmap" class="nav-item">Roadmap 5 jours</a>
+  <div class="nav-section">03 — Business</div>
+  <a href="#pricing" class="nav-item">Pricing</a>
+  <a href="#financier" class="nav-item">Projections</a>
+  <a href="#risques" class="nav-item">Risques</a>
+  <div class="nav-section">04 — Lancement</div>
+  <a href="#validation" class="nav-item">Validation (S0)</a>
+  <a href="#seo" class="nav-item">SEO long-tail</a>
+  <a href="#acquisition" class="nav-item">Acquisition</a>
+  <a href="#30jours" class="nav-item">Plan 30 jours</a>
+  <div class="sidebar-footer">Mars 2026 · v1.0<br>Concurrence FR vérifiée</div>
+</nav>
+
+<main class="main">
+
+<section class="hero">
+  <div class="hero-bg-text">LM</div>
+  <div class="hero-eyebrow">Micro-SaaS B2C · Courriers administratifs par IA</div>
+  <h1 class="hero-title">Lettre<br><span class="highlight">Magique</span></h1>
+  <div class="hero-subtitle">Courriers administratifs personnalisés en 2 minutes</div>
+  <p style="max-width: 560px; color: #888; font-size: 15px; line-height: 1.7;">Résiliation, réclamation, mise en demeure, contestation — l'utilisateur répond à 3 questions, l'IA génère un courrier professionnel avec les mentions légales. Export PDF immédiat. Premier courrier gratuit.</p>
+  <div class="hero-stats">
+    <div><div class="hero-stat-value">67M</div><div class="hero-stat-label">Français = marché cible</div></div>
+    <div><div class="hero-stat-value">1,99€</div><div class="hero-stat-label">Par courrier</div></div>
+    <div><div class="hero-stat-value">5 jours</div><div class="hero-stat-label">Développement MVP</div></div>
+    <div><div class="hero-stat-value">2–4K€</div><div class="hero-stat-label">MRR réaliste à M+12</div></div>
+  </div>
+</section>
+
+<!-- 01 — MARCHÉ -->
+<section class="section" id="marche">
+  <div class="section-header"><span class="section-number">01</span><h2 class="section-title">Taille du marché & <em>demande</em> réelle</h2></div>
+
+  <div class="metrics-grid">
+    <div class="metric-card"><div class="metric-card-value accent">67M</div><div class="metric-card-label">Habitants en France</div><div class="metric-card-note">Chacun fait 3-5 courriers formels/an</div></div>
+    <div class="metric-card"><div class="metric-card-value">200M+</div><div class="metric-card-label">Courriers admin/an en France</div><div class="metric-card-note">Résiliation, réclamation, demandes…</div></div>
+    <div class="metric-card"><div class="metric-card-value green">10K+</div><div class="metric-card-label">Recherches/mois « lettre résiliation »</div><div class="metric-card-note">Google FR — mot-clé principal seul</div></div>
+    <div class="metric-card"><div class="metric-card-value">30 min</div><div class="metric-card-label">Temps moyen pour rédiger un courrier</div><div class="metric-card-note">Recherche modèle + adaptation + PDF</div></div>
+  </div>
+
+  <h3>La preuve par le SEO — volume des requêtes long-tail</h3>
+  <p>La demande est massive, concrète et mesurable. Chaque requête ci-dessous correspond à quelqu'un qui cherche activement une solution — en ce moment.</p>
+  <table class="data-table">
+    <thead><tr><th>Requête Google</th><th>Volume estimé/mois</th><th>Intent</th></tr></thead>
+    <tbody>
+      <tr><td class="strong">lettre de résiliation</td><td class="num">10 000+</td><td>Transactionnel fort</td></tr>
+      <tr><td class="strong">modèle lettre réclamation</td><td class="num">3 000–5 000</td><td>Recherche de template</td></tr>
+      <tr><td class="strong">lettre résiliation SFR / Free / Orange</td><td class="num">2 000–4 000 chacun</td><td>Ultra-ciblé, prêt à agir</td></tr>
+      <tr><td class="strong">courrier mise en demeure</td><td class="num">2 000–3 000</td><td>Besoin urgent</td></tr>
+      <tr><td class="strong">lettre contestation amende</td><td class="num">1 500–2 500</td><td>Émotionnel + urgent</td></tr>
+      <tr><td class="strong">modèle courrier réclamation EDF / Engie</td><td class="num">800–1 500</td><td>Spécifique, haute conversion</td></tr>
+      <tr><td class="strong">lettre demande délai de paiement</td><td class="num">500–1 000</td><td>Besoin immédiat</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout success" data-label="Opportunité SEO">
+    <p style="font-size: 14px; margin: 0;">Le volume total des requêtes long-tail liées aux courriers administratifs dépasse <strong>50 000 recherches/mois en France</strong>. Les résultats actuels sont des templates Word statiques, des PDFs à télécharger, ou des sites des années 2010. Aucun outil IA personnalisé ne domine ces mots-clés.</p>
+  </div>
+</section>
+
+<!-- PROBLÈME -->
+<section class="section" id="probleme">
+  <div class="section-header"><span class="section-number">01.2</span><h2 class="section-title">Le <em>Problème</em></h2></div>
+
+  <div class="pull-quote">
+    <p>« J'ai passé 45 minutes à chercher un modèle de lettre de réclamation pour ma facture d'électricité. J'ai trouvé un PDF générique qui ne correspondait pas à mon cas. J'ai fini par bricoler un truc dans Word. »</p>
+    <cite>— Verbatim type d'un utilisateur frustré</cite>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Ce que les gens font aujourd'hui</h3>
+      <ul class="styled-list">
+        <li><span class="li-icon">1</span><div>Chercher « modèle lettre résiliation [opérateur] » sur Google</div></li>
+        <li><span class="li-icon">2</span><div>Tomber sur 10 sites avec des templates génériques en .doc</div></li>
+        <li><span class="li-icon">3</span><div>Copier-coller dans Word, essayer d'adapter</div></li>
+        <li><span class="li-icon">4</span><div>Se demander quelles mentions légales inclure</div></li>
+        <li><span class="li-icon">5</span><div>Hésiter sur le ton, les formules de politesse</div></li>
+        <li><span class="li-icon">6</span><div>Exporter en PDF, chercher l'adresse du destinataire</div></li>
+      </ul>
+      <p style="color: var(--accent); font-weight: 600;">Temps total : 30 à 60 minutes. Pour un courrier de 15 lignes.</p>
+    </div>
+    <div>
+      <h3>Pourquoi c'est un vrai problème</h3>
+      <ul class="styled-list">
+        <li><span class="li-icon">→</span><div><strong>Stress :</strong> les gens repoussent les démarches administratives par peur de mal faire</div></li>
+        <li><span class="li-icon">→</span><div><strong>Argent perdu :</strong> des réclamations non faites = des remboursements non obtenus</div></li>
+        <li><span class="li-icon">→</span><div><strong>Abonnements inutiles :</strong> des résiliations repoussées = des mois payés pour rien</div></li>
+        <li><span class="li-icon">→</span><div><strong>Inégalité :</strong> les personnes moins à l'aise avec l'écrit subissent plus de situations injustes</div></li>
+      </ul>
+
+      <div class="callout" data-label="Insight clé">
+        <p style="font-size: 13px; margin: 0;">Le problème n'est pas que les gens ne savent pas écrire. C'est qu'ils ne savent pas <strong>quoi écrire, à qui, avec quelles mentions, dans quel format</strong>. L'IA résout ça en 30 secondes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCURRENCE -->
+<section class="section" id="concurrence">
+  <div class="section-header"><span class="section-number">01.3</span><h2 class="section-title">Concurrence <em>vérifiée</em></h2></div>
+
+  <table class="matrix">
+    <thead>
+      <tr><th>Solution</th><th>IA personnalisée</th><th>PDF pro</th><th>Mentions légales</th><th>Grand public</th><th>Gratuit partiel</th><th>SEO fort</th></tr>
+    </thead>
+    <tbody>
+      <tr class="us"><td>✦ LettreMagique</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>SimplyLegal.fr</td><td><span class="check">✓</span></td><td><span class="partial">∼</span></td><td><span class="partial">∼</span></td><td><span class="check">✓</span></td><td><span class="partial">∼</span></td><td><span class="cross">✗</span></td></tr>
+      <tr><td>GenerateurCourrier.fr</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="partial">∼</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="partial">∼</span></td></tr>
+      <tr><td>LettreDeReclamation.com</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="partial">∼</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+      <tr><td>Merci Facteur (IA)</td><td><span class="partial">∼</span></td><td><span class="check">✓</span></td><td><span class="partial">∼</span></td><td><span class="check">✓</span></td><td><span class="partial">∼</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Lettre24</td><td><span class="partial">∼</span></td><td><span class="check">✓</span></td><td><span class="partial">∼</span></td><td><span class="check">✓</span></td><td><span class="partial">∼</span></td><td><span class="partial">∼</span></td></tr>
+      <tr><td>Templates Google/Word</td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>ChatGPT directement</td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="partial">∼</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td></tr>
+    </tbody>
+  </table>
+
+  <table class="data-table">
+    <thead><tr><th>Concurrent</th><th>Forces</th><th>Faiblesses</th></tr></thead>
+    <tbody>
+      <tr><td class="strong">SimplyLegal.fr</td><td>IA, multi-catégories, récent</td><td>Petit site, SEO faible, pas de traction visible. Probablement un side-project solo.</td></tr>
+      <tr><td class="strong">GenerateurCourrier.fr</td><td>Gratuit, IA, scope large</td><td>Pas d'export PDF propre, UX basique, pas de mentions légales automatiques.</td></tr>
+      <tr><td class="strong">LettreDeReclamation.com</td><td>Spécialisé réclamations, 5€/courrier, relances incluses</td><td>Niché réclamations uniquement. Pas de résiliation, mise en demeure, etc.</td></tr>
+      <tr><td class="strong">Merci Facteur</td><td>Acteur établi, impression + envoi postal, IA intégrée</td><td>L'IA est un add-on, pas le produit. Le business model est l'envoi postal, pas la génération.</td></tr>
+      <tr><td class="strong">ChatGPT direct</td><td>Gratuit, puissant, flexible</td><td>Pas de PDF, pas de mentions légales, pas de formulaire guidé. Demande de savoir prompter.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pull-quote">
+    <p>Le vrai concurrent est <strong>Google + template Word</strong>. Les outils IA existants sont petits, fragmentés, et aucun ne domine le SEO. Le marché est en train de se former — celui qui prend les mots-clés long-tail maintenant gagne.</p>
+    <cite>— Analyse concurrentielle</cite>
+  </div>
+</section>
+
+<!-- POSITIONNEMENT -->
+<section class="section" id="positionnement">
+  <div class="section-header"><span class="section-number">01.4</span><h2 class="section-title"><em>Positionnement</em></h2></div>
+
+  <div class="two-col">
+    <div>
+      <h3>Ce qu'on est</h3>
+      <ul class="styled-list">
+        <li><span class="li-icon">✓</span><div>Le <strong>générateur de courriers le plus simple</strong> du marché français</div></li>
+        <li><span class="li-icon">✓</span><div>3 questions → courrier personnalisé → PDF en 2 minutes</div></li>
+        <li><span class="li-icon">✓</span><div>Mentions légales automatiques (loi Hamon, Chatel, RGPD…)</div></li>
+        <li><span class="li-icon">✓</span><div>Premier courrier <strong>gratuit</strong> — zéro friction</div></li>
+        <li><span class="li-icon">✓</span><div>Pages SEO long-tail = chaque type de courrier a sa propre page</div></li>
+      </ul>
+    </div>
+    <div>
+      <h3>L'avantage compétitif</h3>
+      <ul class="styled-list">
+        <li><span class="li-icon">→</span><div><strong>SEO :</strong> chaque page « lettre résiliation [marque] » capte du trafic ultra-qualifié</div></li>
+        <li><span class="li-icon">→</span><div><strong>Conversion :</strong> le 1er courrier gratuit élimine toute hésitation</div></li>
+        <li><span class="li-icon">→</span><div><strong>Viralit :</strong> « j'ai récupéré 400€ grâce à ce courrier » est partageable naturellement</div></li>
+        <li><span class="li-icon">→</span><div><strong>Récurrence :</strong> les gens ont 3-5 besoins/an, ils reviennent</div></li>
+      </ul>
+      <div class="callout success" data-label="Moat">
+        <p style="font-size: 13px; margin: 0;">Le moat n'est pas la techno (l'IA est commoditisée). Le moat c'est les <strong>200 pages SEO long-tail</strong> qui captent le trafic organique. Chaque page = une mini-landing optimisée. Ça prend 6 mois à construire et c'est très difficile à rattraper.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 — PRODUIT -->
+<section class="section" id="mvp">
+  <div class="section-header"><span class="section-number">02</span><h2 class="section-title">Scope <em>MVP</em></h2></div>
+
+  <div class="two-col">
+    <div>
+      <h3>Ce qu'on construit</h3>
+      <ul class="styled-list">
+        <li><span class="li-icon">✓</span><div><strong>10 templates de courriers</strong> (résiliation, réclamation, mise en demeure, contestation, demande de remboursement, délai de paiement, rétractation, congé locataire, attestation, courrier libre)</div></li>
+        <li><span class="li-icon">✓</span><div><strong>Formulaire dynamique</strong> (3-4 questions par type, adapté au contexte)</div></li>
+        <li><span class="li-icon">✓</span><div><strong>Génération IA</strong> via API Claude — prompt optimisé par type</div></li>
+        <li><span class="li-icon">✓</span><div><strong>Export PDF pro</strong> (en-tête, mentions légales, mise en page propre)</div></li>
+        <li><span class="li-icon">✓</span><div><strong>Paiement Stripe</strong> (1er gratuit, puis pay-per-use + abo)</div></li>
+        <li><span class="li-icon">✓</span><div><strong>Pages SEO</strong> (1 page par type de courrier × marque/organisme)</div></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Ce qu'on NE fait PAS en V1</h3>
+      <ul class="styled-list">
+        <li><span class="li-icon" style="color:var(--muted)">✗</span><div style="color:var(--muted)">Envoi postal intégré (c'est le terrain de Merci Facteur)</div></li>
+        <li><span class="li-icon" style="color:var(--muted)">✗</span><div style="color:var(--muted)">Comptes utilisateur / historique (V2 uniquement)</div></li>
+        <li><span class="li-icon" style="color:var(--muted)">✗</span><div style="color:var(--muted)">Suivi du statut du courrier après envoi</div></li>
+        <li><span class="li-icon" style="color:var(--muted)">✗</span><div style="color:var(--muted)">Application mobile</div></li>
+        <li><span class="li-icon" style="color:var(--muted)">✗</span><div style="color:var(--muted)">Conseil juridique ou chatbot droit</div></li>
+      </ul>
+      <div class="callout warning" data-label="Règle d'or">
+        <p style="font-size: 14px; margin: 0;">La valeur = <strong>formulaire simple → courrier personnalisé → PDF</strong>. Rien d'autre. Ne pas essayer de devenir un assistant juridique. Rester « le Canva des courriers administratifs ».</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section class="section" id="technique">
+  <div class="section-header"><span class="section-number">02.2</span><h2 class="section-title">Stack <em>Technique</em></h2></div>
+  <div class="tech-grid">
+    <div class="tech-card"><div class="tech-card-layer">Frontend</div><div class="tech-card-name">Next.js 14</div><div class="tech-card-desc">App Router + Server Components. Pages SEO statiques générées au build. Déploiement Vercel.</div><span class="tech-badge free">Gratuit</span></div>
+    <div class="tech-card"><div class="tech-card-layer">IA</div><div class="tech-card-name">API Claude (Anthropic)</div><div class="tech-card-desc">Prompt optimisé par type de courrier. ~0.01€ par génération (Haiku). Streaming côté serveur.</div><span class="tech-badge">~0.01€/appel</span></div>
+    <div class="tech-card"><div class="tech-card-layer">PDF</div><div class="tech-card-name">pdf-lib ou jsPDF</div><div class="tech-card-desc">Génération PDF côté serveur. En-tête, mise en page pro, mentions légales.</div><span class="tech-badge free">Gratuit</span></div>
+    <div class="tech-card"><div class="tech-card-layer">Paiements</div><div class="tech-card-name">Stripe</div><div class="tech-card-desc">Checkout one-time (1,99€) + abonnements (4,99€/mois). Webhooks.</div><span class="tech-badge">2.9%</span></div>
+    <div class="tech-card"><div class="tech-card-layer">Base de données</div><div class="tech-card-name">Supabase</div><div class="tech-card-desc">Stocker les transactions, compteurs de courriers gratuits, emails collectés.</div><span class="tech-badge free">Gratuit</span></div>
+    <div class="tech-card"><div class="tech-card-layer">Analytics</div><div class="tech-card-name">Vercel Analytics + Plausible</div><div class="tech-card-desc">Mesurer le trafic SEO par page, taux de conversion formulaire → PDF.</div><span class="tech-badge free">Free tier</span></div>
+  </div>
+
+  <div class="callout success" data-label="Coûts">
+    <p style="font-size: 14px; margin: 0;"><strong>Coût par courrier généré : ~0.03€</strong> (API Claude Haiku + PDF). À 1,99€ de vente, marge brute de 98%. Coûts fixes M1-M6 : ~20€/mois (domaine + Vercel). Le projet est rentable dès le 1er courrier payant.</p>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="section" id="roadmap">
+  <div class="section-header"><span class="section-number">02.3</span><h2 class="section-title">Roadmap <em>5 Jours</em></h2></div>
+  <div class="timeline">
+    <div class="timeline-item"><div class="timeline-marker">J1</div><div class="timeline-content"><div class="timeline-day">Jour 1 — Setup + Formulaire</div><div class="timeline-title">Fondations + sélecteur de courrier + formulaire dynamique</div><ul class="timeline-tasks"><li>Next.js 14 + Tailwind + shadcn/ui + Supabase</li><li>Page d'accueil avec sélecteur de type (10 catégories)</li><li>Formulaire dynamique : 3-4 questions par type</li><li>Déploiement Vercel initial</li></ul></div></div>
+    <div class="timeline-item"><div class="timeline-marker accent">J2</div><div class="timeline-content"><div class="timeline-day">Jour 2 — Génération IA + PDF</div><div class="timeline-title">Le cœur du produit</div><ul class="timeline-tasks"><li>Intégration API Claude — prompts optimisés par type de courrier</li><li>Aperçu du courrier généré avant téléchargement</li><li>Génération PDF propre (pdf-lib) avec en-tête, mise en page, mentions légales</li><li>Bouton « Télécharger le PDF »</li></ul></div></div>
+    <div class="timeline-item"><div class="timeline-marker green">J3</div><div class="timeline-content"><div class="timeline-day">Jour 3 — Paiement + freemium</div><div class="timeline-title">Monétisation dès J3</div><ul class="timeline-tasks"><li>Stripe Checkout (1,99€ par courrier one-time)</li><li>Logique : 1er courrier gratuit (cookie/fingerprint), puis paiement</li><li>Stripe Subscriptions pour plan illimité 4,99€/mois</li><li>Page de confirmation + lien de téléchargement post-paiement</li></ul></div></div>
+    <div class="timeline-item"><div class="timeline-marker">J4</div><div class="timeline-content"><div class="timeline-day">Jour 4 — Pages SEO long-tail</div><div class="timeline-title">L'actif stratégique du projet</div><ul class="timeline-tasks"><li>Générer 20 pages statiques : « lettre résiliation [Free/SFR/Orange/Bouygues…] »</li><li>Chaque page = mini-landing avec contexte + CTA formulaire</li><li>Méta descriptions optimisées, H1 ciblé, contenu unique par page</li><li>Schema.org markup (FAQ, HowTo) pour rich snippets</li></ul></div></div>
+    <div class="timeline-item"><div class="timeline-marker accent">J5</div><div class="timeline-content"><div class="timeline-day">Jour 5 — Tests + lancement</div><div class="timeline-title">Tout doit marcher. Lancer.</div><ul class="timeline-tasks"><li>Test end-to-end : formulaire → IA → PDF → paiement</li><li>Landing page finale (déjà prête — fichier séparé)</li><li>Soumettre le sitemap à Google Search Console</li><li>Poster sur Reddit, groupes Facebook, Product Hunt</li></ul></div></div>
+  </div>
+</section>
+
+<!-- 03 — BUSINESS -->
+<section class="section" id="pricing">
+  <div class="section-header"><span class="section-number">03</span><h2 class="section-title">Pricing & <em>Monétisation</em></h2></div>
+
+  <div class="metrics-grid">
+    <div class="metric-card"><div class="metric-card-value accent">Gratuit</div><div class="metric-card-label">1er courrier</div><div class="metric-card-note">Hook de conversion — zéro friction</div></div>
+    <div class="metric-card"><div class="metric-card-value">1,99€</div><div class="metric-card-label">Par courrier</div><div class="metric-card-note">Pay-per-use, pas d'engagement</div></div>
+    <div class="metric-card"><div class="metric-card-value green">4,99€</div><div class="metric-card-label">Abo illimité / mois</div><div class="metric-card-note">Pour les utilisateurs réguliers</div></div>
+    <div class="metric-card"><div class="metric-card-value">~0.03€</div><div class="metric-card-label">Coût par courrier</div><div class="metric-card-note">API Claude Haiku + PDF</div></div>
+  </div>
+
+  <div class="callout" data-label="Stratégie">
+    <p style="font-size: 13px; margin: 0;">Le <strong>1er courrier gratuit</strong> est la clé. L'utilisateur teste, voit que ça marche, et paie 1,99€ pour le suivant. Le plan illimité à 4,99€ capture les utilisateurs réguliers (gestionnaires de biens, associations, etc.). Le mix attendu : 70% pay-per-use, 30% abonnements.</p>
+  </div>
+</section>
+
+<!-- PROJECTIONS -->
+<section class="section" id="financier">
+  <div class="section-header"><span class="section-number">03.2</span><h2 class="section-title">Projections <em>réalistes</em></h2></div>
+
+  <p style="font-size: 13px; color: var(--muted); margin-bottom: 24px;">Hypothèses : trafic SEO croissant (0 → 3 000 visiteurs/mois à M+6), conversion 3% visiteur → courrier, 50% gratuits / 50% payants, ARPU mix 1,80€</p>
+
+  <div style="margin: 32px 0;">
+    <div class="proj-row"><div class="proj-month">M+1</div><div class="proj-bar-wrap"><div class="proj-bar" style="width:2%"><span class="proj-bar-val">50€</span></div></div><div class="proj-clients">~25 courriers payants</div></div>
+    <div class="proj-row"><div class="proj-month">M+3</div><div class="proj-bar-wrap"><div class="proj-bar" style="width:6%"><span class="proj-bar-val">200€</span></div></div><div class="proj-clients">~100 courriers/mois</div></div>
+    <div class="proj-row"><div class="proj-month">M+6</div><div class="proj-bar-wrap"><div class="proj-bar active" style="width:18%"><span class="proj-bar-val">800€</span></div></div><div class="proj-clients">~400 courriers + 30 abos</div></div>
+    <div class="proj-row"><div class="proj-month">M+9</div><div class="proj-bar-wrap"><div class="proj-bar active" style="width:40%"><span class="proj-bar-val">1 800€</span></div></div><div class="proj-clients">~700 courriers + 80 abos</div></div>
+    <div class="proj-row"><div class="proj-month">M+12</div><div class="proj-bar-wrap"><div class="proj-bar target" style="width:65%"><span class="proj-bar-val">3 200€</span></div></div><div class="proj-clients">~1 200 courriers + 150 abos</div></div>
+    <div class="proj-row"><div class="proj-month">M+18</div><div class="proj-bar-wrap"><div class="proj-bar target" style="width:100%"><span class="proj-bar-val">5 500€</span></div></div><div class="proj-clients">SEO compounding + viral</div></div>
+  </div>
+
+  <div class="callout warning" data-label="Réalisme">
+    <p style="font-size: 13px; margin: 0;">Ces projections supposent que le SEO commence à porter ses fruits à M+3. Les 3 premiers mois seront lents (~50-200€/mois). <strong>Ne pas compter sur ces revenus pour vivre avant M+9-12.</strong> Le SEO est un investissement long-terme qui compound — la patience est la clé.</p>
+  </div>
+
+  <div class="callout success" data-label="Comparaison">
+    <p style="font-size: 13px; margin: 0;">LettreDeReclamation.com vend à 5€/courrier sur un seul type de courrier (réclamations). LettreMagique couvre 10 catégories à 1,99€ avec un volume de mots-clés SEO 10× supérieur. Le potentiel de trafic organique est le vrai levier.</p>
+  </div>
+</section>
+
+<!-- RISQUES -->
+<section class="section" id="risques">
+  <div class="section-header"><span class="section-number">03.3</span><h2 class="section-title">Analyse des <em>Risques</em></h2></div>
+  <table class="data-table">
+    <thead><tr><th>Risque</th><th>Probabilité</th><th>Impact</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td class="strong">Les gens utilisent ChatGPT directement</td><td><span class="risk-tag risk-high">Élevée</span></td><td><span class="risk-tag risk-med">Moyen</span></td><td>ChatGPT ne fait pas de PDF pro, pas de mentions légales automatiques, pas de formulaire guidé. Notre valeur = le packaging + la simplicité + le PDF.</td></tr>
+      <tr><td class="strong">SEO trop lent à démarrer</td><td><span class="risk-tag risk-med">Moyenne</span></td><td><span class="risk-tag risk-high">Fort</span></td><td>Diversifier l'acquisition : Reddit, TikTok, groupes Facebook dès le lancement. Le SEO est le jeu long-terme, pas le seul canal.</td></tr>
+      <tr><td class="strong">Ticket trop bas pour être rentable</td><td><span class="risk-tag risk-med">Moyenne</span></td><td><span class="risk-tag risk-med">Moyen</span></td><td>Le coût par courrier est de 0.03€. À 1,99€, la marge est de 98%. Le volume compense le ticket. Et l'abo à 4,99€ améliore le LTV.</td></tr>
+      <tr><td class="strong">Un concurrent SEO fait la même chose</td><td><span class="risk-tag risk-med">Moyenne</span></td><td><span class="risk-tag risk-med">Moyen</span></td><td>Le premier à planter 200 pages long-tail avec une bonne UX gagne. L'avantage du premier arrivant sur les mots-clés est réel et durable.</td></tr>
+      <tr><td class="strong">Responsabilité juridique sur les courriers</td><td><span class="risk-tag risk-low">Faible</span></td><td><span class="risk-tag risk-med">Moyen</span></td><td>Disclaimer clair : « outil d'aide à la rédaction, ne constitue pas un conseil juridique ». Même approche que tous les générateurs existants.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 04 — LANCEMENT -->
+<section class="section" id="validation">
+  <div class="section-header"><span class="section-number">04</span><h2 class="section-title"><em>Validation</em> — Semaine 0</h2></div>
+
+  <div class="callout warning" data-label="Avant de coder">
+    <p style="font-size: 14px; margin: 0;">Tester l'intérêt AVANT de construire le MVP. La landing page est prête. Objectif : <strong>20+ inscriptions waitlist en 7 jours</strong> = feu vert.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item"><div class="timeline-marker accent">S0</div><div class="timeline-content">
+      <div class="timeline-day">Semaine 0 — Validation marché</div>
+      <div class="timeline-title">Landing page + distribution manuelle + test Wizard of Oz</div>
+      <ul class="timeline-tasks">
+        <li>Déployer la landing page sur lettremagique.vercel.app</li>
+        <li>Poster sur r/france, r/vosfinances : « Je teste un outil qui génère vos courriers admin en 2 min — les 50 premiers sont gratuits »</li>
+        <li>Poster dans 5 groupes Facebook d'aide administrative / droit des consommateurs</li>
+        <li>Service « Wizard of Oz » : les demandes arrivent par email, tu génères manuellement avec Claude, tu renvoies le PDF</li>
+        <li>Mesurer : inscriptions waitlist, demandes reçues, types de courriers demandés</li>
+        <li><strong>GO/NO-GO :</strong> 20+ inscriptions ou 10+ demandes réelles = feu vert pour le MVP</li>
+      </ul>
+    </div></div>
+  </div>
+</section>
+
+<!-- SEO -->
+<section class="section" id="seo">
+  <div class="section-header"><span class="section-number">04.2</span><h2 class="section-title">Stratégie <em>SEO</em> long-tail</h2></div>
+
+  <p>Le SEO est l'actif stratégique numéro 1 de LettreMagique. Chaque page = une porte d'entrée qui capte un besoin spécifique.</p>
+
+  <h3>Pages prioritaires à créer (20 premières)</h3>
+  <table class="data-table">
+    <thead><tr><th>Page</th><th>Mot-clé cible</th><th>Volume est.</th></tr></thead>
+    <tbody>
+      <tr><td class="strong">Résiliation Free Mobile</td><td>lettre résiliation free mobile</td><td class="num">2 000+/mois</td></tr>
+      <tr><td class="strong">Résiliation SFR</td><td>lettre résiliation SFR</td><td class="num">1 500+/mois</td></tr>
+      <tr><td class="strong">Résiliation salle de sport</td><td>lettre résiliation salle de sport</td><td class="num">1 500+/mois</td></tr>
+      <tr><td class="strong">Réclamation EDF</td><td>courrier réclamation EDF</td><td class="num">800+/mois</td></tr>
+      <tr><td class="strong">Contestation amende SNCF</td><td>contestation amende SNCF</td><td class="num">800+/mois</td></tr>
+      <tr><td class="strong">Mise en demeure remboursement</td><td>mise en demeure remboursement modèle</td><td class="num">1 000+/mois</td></tr>
+      <tr><td class="strong">Résiliation assurance habitation</td><td>lettre résiliation assurance habitation</td><td class="num">1 200+/mois</td></tr>
+      <tr><td class="strong">Congé locataire préavis 1 mois</td><td>lettre congé locataire préavis 1 mois</td><td class="num">600+/mois</td></tr>
+      <tr><td class="strong">Réclamation Amazon</td><td>réclamation Amazon non livré</td><td class="num">500+/mois</td></tr>
+      <tr><td class="strong">Résiliation mutuelle</td><td>lettre résiliation mutuelle santé</td><td class="num">1 000+/mois</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout success" data-label="Volume total">
+    <p style="font-size: 14px; margin: 0;">Ces 10 premières pages seules couvrent <strong>~11 000 recherches/mois</strong>. Avec les 200 pages prévues à terme, le potentiel dépasse 50 000 recherches/mois. À 3% de conversion, c'est 1 500 courriers/mois — dont 750 payants.</p>
+  </div>
+
+  <h3>Structure de chaque page SEO</h3>
+  <ul class="styled-list">
+    <li><span class="li-icon">1</span><div><strong>H1 ciblé</strong> : « Lettre de résiliation Free Mobile — Modèle 2026 »</div></li>
+    <li><span class="li-icon">2</span><div><strong>Contexte</strong> : 200 mots sur les conditions de résiliation Free (loi Chatel, préavis, etc.)</div></li>
+    <li><span class="li-icon">3</span><div><strong>CTA</strong> : « Générez votre lettre personnalisée en 2 minutes » → formulaire</div></li>
+    <li><span class="li-icon">4</span><div><strong>FAQ</strong> : 3-4 questions fréquentes (Schema.org pour rich snippets)</div></li>
+    <li><span class="li-icon">5</span><div><strong>Méta description</strong> : optimisée pour le CTR dans les résultats Google</div></li>
+  </ul>
+</section>
+
+<!-- ACQUISITION -->
+<section class="section" id="acquisition">
+  <div class="section-header"><span class="section-number">04.3</span><h2 class="section-title">Plan <em>Acquisition</em></h2></div>
+
+  <div class="funnel-step"><div class="funnel-num">1</div><div class="funnel-body"><div class="funnel-channel">SEO long-tail</div><div class="funnel-action"><strong>Canal principal (M+3+).</strong> 200 pages long-tail captent 50K+ recherches/mois. Chaque page est une landing page avec CTA direct. Croissance organique compounding.</div><div class="funnel-metric">50K vues/mois visé</div></div></div>
+  <div class="funnel-step"><div class="funnel-num">2</div><div class="funnel-body"><div class="funnel-channel">Reddit / Forums</div><div class="funnel-action"><strong>Canal de lancement (M+1).</strong> r/france, r/vosfinances, forums droit des consommateurs. Répondre aux questions avec « j'ai créé un outil pour ça ». Pas de spam — valeur d'abord.</div><div class="funnel-metric">Trafic immédiat</div></div></div>
+  <div class="funnel-step"><div class="funnel-num">3</div><div class="funnel-body"><div class="funnel-channel">TikTok / Reels</div><div class="funnel-action"><strong>Canal viral (M+1+).</strong> Format « j'ai récupéré 400€ grâce à un courrier de 2 min ». Montrer le process en accéléré. Les « résultats choc » se partagent naturellement.</div><div class="funnel-metric">Potentiel viral fort</div></div></div>
+  <div class="funnel-step"><div class="funnel-num">4</div><div class="funnel-body"><div class="funnel-channel">Groupes Facebook</div><div class="funnel-action"><strong>Canal communautaire (M+1+).</strong> Groupes d'aide administrative, consommateurs, locataires, associations. Partager le lien quand quelqu'un pose une question sur un courrier.</div><div class="funnel-metric">Ultra-ciblé</div></div></div>
+  <div class="funnel-step"><div class="funnel-num">5</div><div class="funnel-body"><div class="funnel-channel">Bouche-à-oreille</div><div class="funnel-action"><strong>Canal organique.</strong> « Quelqu'un te doit de l'argent ? Envoie-lui ça. » Le produit se recommande naturellement. Chaque PDF généré contient « Créé avec LettreMagique.fr ».</div><div class="funnel-metric">Coefficient viral k</div></div></div>
+</section>
+
+<!-- PLAN 30 JOURS -->
+<section class="section" id="30jours">
+  <div class="section-header"><span class="section-number">04.4</span><h2 class="section-title">Plan <em>30 Jours</em></h2></div>
+
+  <div class="timeline">
+    <div class="timeline-item"><div class="timeline-marker accent">S0</div><div class="timeline-content">
+      <div class="timeline-day">Semaine 0 — Validation</div>
+      <div class="timeline-title">Landing page + 50 demandes test</div>
+      <ul class="timeline-tasks"><li>Déployer landing page</li><li>Poster Reddit + 5 groupes Facebook</li><li>Wizard of Oz : traiter les demandes manuellement</li><li>GO/NO-GO : 20+ inscriptions</li></ul>
+    </div></div>
+    <div class="timeline-item"><div class="timeline-marker">S1</div><div class="timeline-content">
+      <div class="timeline-day">Semaine 1 — Construction MVP</div>
+      <div class="timeline-title">5 jours de dev (cf. roadmap technique)</div>
+      <ul class="timeline-tasks"><li>Développer le MVP complet (J1 à J5)</li><li>Créer les 20 premières pages SEO long-tail</li><li>Soumettre sitemap à Google Search Console</li></ul>
+    </div></div>
+    <div class="timeline-item"><div class="timeline-marker accent">S2</div><div class="timeline-content">
+      <div class="timeline-day">Semaine 2 — Lancement public</div>
+      <div class="timeline-title">Distribution active + premiers courriers payants</div>
+      <ul class="timeline-tasks"><li>Poster sur Product Hunt</li><li>Créer 3 TikTok/Reels montrant le process en accéléré</li><li>Poster dans 10 groupes Facebook supplémentaires</li><li>Objectif : 100 courriers générés (50 gratuits + 50 payants)</li></ul>
+    </div></div>
+    <div class="timeline-item"><div class="timeline-marker green">S3</div><div class="timeline-content">
+      <div class="timeline-day">Semaine 3 — Itération + contenu</div>
+      <div class="timeline-title">Analyser les données + ajouter des pages SEO</div>
+      <ul class="timeline-tasks"><li>Analyser : quels types de courriers sont les plus demandés ?</li><li>Créer 20 pages SEO supplémentaires sur les catégories populaires</li><li>Corriger les prompts IA selon les feedbacks</li><li>1er article de blog SEO pilier</li></ul>
+    </div></div>
+    <div class="timeline-item"><div class="timeline-marker">S4</div><div class="timeline-content">
+      <div class="timeline-day">Semaine 4 — Bilan + plan M+2</div>
+      <div class="timeline-title">Mesurer, décider, accélérer</div>
+      <ul class="timeline-tasks"><li>Bilan : nombre de courriers, revenus, trafic SEO, taux de conversion</li><li>Objectif J30 : 200+ courriers générés, 50€+ de revenus, 40 pages SEO en ligne</li><li>Si positif : accélérer SEO (objectif 100 pages à M+2)</li><li>Post LinkedIn / Twitter : « J'ai lancé LettreMagique il y a 30 jours — voici les chiffres »</li></ul>
+    </div></div>
+  </div>
+
+  <div class="metrics-grid" style="margin-top: 40px;">
+    <div class="metric-card"><div class="metric-card-value green">200+</div><div class="metric-card-label">Courriers générés à J30</div></div>
+    <div class="metric-card"><div class="metric-card-value green">50€+</div><div class="metric-card-label">Premiers revenus</div></div>
+    <div class="metric-card"><div class="metric-card-value">40</div><div class="metric-card-label">Pages SEO en ligne</div></div>
+    <div class="metric-card"><div class="metric-card-value">3</div><div class="metric-card-label">Vidéos TikTok/Reels</div></div>
+  </div>
+
+  <div class="callout success" data-label="Ce qui compte à J30">
+    <p style="font-size: 14px; margin: 0; line-height: 2;">
+      <strong>Signal fort :</strong> 200+ courriers générés, des gens qui paient 1,99€, du trafic SEO qui commence<br>
+      <strong>Signal faible :</strong> <50 courriers, personne ne paie, les pages SEO n'indexent pas<br>
+      <strong>L'objectif n'est pas le revenu à J30.</strong> C'est de confirmer que les gens trouvent l'outil, l'utilisent, et paient. Le revenu viendra du SEO compounding à M+3-6.
+    </p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div>
+    <div class="footer-brand">Lettre<span>Magique</span></div>
+    <div>Business Plan v1.0 — Mars 2026</div>
+    <div style="margin-top: 4px;">Concurrence FR vérifiée · Projections réalistes</div>
+  </div>
+  <div style="text-align: right;">
+    <div>Stack : Next.js · Claude API · Stripe · Vercel</div>
+    <div style="margin-top: 4px;">Cible : Grand public FR · B2C</div>
+    <div style="margin-top: 4px;">MRR réaliste M+12 : 3 200€</div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  const bar = document.getElementById('progressBar');
+  window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    bar.style.width = scrolled + '%';
+  });
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('section[id]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(item => item.classList.remove('active'));
+        const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -40% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
