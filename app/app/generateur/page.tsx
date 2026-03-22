@@ -84,9 +84,8 @@ export default async function GenerateurPage() {
       <section className="px-4 md:px-16 py-10 md:py-16">
         <div className="max-w-[980px] mx-auto">
           <div
-            className="grid gap-[2px] border-[2px]"
+            className="grid gap-4"
             style={{
-              borderColor: "var(--ink)",
               gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             }}
           >
@@ -95,13 +94,25 @@ export default async function GenerateurPage() {
                 key={type.id}
                 href={`/generateur/${type.id}`}
                 className="block p-6 transition-all duration-200 no-underline group"
-                style={{ background: "var(--paper)" }}
+                style={{
+                  background: "var(--white-warm)",
+                  border: "1.5px solid var(--rule)",
+                  borderRadius: "2px",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "var(--ink)";
+                  (e.currentTarget as HTMLElement).style.boxShadow = "3px 3px 0 var(--ink)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "var(--rule)";
+                  (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                }}
               >
                 <div className="flex items-start gap-4">
                   <div className="text-3xl shrink-0">{type.emoji}</div>
                   <div className="flex-1">
                     <div
-                      className="text-base font-bold mb-1 group-hover:text-accent transition-colors"
+                      className="text-base font-bold mb-1 transition-colors"
                       style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}
                     >
                       {type.name}
@@ -125,6 +136,7 @@ export default async function GenerateurPage() {
                               fontFamily: "var(--font-dm-mono)",
                               background: "var(--paper2)",
                               color: "var(--muted-lm)",
+                              border: "1px solid var(--rule)",
                             }}
                           >
                             {ex}
@@ -134,7 +146,7 @@ export default async function GenerateurPage() {
                     )}
                   </div>
                   <div
-                    className="text-lg shrink-0 opacity-30 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+                    className="text-lg shrink-0 opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
                     style={{ color: "var(--accent)" }}
                   >
                     →
