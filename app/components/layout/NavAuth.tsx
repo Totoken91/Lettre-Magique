@@ -44,9 +44,9 @@ function QuotaBadge({ quota }: { quota: Quota | null }) {
         fontSize: "9px",
         letterSpacing: "1.5px",
         textTransform: "uppercase",
-        color: isEmpty ? "var(--accent)" : "#999",
-        border: `1px solid ${isEmpty ? "var(--accent)" : "#444"}`,
-        opacity: isEmpty ? 1 : 0.7,
+        color: "var(--accent)",
+        border: "1px solid var(--accent)",
+        opacity: isEmpty ? 1 : 0.85,
       }}
     >
       <span
@@ -55,7 +55,7 @@ function QuotaBadge({ quota }: { quota: Quota | null }) {
           width: 6,
           height: 6,
           borderRadius: "50%",
-          background: isEmpty ? "var(--accent)" : "#555",
+          background: "var(--accent)",
           flexShrink: 0,
         }}
       />
@@ -214,7 +214,7 @@ export default function NavAuth() {
               {quota && (
                 <div
                   className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] border-b"
-                  style={{ fontFamily: "var(--font-dm-mono)", color: quota.isPro ? "var(--accent)" : "#888", borderColor: "#222" }}
+                  style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)", borderColor: "#222" }}
                 >
                   {quota.isPro ? "Pro · Illimité" : `${quota.remaining ?? 0} lettre${(quota.remaining ?? 0) !== 1 ? "s" : ""} restante${(quota.remaining ?? 0) !== 1 ? "s" : ""}`}
                 </div>
