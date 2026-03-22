@@ -8,6 +8,7 @@ import type { User } from "@supabase/supabase-js";
 
 interface Quota {
   isPro: boolean;
+  isAdmin: boolean;
   used: number | null;
   limit: number | null;
   remaining: number | null;
@@ -128,6 +129,20 @@ export default function NavAuth() {
             Mon compte
           </Link>
           <QuotaBadge quota={quota} />
+          {quota?.isAdmin && (
+            <Link
+              href="/admin"
+              className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200 px-2.5 py-1"
+              style={{
+                fontFamily: "var(--font-dm-mono)",
+                color: "var(--accent)",
+                border: "1px solid var(--accent)",
+                opacity: 0.85,
+              }}
+            >
+              Admin
+            </Link>
+          )}
           <Link
             href="/generateur"
             className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
@@ -227,6 +242,16 @@ export default function NavAuth() {
               >
                 Mon compte
               </Link>
+              {quota?.isAdmin && (
+                <Link
+                  href="/admin"
+                  onClick={() => setMenuOpen(false)}
+                  className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                  style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)", borderColor: "#222" }}
+                >
+                  Admin
+                </Link>
+              )}
               <button
                 onClick={handleSignOut}
                 className="px-6 py-4 text-left text-[11px] uppercase tracking-[1.5px]"
