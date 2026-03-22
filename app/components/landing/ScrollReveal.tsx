@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 export default function ScrollReveal() {
-  useEffect(() => {
+  // useLayoutEffect s'exécute AVANT que le navigateur peigne
+  // → zéro flash, même au retour arrière
+  useLayoutEffect(() => {
     const reveals = Array.from(document.querySelectorAll(".reveal"));
-
     const show = (el: Element) => el.classList.add("visible");
 
-    // 1. Vérification SYNCHRONE : éléments déjà visibles → immédiats, pas de flash
+    // Marquer immédiatement les éléments déjà dans le viewport
     const toObserve: Element[] = [];
     for (const el of reveals) {
       const rect = el.getBoundingClientRect();
@@ -19,10 +20,10 @@ export default function ScrollReveal() {
       }
     }
 
-    // 2. Seulement APRÈS avoir montré les éléments visibles, activer le masquage
+    // Activer le masquage APRÈS avoir montré les éléments visibles
     document.documentElement.classList.add("js-ready");
 
-    // 3. Observer le reste (hors viewport)
+    // Observer le reste (éléments hors viewport)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

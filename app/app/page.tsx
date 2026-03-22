@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LETTER_TYPES } from "@/data/letter-types";
+import HeroCTA from "@/components/landing/HeroCTA";
 
 export default function Home() {
   return (
@@ -76,13 +77,7 @@ export default function Home() {
           </p>
 
           <div className="flex gap-4 items-center flex-wrap animate-fade-up-4">
-            <Link
-              href="/signup"
-              className="btn-primary inline-flex items-center gap-2.5 px-9 py-4 text-sm font-bold text-white uppercase tracking-[0.5px] no-underline transition-all duration-200"
-              style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
-            >
-              Essayer gratuitement →
-            </Link>
+            <HeroCTA />
             <Link
               href="#comment"
               className="px-7 py-4 text-sm font-semibold transition-colors duration-200 no-underline"
