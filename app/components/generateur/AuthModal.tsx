@@ -33,6 +33,12 @@ export default function AuthModal({ onSuccess, onClose }: Props) {
         setLoading(false);
         return;
       }
+      // Email déjà utilisé : Supabase retourne succès mais identities est vide
+      if (data.user && data.user.identities?.length === 0) {
+        setError("Un compte existe déjà avec cet email. Connectez-vous plutôt.");
+        setLoading(false);
+        return;
+      }
       // If email confirmation is disabled in Supabase, session is immediately available
       if (data.session) {
         onSuccess();
