@@ -68,6 +68,7 @@ export default function NavAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [quota, setQuota] = useState<Quota | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
   const fetchQuota = async () => {
@@ -101,7 +102,13 @@ export default function NavAuth() {
     };
   }, []);
 
+  // Close menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [router]);
+
   const handleSignOut = async () => {
+    setMenuOpen(false);
     await supabase.auth.signOut();
     router.push("/");
     router.refresh();
@@ -109,51 +116,137 @@ export default function NavAuth() {
 
   if (!ready) return null;
 
-  if (user) {
-    return (
-      <div className="flex items-center gap-4 md:gap-5">
-        <Link
-          href="/compte"
-          className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
-          style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
-        >
-          Mon compte
-        </Link>
-        <QuotaBadge quota={quota} />
-        <Link
-          href="/generateur"
-          className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
-          style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
-        >
-          Générer
-        </Link>
-        <button
-          onClick={handleSignOut}
-          className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] transition-colors duration-200"
-          style={{ fontFamily: "var(--font-dm-mono)", color: "#666", background: "none", border: "none", cursor: "pointer" }}
-        >
-          Déconnecter
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex items-center gap-5">
-      <Link
-        href="/login"
-        className="nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
-        style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
-      >
-        Se connecter
-      </Link>
-      <Link
-        href="/signup"
-        className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
-        style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
-      >
-        Créer un compte
-      </Link>
-    </div>
+    <>
+      {user ? (
+        <div className="flex items-center gap-4 md:gap-5">
+          <Link
+            href="/compte"
+            className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
+            style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
+          >
+            Mon compte
+          </Link>
+          <QuotaBadge quota={quota} />
+          <Link
+            href="/generateur"
+            className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
+          >
+            Générer
+          </Link>
+          <button
+            onClick={handleSignOut}
+            className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] transition-colors duration-200"
+            style={{ fontFamily: "var(--font-dm-mono)", color: "#666", background: "none", border: "none", cursor: "pointer" }}
+          >
+            Déconnecter
+          </button>
+
+          {/* Hamburger — mobile only */}
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 items-center"
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+            aria-label="Menu"
+          >
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "#999", transition: "all 0.2s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "transparent" : "#999", transition: "all 0.2s" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "#999", transition: "all 0.2s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-5">
+          <Link
+            href="/login"
+            className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
+            style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
+          >
+            Se connecter
+          </Link>
+          <Link
+            href="/signup"
+            className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
+          >
+            Créer un compte
+          </Link>
+
+          {/* Hamburger — mobile only */}
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 items-center"
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+            aria-label="Menu"
+          >
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "#999", transition: "all 0.2s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "transparent" : "#999", transition: "all 0.2s" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "#999", transition: "all 0.2s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
+          </button>
+        </div>
+      )}
+
+      {/* Mobile dropdown menu */}
+      {menuOpen && (
+        <div
+          className="md:hidden fixed top-14 left-0 right-0 z-40 flex flex-col"
+          style={{ background: "var(--ink)", borderBottom: "2px solid var(--accent)" }}
+        >
+          <Link
+            href="/#comment"
+            onClick={() => setMenuOpen(false)}
+            className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+            style={{ fontFamily: "var(--font-dm-mono)", color: "#888", borderColor: "#222" }}
+          >
+            Comment ça marche
+          </Link>
+          <Link
+            href="/tarifs"
+            onClick={() => setMenuOpen(false)}
+            className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+            style={{ fontFamily: "var(--font-dm-mono)", color: "#888", borderColor: "#222" }}
+          >
+            Tarifs
+          </Link>
+
+          {user ? (
+            <>
+              {quota && (
+                <div
+                  className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] border-b"
+                  style={{ fontFamily: "var(--font-dm-mono)", color: quota.isPro ? "var(--accent)" : "#888", borderColor: "#222" }}
+                >
+                  {quota.isPro ? "Pro · Illimité" : `${quota.remaining ?? 0} lettre${(quota.remaining ?? 0) !== 1 ? "s" : ""} restante${(quota.remaining ?? 0) !== 1 ? "s" : ""}`}
+                </div>
+              )}
+              <Link
+                href="/compte"
+                onClick={() => setMenuOpen(false)}
+                className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "#888", borderColor: "#222" }}
+              >
+                Mon compte
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="px-6 py-4 text-left text-[11px] uppercase tracking-[1.5px]"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "#666", background: "none", border: "none", cursor: "pointer" }}
+              >
+                Déconnecter
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline"
+              style={{ fontFamily: "var(--font-dm-mono)", color: "#888" }}
+            >
+              Se connecter
+            </Link>
+          )}
+        </div>
+      )}
+    </>
   );
 }
