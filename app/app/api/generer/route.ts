@@ -24,6 +24,13 @@ export async function POST(req: Request) {
     }
 
     // Vérifier le statut pro
+    // Récupérer ou créer le profil (upsert au cas où le trigger n'a pas tourné)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (getSupabaseAdmin().from("profiles") as any).upsert(
+      { id: user.id, is_pro: false },
+      { onConflict: "id", ignoreDuplicates: true }
+    );
+
     const { data: profile } = await getSupabaseAdmin()
       .from("profiles")
       .select("is_pro")
