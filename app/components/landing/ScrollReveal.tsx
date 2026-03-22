@@ -4,14 +4,25 @@ import { useEffect } from "react";
 
 export default function ScrollReveal() {
   useEffect(() => {
-    document.documentElement.classList.add("js-ready");
-
     const reveals = Array.from(document.querySelectorAll(".reveal"));
 
-    const show = (el: Element) => {
-      el.classList.add("visible");
-    };
+    const show = (el: Element) => el.classList.add("visible");
 
+    // 1. Vérification SYNCHRONE : éléments déjà visibles → immédiats, pas de flash
+    const toObserve: Element[] = [];
+    for (const el of reveals) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        show(el);
+      } else {
+        toObserve.push(el);
+      }
+    }
+
+    // 2. Seulement APRÈS avoir montré les éléments visibles, activer le masquage
+    document.documentElement.classList.add("js-ready");
+
+    // 3. Observer le reste (hors viewport)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -24,15 +35,13 @@ export default function ScrollReveal() {
       { threshold: 0, rootMargin: "0px 0px -40px 0px" }
     );
 
-    reveals.forEach((el) => observer.observe(el));
+    toObserve.forEach((el) => observer.observe(el));
 
-    // Fallback hard: tout visible après 1.5s quoi qu'il arrive
     const fallback = setTimeout(() => reveals.forEach(show), 1500);
 
     return () => {
       observer.disconnect();
       clearTimeout(fallback);
-      // Ne pas retirer js-ready : évite le flash opacity:0 au retour arrière
     };
   }, []);
 
