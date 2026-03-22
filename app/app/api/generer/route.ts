@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { buildPrompt } from "@/lib/prompts";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     }
 
     // Vérifier le statut pro
-    const { data: profile } = await supabaseAdmin
+    const { data: profile } = await getSupabaseAdmin()
       .from("profiles")
       .select("is_pro")
       .eq("id", user.id)
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     if (!isPro) {
       // Compter les lettres déjà générées par cet utilisateur
-      const { count } = await supabaseAdmin
+      const { count } = await getSupabaseAdmin()
         .from("letters")
         .select("*", { count: "exact", head: true })
         .eq("user_id", user.id);
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
       message.content[0].type === "text" ? message.content[0].text : "";
 
     // Sauvegarder la lettre générée
-    await supabaseAdmin.from("letters").insert({
+    await getSupabaseAdmin().from("letters").insert({
       user_id: user.id,
       email: user.email,
       type,
