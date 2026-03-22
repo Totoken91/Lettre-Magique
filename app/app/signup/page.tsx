@@ -265,7 +265,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading || googleLoading}
-            className="w-full mt-7 py-4 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50"
+            className="w-full mt-7 py-4 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50 cursor-pointer hover:brightness-90 active:scale-[0.98]"
             style={{
               fontFamily: "var(--font-syne)",
               background: "var(--accent)",
