@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { LetterType } from "@/data/letter-types";
+import { supabase } from "@/lib/supabase/client";
+import AuthModal from "./AuthModal";
 
 interface Props {
   letterType: LetterType;
@@ -15,6 +17,7 @@ export default function DynamicForm({ letterType }: Props) {
   const [senderAddress, setSenderAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleChange = (id: string, value: string) => {
     setValues((prev) => ({ ...prev, [id]: value }));
@@ -29,10 +32,7 @@ export default function DynamicForm({ letterType }: Props) {
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isComplete()) return;
-
+  const generate = async () => {
     setLoading(true);
     setError(null);
 
@@ -65,15 +65,33 @@ export default function DynamicForm({ letterType }: Props) {
       );
       router.push("/resultat");
     } catch {
-      setError(
-        "Une erreur est survenue. Veuillez réessayer."
-      );
+      setError("Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isComplete()) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    await generate();
+  };
+
   return (
+    <>
+    {showAuthModal && (
+      <AuthModal
+        onSuccess={() => { setShowAuthModal(false); generate(); }}
+        onClose={() => setShowAuthModal(false)}
+      />
+    )}
     <form onSubmit={handleSubmit}>
       {/* Infos expéditeur */}
       <div
@@ -290,5 +308,6 @@ export default function DynamicForm({ letterType }: Props) {
         Premier courrier gratuit · Aucune carte requise
       </p>
     </form>
+    </>
   );
 }
