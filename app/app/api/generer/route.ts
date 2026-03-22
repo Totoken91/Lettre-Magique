@@ -70,6 +70,25 @@ export async function POST(req: Request) {
     const text =
       message.content[0].type === "text" ? message.content[0].text : "";
 
+    // Détecter si Claude a refusé de générer le courrier
+    const refusalPatterns = [
+      /^je ne peux pas/i,
+      /^je suis désolé.{0,20}mais je ne peux pas/i,
+      /^désolé.{0,20}je ne peux pas/i,
+      /^il m'est impossible/i,
+      /^je dois refuser/i,
+      /contrevient à mes principes/i,
+      /contraire à mes valeurs/i,
+      /en dehors de ce que je peux/i,
+    ];
+    const isRefusal = refusalPatterns.some((re) => re.test(text.trim()));
+    if (isRefusal) {
+      return Response.json(
+        { error: "refused", text },
+        { status: 422 }
+      );
+    }
+
     // Sauvegarder la lettre générée
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (getSupabaseAdmin().from("letters") as any).insert({

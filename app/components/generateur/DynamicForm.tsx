@@ -42,6 +42,7 @@ export default function DynamicForm({ letterType }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [limitReached, setLimitReached] = useState(false);
+  const [refused, setRefused] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleChange = (id: string, value: string) => {
@@ -60,6 +61,7 @@ export default function DynamicForm({ letterType }: Props) {
   const generate = async () => {
     setLoading(true);
     setError(null);
+    setRefused(false);
 
     try {
       const res = await fetch("/api/generer", {
@@ -76,6 +78,9 @@ export default function DynamicForm({ letterType }: Props) {
       const data = await res.json();
       if (res.status === 403 && data.limitReached) {
         throw new Error("__LIMIT__");
+      }
+      if (res.status === 422 && data.error === "refused") {
+        throw new Error("__REFUSED__");
       }
       if (!res.ok) throw new Error(data.detail || data.error || "Erreur lors de la génération");
       // Stocker le résultat et rediriger vers la page résultat
@@ -96,6 +101,8 @@ export default function DynamicForm({ letterType }: Props) {
       const msg = err instanceof Error ? err.message : String(err);
       if (msg === "__LIMIT__") {
         setLimitReached(true);
+      } else if (msg === "__REFUSED__") {
+        setRefused(true);
       } else {
         setError(msg || "Une erreur est survenue. Veuillez réessayer.");
       }
@@ -339,6 +346,33 @@ export default function DynamicForm({ letterType }: Props) {
           >
             Voir les offres →
           </a>
+        </div>
+      )}
+
+      {refused && (
+        <div
+          className="mb-6 p-5 border-[2px]"
+          style={{ borderColor: "var(--rule)", background: "var(--paper2)" }}
+        >
+          <div
+            className="text-[10px] uppercase tracking-[2px] mb-2"
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+          >
+            Génération refusée
+          </div>
+          <p
+            className="text-sm leading-[1.6]"
+            style={{ fontFamily: "var(--font-lora)", color: "var(--ink)" }}
+          >
+            L&apos;IA a refusé de générer ce courrier (contenu inapproprié ou contraire à ses règles).{" "}
+            <strong>Votre crédit n&apos;a pas été débité.</strong>
+          </p>
+          <p
+            className="text-sm leading-[1.6] mt-2"
+            style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}
+          >
+            Reformulez votre demande ou choisissez un autre type de courrier.
+          </p>
         </div>
       )}
 
