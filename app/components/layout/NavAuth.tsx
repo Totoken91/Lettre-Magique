@@ -38,7 +38,7 @@ export default function NavAuth() {
     return (
       <div className="flex items-center gap-5">
         <span
-          className="text-[11px] max-w-[160px] truncate"
+          className="hidden md:block text-[11px] max-w-[160px] truncate"
           style={{ fontFamily: "var(--font-dm-mono)", color: "#555" }}
           title={user.email}
         >

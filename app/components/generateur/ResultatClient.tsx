@@ -66,7 +66,7 @@ export default function ResultatClient() {
     <>
       {/* Header */}
       <section
-        className="relative overflow-hidden px-16 py-16"
+        className="relative overflow-hidden px-4 md:px-16 py-10 md:py-16"
         style={{ background: "var(--ink)", color: "var(--white-warm)" }}
       >
         <div
@@ -115,7 +115,7 @@ export default function ResultatClient() {
         </div>
       </section>
 
-      <section className="px-16 py-12">
+      <section className="px-4 md:px-16 py-10 md:py-12">
         <div className="max-w-[700px] mx-auto">
           {/* Aperçu du courrier */}
           <div

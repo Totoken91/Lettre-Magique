@@ -12,7 +12,7 @@ export default function GenerateurPage() {
   return (
     <div className="pt-14">
       <section
-        className="relative overflow-hidden px-16 py-20"
+        className="relative overflow-hidden px-4 md:px-16 py-12 md:py-20"
         style={{ background: "var(--ink)", color: "var(--white-warm)" }}
       >
         <div
@@ -61,7 +61,7 @@ export default function GenerateurPage() {
         </div>
       </section>
 
-      <section className="px-16 py-16">
+      <section className="px-4 md:px-16 py-10 md:py-16">
         <div className="max-w-[980px] mx-auto">
           <div
             className="grid gap-[2px] border-[2px]"

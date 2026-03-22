@@ -31,7 +31,7 @@ export default async function GenerateurTypePage({ params }: Props) {
     <div className="pt-14">
       {/* Header */}
       <section
-        className="relative overflow-hidden px-16 py-16"
+        className="relative overflow-hidden px-4 md:px-16 py-10 md:py-16"
         style={{ background: "var(--ink)", color: "var(--white-warm)" }}
       >
         <div
@@ -81,7 +81,7 @@ export default async function GenerateurTypePage({ params }: Props) {
       </section>
 
       {/* Formulaire */}
-      <section className="px-16 py-16">
+      <section className="px-4 md:px-16 py-10 md:py-16">
         <div className="max-w-[700px] mx-auto">
           <DynamicForm letterType={letterType} />
         </div>

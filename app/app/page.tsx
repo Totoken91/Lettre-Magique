@@ -1,14 +1,19 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { LETTER_TYPES } from "@/data/letter-types";
 import HeroCTA from "@/components/landing/HeroCTA";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createSupabaseServerClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) redirect("/generateur");
   return (
     <div className="pt-14">
 
       {/* ═══ HERO ═══ */}
       <section
-        className="relative overflow-hidden px-16 pt-[140px] pb-[88px]"
+        className="relative overflow-hidden px-4 md:px-16 pt-[80px] md:pt-[140px] pb-12 md:pb-[88px]"
         style={{ background: "var(--ink)", color: "var(--white-warm)" }}
       >
         {/* Dashed bottom border */}
@@ -124,7 +129,7 @@ export default function Home() {
 
       {/* ═══ CATÉGORIES ═══ */}
       <section
-        className="px-16 py-10 reveal"
+        className="px-4 md:px-16 py-8 md:py-10 reveal"
         style={{
           background: "var(--white-warm)",
           borderBottom: "1px solid var(--rule)",
@@ -138,7 +143,7 @@ export default function Home() {
             Types de courriers disponibles
           </div>
           <div
-            className="grid grid-cols-5 gap-[2px] border-[2px]"
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-[2px] border-[2px]"
             style={{ borderColor: "var(--ink)" }}
           >
             {LETTER_TYPES.slice(0, 5).map((type) => (
@@ -168,7 +173,7 @@ export default function Home() {
       </section>
 
       {/* ═══ 01 — POURQUOI C'EST PÉNIBLE ═══ */}
-      <section className="px-16 py-20 reveal">
+      <section className="px-4 md:px-16 py-12 md:py-20 reveal">
         <div className="max-w-[980px] mx-auto">
           <div className="flex items-baseline gap-5 mb-12">
             <span
@@ -187,12 +192,12 @@ export default function Home() {
           </div>
 
           <div
-            className="grid grid-cols-2 border-[2px] overflow-hidden"
+            className="grid grid-cols-1 md:grid-cols-2 border-[2px] overflow-hidden"
             style={{ borderColor: "var(--ink)" }}
           >
             <div
-              className="p-9"
-              style={{ background: "var(--paper2)", borderRight: "2px solid var(--ink)" }}
+              className="p-6 md:p-9 border-b-[2px] md:border-b-0 md:border-r-[2px]"
+              style={{ background: "var(--paper2)", borderColor: "var(--ink)" }}
             >
               <div
                 className="text-[9px] uppercase tracking-[2px] mb-5 opacity-50"
@@ -259,7 +264,7 @@ export default function Home() {
       {/* ═══ 02 — COMMENT ÇA MARCHE ═══ */}
       <section
         id="comment"
-        className="px-16 py-20"
+        className="px-4 md:px-16 py-12 md:py-20"
         style={{
           background: "var(--white-warm)",
           borderTop: "1px solid var(--rule)",
@@ -361,7 +366,7 @@ export default function Home() {
       </section>
 
       {/* ═══ 03 — EXEMPLES ═══ */}
-      <section id="exemples" className="px-16 py-20 reveal">
+      <section id="exemples" className="px-4 md:px-16 py-12 md:py-20 reveal">
         <div className="max-w-[980px] mx-auto">
           <div className="flex items-baseline gap-5 mb-4">
             <span
@@ -388,7 +393,7 @@ export default function Home() {
           </p>
 
           <div
-            className="grid grid-cols-3 gap-[2px] border-[2px]"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[2px] border-[2px]"
             style={{ background: "var(--rule)", borderColor: "var(--ink)" }}
           >
             {[
@@ -474,7 +479,7 @@ export default function Home() {
       {/* ═══ 04 — TARIFS ═══ */}
       <section
         id="tarifs"
-        className="px-16 py-20"
+        className="px-4 md:px-16 py-12 md:py-20"
         style={{
           background: "var(--white-warm)",
           borderTop: "1px solid var(--rule)",
@@ -499,13 +504,13 @@ export default function Home() {
           </div>
 
           <div
-            className="grid grid-cols-2 border-[2px] max-w-[700px]"
+            className="grid grid-cols-1 md:grid-cols-2 border-[2px] max-w-[700px]"
             style={{ borderColor: "var(--ink)" }}
           >
             {/* Plan à l'unité */}
             <div
-              className="p-10 relative"
-              style={{ borderRight: "2px solid var(--ink)" }}
+              className="p-8 md:p-10 relative border-b-[2px] md:border-b-0 md:border-r-[2px]"
+              style={{ borderColor: "var(--ink)" }}
             >
               <div
                 className="text-[10px] uppercase tracking-[2px] mb-2.5"
@@ -549,7 +554,7 @@ export default function Home() {
 
             {/* Plan illimité */}
             <div
-              className="p-10 relative"
+              className="p-8 md:p-10 relative"
               style={{ background: "var(--ink)", color: "var(--white-warm)" }}
             >
               <div
@@ -596,7 +601,7 @@ export default function Home() {
       </section>
 
       {/* ═══ PULL QUOTE (social proof) ═══ */}
-      <section className="px-16 py-16 reveal">
+      <section className="px-4 md:px-16 py-10 md:py-16 reveal">
         <div className="max-w-[980px] mx-auto">
           <blockquote
             className="px-8 py-6"
@@ -630,7 +635,7 @@ export default function Home() {
 
       {/* ═══ CTA FINAL ═══ */}
       <section
-        className="relative px-16 py-[100px] text-center"
+        className="relative px-4 md:px-16 py-16 md:py-[100px] text-center"
         style={{ background: "var(--ink)" }}
       >
         {/* Dashed top border */}
