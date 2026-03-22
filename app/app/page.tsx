@@ -28,7 +28,7 @@ export default async function Home() {
         <div className="max-w-[980px] mx-auto relative">
           {/* Bg text fantôme */}
           <div
-            className="absolute right-[-30px] top-[-50px] pointer-events-none select-none leading-[0.85]"
+            className="hidden md:block absolute right-[-30px] top-[-50px] pointer-events-none select-none leading-[0.85]"
             style={{
               fontFamily: "var(--font-syne)",
               fontWeight: 800,
