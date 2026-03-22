@@ -33,11 +33,12 @@ export async function POST(req: Request) {
 
     const { data: profile } = await getSupabaseAdmin()
       .from("profiles")
-      .select("is_pro")
+      .select("is_pro, credits")
       .eq("id", user.id)
-      .single() as { data: { is_pro: boolean } | null };
+      .single() as { data: { is_pro: boolean; credits: number } | null };
 
     const isPro = profile?.is_pro === true;
+    const credits = profile?.credits ?? 0;
 
     if (!isPro) {
       // Compter les lettres déjà générées par cet utilisateur
@@ -46,7 +47,8 @@ export async function POST(req: Request) {
         .select("*", { count: "exact", head: true })
         .eq("user_id", user.id);
 
-      if ((count ?? 0) >= 1) {
+      const limit = Math.max(1, credits);
+      if ((count ?? 0) >= limit) {
         return Response.json(
           {
             error: "Vous avez utilisé votre courrier gratuit. Passez en Pro pour en générer à l'infini.",

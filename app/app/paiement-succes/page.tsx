@@ -1,11 +1,30 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Stripe from "stripe";
 
 export const metadata: Metadata = {
   title: "Paiement réussi — LettreMagique",
 };
 
-export default function PaiementSuccesPage() {
+export default async function PaiementSuccesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ session_id?: string }>;
+}) {
+  const { session_id } = await searchParams;
+
+  let isSubscription = false;
+
+  if (session_id) {
+    try {
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+      const session = await stripe.checkout.sessions.retrieve(session_id);
+      isSubscription = session.mode === "subscription";
+    } catch {
+      // fallback: show generic message
+    }
+  }
+
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4 pt-14"
@@ -26,22 +45,44 @@ export default function PaiementSuccesPage() {
           Paiement confirmé
         </div>
 
-        <h1
-          className="text-[32px] font-extrabold tracking-[-1px] leading-[1.1] mb-4"
-          style={{ fontFamily: "var(--font-syne)" }}
-        >
-          Vous êtes maintenant{" "}
-          <em style={{ color: "var(--accent)", fontStyle: "italic", fontFamily: "var(--font-lora)", fontWeight: 500 }}>
-            Pro
-          </em>
-        </h1>
-
-        <p
-          className="text-base leading-[1.7] mb-8"
-          style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}
-        >
-          Votre accès illimité est activé. Générez autant de courriers que vous le souhaitez.
-        </p>
+        {isSubscription ? (
+          <>
+            <h1
+              className="text-[32px] font-extrabold tracking-[-1px] leading-[1.1] mb-4"
+              style={{ fontFamily: "var(--font-syne)" }}
+            >
+              Vous êtes maintenant{" "}
+              <em style={{ color: "var(--accent)", fontStyle: "italic", fontFamily: "var(--font-lora)", fontWeight: 500 }}>
+                Pro
+              </em>
+            </h1>
+            <p
+              className="text-base leading-[1.7] mb-8"
+              style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}
+            >
+              Votre accès illimité est activé. Générez autant de courriers que vous le souhaitez.
+            </p>
+          </>
+        ) : (
+          <>
+            <h1
+              className="text-[32px] font-extrabold tracking-[-1px] leading-[1.1] mb-4"
+              style={{ fontFamily: "var(--font-syne)" }}
+            >
+              Votre{" "}
+              <em style={{ color: "var(--accent)", fontStyle: "italic", fontFamily: "var(--font-lora)", fontWeight: 500 }}>
+                crédit
+              </em>{" "}
+              est activé
+            </h1>
+            <p
+              className="text-base leading-[1.7] mb-8"
+              style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}
+            >
+              Vous pouvez maintenant générer votre courrier. Votre crédit a été ajouté à votre compte.
+            </p>
+          </>
+        )}
 
         <Link
           href="/generateur"

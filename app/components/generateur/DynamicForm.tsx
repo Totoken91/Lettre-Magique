@@ -90,6 +90,7 @@ export default function DynamicForm({ letterType }: Props) {
           formData: values,
         })
       );
+      window.dispatchEvent(new Event("quotaUpdated"));
       router.push("/resultat");
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);

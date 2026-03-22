@@ -94,7 +94,11 @@ export default function NavAuth() {
       else setQuota(null);
     });
 
-    return () => subscription.unsubscribe();
+    window.addEventListener("quotaUpdated", fetchQuota);
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener("quotaUpdated", fetchQuota);
+    };
   }, []);
 
   const handleSignOut = async () => {

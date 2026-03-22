@@ -15,11 +15,12 @@ export async function GET() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: profile } = await (admin.from("profiles") as any)
-    .select("is_pro")
+    .select("is_pro, credits")
     .eq("id", user.id)
     .single();
 
   const isPro = profile?.is_pro === true;
+  const credits = (profile?.credits ?? 0) as number;
 
   if (isPro) {
     return Response.json({ isPro: true, used: null, limit: null, remaining: null });
@@ -31,7 +32,8 @@ export async function GET() {
     .eq("user_id", user.id);
 
   const used = count ?? 0;
-  const remaining = Math.max(0, FREE_LIMIT - used);
+  const limit = Math.max(FREE_LIMIT, credits);
+  const remaining = Math.max(0, limit - used);
 
-  return Response.json({ isPro: false, used, limit: FREE_LIMIT, remaining });
+  return Response.json({ isPro: false, used, limit, remaining });
 }
