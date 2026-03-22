@@ -34,8 +34,8 @@ export async function POST(req: Request) {
 
     if (!isPro) {
       // Compter les lettres déjà générées par cet utilisateur
-      const { count } = await getSupabaseAdmin()
-        .from("letters")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { count } = await (getSupabaseAdmin().from("letters") as any)
         .select("*", { count: "exact", head: true })
         .eq("user_id", user.id);
 
@@ -62,7 +62,8 @@ export async function POST(req: Request) {
       message.content[0].type === "text" ? message.content[0].text : "";
 
     // Sauvegarder la lettre générée
-    await getSupabaseAdmin().from("letters").insert({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (getSupabaseAdmin().from("letters") as any).insert({
       user_id: user.id,
       email: user.email,
       type,
