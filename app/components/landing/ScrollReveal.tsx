@@ -1,15 +1,20 @@
 "use client";
 
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export default function ScrollReveal() {
-  // useLayoutEffect s'exécute AVANT que le navigateur peigne
-  // → zéro flash, même au retour arrière
-  useLayoutEffect(() => {
+  const pathname = usePathname();
+
+  useEffect(() => {
     const reveals = Array.from(document.querySelectorAll(".reveal"));
     const show = (el: Element) => el.classList.add("visible");
 
-    // Marquer immédiatement les éléments déjà dans le viewport
+    // Remove js-ready first to avoid flash of hidden content
+    document.documentElement.classList.remove("js-ready");
+    reveals.forEach((el) => el.classList.remove("visible"));
+
+    // Show elements already in viewport
     const toObserve: Element[] = [];
     for (const el of reveals) {
       const rect = el.getBoundingClientRect();
@@ -20,10 +25,9 @@ export default function ScrollReveal() {
       }
     }
 
-    // Activer le masquage APRÈS avoir montré les éléments visibles
+    // Enable hiding AFTER visible elements are shown
     document.documentElement.classList.add("js-ready");
 
-    // Observer le reste (éléments hors viewport)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -44,7 +48,7 @@ export default function ScrollReveal() {
       observer.disconnect();
       clearTimeout(fallback);
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
