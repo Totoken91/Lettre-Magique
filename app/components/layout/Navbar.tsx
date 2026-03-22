@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NavAuth from "./NavAuth";
 
 export default function Navbar() {
   return (
@@ -36,16 +37,7 @@ export default function Navbar() {
         >
           Tarifs
         </Link>
-        <Link
-          href="/generateur"
-          className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
-          style={{
-            fontFamily: "var(--font-syne)",
-            background: "var(--accent)",
-          }}
-        >
-          Générer un courrier
-        </Link>
+        <NavAuth />
       </div>
     </nav>
   );

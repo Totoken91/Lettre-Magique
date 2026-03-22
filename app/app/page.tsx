@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { LETTER_TYPES } from "@/data/letter-types";
-import WaitlistForm from "@/components/landing/WaitlistForm";
 
 export default function Home() {
   return (
@@ -78,7 +77,7 @@ export default function Home() {
 
           <div className="flex gap-4 items-center flex-wrap animate-fade-up-4">
             <Link
-              href="#waitlist"
+              href="/signup"
               className="btn-primary inline-flex items-center gap-2.5 px-9 py-4 text-sm font-bold text-white uppercase tracking-[0.5px] no-underline transition-all duration-200"
               style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
             >
@@ -634,9 +633,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ WAITLIST ═══ */}
+      {/* ═══ CTA FINAL ═══ */}
       <section
-        id="waitlist"
         className="relative px-16 py-[100px] text-center"
         style={{ background: "var(--ink)" }}
       >
@@ -654,7 +652,7 @@ export default function Home() {
             className="text-[11px] uppercase tracking-[3px] mb-5"
             style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
           >
-            Accès anticipé
+            Commencer maintenant
           </div>
           <h2
             className="font-extrabold tracking-[-1.5px] leading-[1.1] mb-4"
@@ -682,14 +680,33 @@ export default function Home() {
             className="text-base mb-9 leading-[1.7]"
             style={{ fontFamily: "var(--font-lora)", color: "#777" }}
           >
-            LettreMagique est en cours de lancement. Inscrivez-vous pour être
-            prévenu et recevoir votre premier courrier offert.
+            Créez votre compte en 30 secondes et générez votre premier courrier
+            professionnel gratuitement. Sans carte bancaire.
           </p>
 
-          <WaitlistForm />
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/signup"
+              className="btn-primary inline-flex items-center justify-center gap-2.5 px-10 py-4 text-sm font-bold text-white uppercase tracking-[0.5px] no-underline transition-all duration-200"
+              style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
+            >
+              Créer mon compte gratuit →
+            </Link>
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center px-8 py-4 text-sm font-semibold no-underline transition-colors duration-200"
+              style={{
+                fontFamily: "var(--font-syne)",
+                color: "#666",
+                border: "1.5px solid #333",
+              }}
+            >
+              J&apos;ai déjà un compte
+            </Link>
+          </div>
 
           <div
-            className="mt-4 text-[10px] uppercase tracking-[1px]"
+            className="mt-6 text-[10px] uppercase tracking-[1px]"
             style={{ fontFamily: "var(--font-dm-mono)", color: "#444" }}
           >
             Gratuit · 1er courrier offert · Aucun engagement
