@@ -24,11 +24,11 @@ const C_PAPER  = rgb(0.961, 0.941, 0.910);   // #f5f0e8
 const C_WHITE  = rgb(1, 1, 1);
 
 // Typography
-const SZ_BODY  = 10.5;
+const SZ_BODY  = 10;
 const SZ_SMALL = 8;
 const SZ_LABEL = 7.5;
-const LH       = 17;   // line height body
-const LH_TIGHT = 14;   // line height in sender block
+const LH       = 16;   // line height body
+const LH_TIGHT = 13;   // line height in sender block
 
 function stripMarkdown(text: string): string {
   return text
@@ -70,10 +70,10 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
   const pdfDoc = await PDFDocument.create();
 
-  const fontRegular  = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-  const fontBold     = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
-  const fontSans     = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const fontSansBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const fontRegular  = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const fontBold     = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const fontSans     = fontRegular;
+  const fontSansBold = fontBold;
 
   // ─── Draw page chrome (header + sidebar + footer) ───────────────────────
   const drawChrome = (page: ReturnType<PDFDocument["addPage"]>, pageNum: number, totalPages: number) => {
@@ -184,14 +184,28 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
   const renderLines: RenderLine[] = [];
 
-  // Strip leading sender lines already shown in the EXPÉDITEUR block
-  const senderLinesToStrip = [senderName, ...senderAddress.split("\n").filter(Boolean)]
-    .map((l) => l.trim().toLowerCase());
+  // Normalisation agressive pour comparer les lignes expéditeur
+  const fuzzyNorm = (s: string) =>
+    s.toLowerCase()
+      .replace(/tél\.?\s*:?\s*/gi, "")
+      .replace(/tel\.?\s*:?\s*/gi, "")
+      .replace(/[-–—]/g, " ")
+      .replace(/[.,;]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const senderInfoNorms = [senderName, ...senderAddress.split("\n").filter(Boolean)]
+    .map(fuzzyNorm)
+    .filter(Boolean);
+
   const allRawLines = text.split("\n");
   let skipIdx = 0;
   for (let i = 0; i < allRawLines.length; i++) {
-    const norm = allRawLines[i].trim().toLowerCase();
-    if (norm === "" || senderLinesToStrip.some((sl) => norm === sl)) {
+    const norm = fuzzyNorm(allRawLines[i]);
+    if (
+      norm === "" ||
+      senderInfoNorms.some((si) => norm === si || norm.includes(si) || si.includes(norm))
+    ) {
       skipIdx = i + 1;
     } else {
       break;
