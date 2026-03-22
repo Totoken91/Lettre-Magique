@@ -63,8 +63,9 @@ export default function DynamicForm({ letterType }: Props) {
         })
       );
       router.push("/resultat");
-    } catch {
-      setError("Une erreur est survenue. Veuillez réessayer.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || "Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setLoading(false);
     }
