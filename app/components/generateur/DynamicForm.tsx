@@ -48,9 +48,8 @@ export default function DynamicForm({ letterType }: Props) {
         }),
       });
 
-      if (!res.ok) throw new Error("Erreur lors de la génération");
-
       const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || data.error || "Erreur lors de la génération");
       // Stocker le résultat et rediriger vers la page résultat
       sessionStorage.setItem(
         "lm_result",

@@ -26,9 +26,10 @@ export async function POST(req: Request) {
 
     return Response.json({ text });
   } catch (err) {
-    console.error("Erreur génération:", err);
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Erreur génération:", message);
     return Response.json(
-      { error: "Erreur lors de la génération" },
+      { error: "Erreur lors de la génération", detail: message },
       { status: 500 }
     );
   }
