@@ -11,8 +11,8 @@ const A4_W = 595.28;
 const A4_H = 841.89;
 
 // Margins
-const ML = 64;  // left
-const MR = 64;  // right
+const ML = 68;  // left
+const MR = 68;  // right
 const BODY_W = A4_W - ML - MR;
 
 // Colors
@@ -21,21 +21,22 @@ const C_ACCENT = rgb(0.784, 0.294, 0.184);   // #c84b2f
 const C_MUTED  = rgb(0.478, 0.455, 0.408);   // #7a7468
 const C_RULE   = rgb(0.784, 0.751, 0.690);   // #c8c0b0
 const C_PAPER  = rgb(0.961, 0.941, 0.910);   // #f5f0e8
+const C_OBJET  = rgb(0.996, 0.949, 0.941);   // accent tint for objet bg
 const C_WHITE  = rgb(1, 1, 1);
 
 // Typography
-const SZ_BODY  = 10;
+const SZ_BODY  = 10.5;
 const SZ_SMALL = 8;
 const SZ_LABEL = 7.5;
-const LH       = 16;   // line height body
-const LH_TIGHT = 13;   // line height in sender block
+const LH       = 17.5;  // line height body
+const LH_TIGHT = 13;    // line height in sender block
 
 function stripMarkdown(text: string): string {
   return text
-    .replace(/^\*\*(.+)\*\*$/, "$1")   // full bold line
-    .replace(/\*\*(.+?)\*\*/g, "$1")   // inline bold
-    .replace(/\*(.+?)\*/g, "$1")       // inline italic
-    .replace(/^_{1,2}(.+)_{1,2}$/, "$1") // underscores
+    .replace(/^\*\*(.+)\*\*$/, "$1")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/^_{1,2}(.+)_{1,2}$/, "$1")
     .trim();
 }
 
@@ -72,105 +73,100 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
   const fontRegular  = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold     = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const fontSans     = fontRegular;
-  const fontSansBold = fontBold;
+  const fontItalic   = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
-  // ─── Draw page chrome (header + sidebar + footer) ───────────────────────
+  // ─── Draw page chrome (header + footer) ──────────────────────────────────
   const drawChrome = (page: ReturnType<PDFDocument["addPage"]>, pageNum: number, totalPages: number) => {
 
-    // ── Top accent bar (full width, 5px) ──
+    // Top accent bar
     page.drawRectangle({
-      x: 0, y: A4_H - 5,
-      width: A4_W, height: 5,
+      x: 0, y: A4_H - 4,
+      width: A4_W, height: 4,
       color: C_ACCENT,
     });
 
-    // ── Left accent sidebar ──
-    page.drawRectangle({
-      x: 0, y: 52,
-      width: 3, height: A4_H - 5 - 52,
-      color: C_ACCENT,
-      opacity: 0.18,
-    });
-
-    // ── Header zone ──
+    // Header zone
     const headerY = A4_H - 46;
 
-    // Logo mark
+    // Logo square
     page.drawRectangle({
       x: ML, y: headerY + 4,
-      width: 22, height: 22,
+      width: 24, height: 24,
       color: C_ACCENT,
     });
     page.drawText("LM", {
-      x: ML + 3, y: headerY + 10,
-      size: 9, font: fontSansBold, color: C_WHITE,
+      x: ML + 3.5, y: headerY + 10,
+      size: 9.5, font: fontBold, color: C_WHITE,
     });
 
     // Brand name
     page.drawText("Lettre", {
-      x: ML + 28, y: headerY + 14,
-      size: 10, font: fontSansBold, color: C_INK,
+      x: ML + 32, y: headerY + 16,
+      size: 10.5, font: fontBold, color: C_INK,
     });
     page.drawText("Magique", {
-      x: ML + 28 + fontSansBold.widthOfTextAtSize("Lettre", 10), y: headerY + 14,
-      size: 10, font: fontSansBold, color: C_ACCENT,
+      x: ML + 32 + fontBold.widthOfTextAtSize("Lettre", 10.5), y: headerY + 16,
+      size: 10.5, font: fontBold, color: C_ACCENT,
     });
     page.drawText("lettre-magique.com", {
-      x: ML + 28, y: headerY + 4,
-      size: 6.5, font: fontSans, color: C_MUTED,
+      x: ML + 32, y: headerY + 5,
+      size: 6.5, font: fontRegular, color: C_MUTED,
     });
 
-    // Doc type badge (right)
+    // Doc type badge
     const typeLabel = typeName.toUpperCase();
-    const typeLabelW = fontSans.widthOfTextAtSize(typeLabel, SZ_LABEL);
-    const badgeX = A4_W - MR - typeLabelW - 16;
+    const typeLabelW = fontRegular.widthOfTextAtSize(typeLabel, SZ_LABEL);
+    const badgePadH = 8;
+    const badgePadV = 5;
+    const badgeX = A4_W - MR - typeLabelW - badgePadH * 2;
+    const badgeY = headerY + 8;
     page.drawRectangle({
-      x: badgeX - 2, y: headerY + 7,
-      width: typeLabelW + 18, height: 15,
+      x: badgeX, y: badgeY,
+      width: typeLabelW + badgePadH * 2, height: SZ_LABEL + badgePadV * 2,
       color: C_PAPER,
     });
     page.drawText(typeLabel, {
-      x: badgeX + 7, y: headerY + 11,
-      size: SZ_LABEL, font: fontSans, color: C_MUTED,
+      x: badgeX + badgePadH, y: badgeY + badgePadV + 0.5,
+      size: SZ_LABEL, font: fontRegular, color: C_MUTED,
     });
 
-    // Header rule
+    // Header separator
     page.drawLine({
       start: { x: ML, y: headerY },
       end:   { x: A4_W - MR, y: headerY },
       thickness: 0.5, color: C_RULE,
     });
 
-    // ── Footer ──
-    const footerY = 38;
+    // Footer
+    const footerY = 36;
     page.drawLine({
-      start: { x: ML, y: footerY + 16 },
-      end:   { x: A4_W - MR, y: footerY + 16 },
+      start: { x: ML, y: footerY + 14 },
+      end:   { x: A4_W - MR, y: footerY + 14 },
       thickness: 0.4, color: C_RULE,
     });
-
-    page.drawText("Document généré par LettreMagique · Outil d'aide à la rédaction, ne constitue pas un conseil juridique.", {
-      x: ML, y: footerY + 5,
-      size: 6.5, font: fontSans, color: C_MUTED,
-    });
+    page.drawText(
+      "Document généré par LettreMagique · Outil d'aide à la rédaction, ne constitue pas un conseil juridique.",
+      { x: ML, y: footerY + 4, size: 6.5, font: fontRegular, color: C_MUTED }
+    );
 
     if (totalPages > 1) {
       const pnText = `${pageNum} / ${totalPages}`;
-      const pnW = fontSans.widthOfTextAtSize(pnText, 7);
+      const pnW = fontRegular.widthOfTextAtSize(pnText, 7);
       page.drawText(pnText, {
-        x: A4_W - MR - pnW, y: footerY + 5,
-        size: 7, font: fontSans, color: C_MUTED,
+        x: A4_W - MR - pnW, y: footerY + 4,
+        size: 7, font: fontRegular, color: C_MUTED,
       });
     }
   };
 
   // ─── Parse body lines ─────────────────────────────────────────────────────
   const CONTENT_TOP    = A4_H - 46 - 14;
-  const CONTENT_BOTTOM = 38 + 16 + 10;
+  const CONTENT_BOTTOM = 36 + 14 + 12;
 
   const senderLines = [senderName, ...senderAddress.split("\n").filter(Boolean)];
   const SENDER_BLOCK_H = 14 + senderLines.length * LH_TIGHT + 14;
+
+  type LineType = "normal" | "bold" | "italic" | "objet" | "spacer";
 
   interface RenderLine {
     text: string;
@@ -179,12 +175,12 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     color: typeof C_INK;
     indent: number;
     spaceBefore: number;
-    isObjet: boolean;
+    type: LineType;
   }
 
   const renderLines: RenderLine[] = [];
 
-  // Normalisation agressive pour comparer les lignes expéditeur
+  // Fuzzy normalizer to detect and skip sender info in the body
   const fuzzyNorm = (s: string) =>
     s.toLowerCase()
       .replace(/tél\.?\s*:?\s*/gi, "")
@@ -215,32 +211,29 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
   for (const raw of rawLines) {
     if (raw.trim() === "") {
-      renderLines.push({ text: "", font: fontRegular, size: SZ_BODY, color: C_INK, indent: 0, spaceBefore: LH * 0.5, isObjet: false });
+      renderLines.push({
+        text: "", font: fontRegular, size: SZ_BODY, color: C_INK,
+        indent: 0, spaceBefore: LH * 0.95, type: "spacer",
+      });
       continue;
     }
 
-    // Détecter si la ligne est en gras markdown avant strip
-    const wasBoldMarkdown = isFullBoldMarkdown(raw.trim());
-
-    // Strip tous les marqueurs markdown
+    const wasBold = isFullBoldMarkdown(raw.trim());
     const clean = stripMarkdown(raw.trim());
-
     if (!clean) continue;
 
     const isListItem = /^[-–•]\s/.test(clean);
     const isObjet = /^(Objet|OBJET)\s*:/.test(clean);
-    const isBoldLine = wasBoldMarkdown ||
-      /^(Madame|Monsieur|Veuillez|Je vous)/i.test(clean) ||
-      isObjet;
 
-    const font = isBoldLine ? fontBold : fontRegular;
+    // Bold only for: explicit markdown bold AND short lines (salutation, closing, signature)
+    // — never make full paragraphs bold just because they happen to start with "Je vous"
+    const isBold = wasBold && clean.length < 80;
 
-    // Pour les listes, réduire la largeur disponible pour l'indent
-    const indent = isListItem ? 12 : 0;
+    const font   = isBold ? fontBold : fontRegular;
+    const indent = isListItem ? 14 : 0;
     const availW = BODY_W - indent;
 
     const wrapped = wrapText(clean, font, SZ_BODY, availW);
-
     wrapped.forEach((wl, i) => {
       renderLines.push({
         text: wl,
@@ -249,13 +242,13 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
         color: C_INK,
         indent,
         spaceBefore: 0,
-        isObjet: isObjet && i === 0,
+        type: isObjet && i === 0 ? "objet" : (isBold ? "bold" : "normal"),
       });
     });
   }
 
   // ── Measure total height ──
-  const lineH = (rl: RenderLine) => rl.text === "" ? rl.spaceBefore : LH;
+  const lineH = (rl: RenderLine) => rl.type === "spacer" ? rl.spaceBefore : LH;
 
   let totalH = SENDER_BLOCK_H + LH;
   for (const rl of renderLines) totalH += lineH(rl);
@@ -277,6 +270,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   let curPage = pages[0];
   let y = CONTENT_TOP;
 
+  // Sender card with left accent border
   curPage.drawRectangle({
     x: ML, y: y - SENDER_BLOCK_H,
     width: BODY_W, height: SENDER_BLOCK_H,
@@ -291,7 +285,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   y -= 14;
   curPage.drawText("EXPÉDITEUR", {
     x: ML + 12, y,
-    size: SZ_LABEL, font: fontSans, color: C_MUTED,
+    size: SZ_LABEL, font: fontRegular, color: C_MUTED,
   });
   y -= 4;
 
@@ -320,30 +314,35 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
   for (const rl of renderLines) {
     const h = lineH(rl);
-
     if (y - h < CONTENT_BOTTOM) advancePage();
 
-    if (rl.text === "") {
+    if (rl.type === "spacer") {
       y -= rl.spaceBefore;
       continue;
     }
 
-    // OBJET: accent underline
-    if (rl.isObjet) {
+    // OBJET: pill background + left accent bar
+    if (rl.type === "objet") {
       const tw = rl.font.widthOfTextAtSize(rl.text, rl.size);
-      curPage.drawLine({
-        start: { x: ML + rl.indent, y: y - 2 },
-        end:   { x: ML + rl.indent + tw, y: y - 2 },
-        thickness: 0.8, color: C_ACCENT,
+      curPage.drawRectangle({
+        x: ML, y: y - 3,
+        width: Math.max(tw + 20, BODY_W * 0.6),
+        height: LH - 1,
+        color: C_OBJET,
+      });
+      curPage.drawRectangle({
+        x: ML, y: y - 3,
+        width: 3, height: LH - 1,
+        color: C_ACCENT,
       });
     }
 
     curPage.drawText(rl.text, {
-      x: ML + rl.indent,
+      x: ML + rl.indent + (rl.type === "objet" ? 8 : 0),
       y,
       size: rl.size,
       font: rl.font,
-      color: rl.color,
+      color: rl.type === "objet" ? C_ACCENT : rl.color,
     });
 
     y -= LH;
@@ -355,8 +354,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   pdfDoc.setCreator("LettreMagique · lettre-magique.com");
   pdfDoc.setSubject(`Courrier : ${typeName}`);
 
-  // suppress unused warning
-  void SZ_SMALL;
+  void SZ_SMALL; void fontItalic;
 
   return pdfDoc.save();
 }

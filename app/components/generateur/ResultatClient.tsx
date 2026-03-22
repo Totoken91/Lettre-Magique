@@ -17,6 +17,7 @@ export default function ResultatClient() {
   const router = useRouter();
   const [result, setResult] = useState<ResultData | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<"idle" | "copied">("idle");
 
   useEffect(() => {
     const stored = sessionStorage.getItem("lm_result");
@@ -26,6 +27,17 @@ export default function ResultatClient() {
     }
     setResult(JSON.parse(stored));
   }, [router]);
+
+  const handleEmailClick = () => {
+    if (!result) return;
+    navigator.clipboard.writeText(result.text).catch(() => {});
+    const subject = encodeURIComponent(`${result.typeName} — LettreMagique`);
+    const body = encodeURIComponent(result.text);
+    const fullUrl = `mailto:?subject=${subject}&body=${body}`;
+    window.location.href = fullUrl.length <= 1800 ? fullUrl : `mailto:?subject=${subject}`;
+    setEmailStatus("copied");
+    setTimeout(() => setEmailStatus("idle"), 3500);
+  };
 
   const handleDownloadPDF = async () => {
     if (!result) return;
@@ -176,18 +188,20 @@ export default function ResultatClient() {
             </button>
 
             {/* Ouvrir la boite mail */}
-            <a
-              href={`mailto:?subject=${encodeURIComponent(`${result.typeName} — LettreMagique`)}&body=${encodeURIComponent(result.text)}`}
-              className="w-full py-4 text-sm font-bold uppercase tracking-[0.5px] text-center no-underline transition-all duration-200 cursor-pointer hover:brightness-95 block"
+            <button
+              onClick={handleEmailClick}
+              className="w-full py-4 text-sm font-bold uppercase tracking-[0.5px] transition-all duration-200 cursor-pointer hover:brightness-95"
               style={{
                 fontFamily: "var(--font-syne)",
                 border: "1.5px solid var(--ink)",
-                color: "var(--ink)",
+                color: emailStatus === "copied" ? "var(--green, #2e7d32)" : "var(--ink)",
                 background: "transparent",
               }}
             >
-              ✉ Envoyer par email
-            </a>
+              {emailStatus === "copied"
+                ? "✓ Lettre copiée — colle-la dans ton email"
+                : "✉ Envoyer par email"}
+            </button>
 
             <div
               className="p-4 border text-sm leading-[1.6]"
