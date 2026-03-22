@@ -4,31 +4,35 @@ import { useEffect } from "react";
 
 export default function ScrollReveal() {
   useEffect(() => {
-    // Mark JS as active — CSS will hide .reveal elements only once this is set
     document.documentElement.classList.add("js-ready");
 
-    const reveals = document.querySelectorAll(".reveal");
+    const reveals = Array.from(document.querySelectorAll(".reveal"));
+
+    const show = (el: Element) => {
+      el.classList.add("visible");
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
+            show(entry.target);
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.08 }
+      { threshold: 0, rootMargin: "0px 0px -40px 0px" }
     );
+
     reveals.forEach((el) => observer.observe(el));
 
-    // Fallback: make all visible after 2s in case observer misses
-    const fallback = setTimeout(() => {
-      reveals.forEach((el) => el.classList.add("visible"));
-    }, 2000);
+    // Fallback hard: tout visible après 1.5s quoi qu'il arrive
+    const fallback = setTimeout(() => reveals.forEach(show), 1500);
 
     return () => {
       observer.disconnect();
       clearTimeout(fallback);
-      document.documentElement.classList.remove("js-ready");
+      // Ne pas retirer js-ready : évite le flash opacity:0 au retour arrière
     };
   }, []);
 

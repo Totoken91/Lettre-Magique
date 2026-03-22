@@ -74,8 +74,9 @@ export default function DynamicForm({ letterType }: Props) {
     e.preventDefault();
     if (!isComplete()) return;
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    // getSession() lit le cache local (pas de réseau) — plus fiable pour vérifier l'auth
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
       setShowAuthModal(true);
       return;
     }
