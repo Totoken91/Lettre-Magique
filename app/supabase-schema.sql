@@ -10,11 +10,42 @@ CREATE TABLE IF NOT EXISTS letters (
   form_data JSONB,
   generated_text TEXT,
   sender_name TEXT,
-  fingerprint TEXT,       -- Pour la logique 1er courrier gratuit
+  fingerprint TEXT,
   paid BOOLEAN DEFAULT false,
   stripe_session_id TEXT,
-  email TEXT
+  email TEXT,
+  user_id UUID REFERENCES auth.users(id)
 );
+
+-- Table des profils utilisateurs (statut pro)
+CREATE TABLE IF NOT EXISTS profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  is_pro BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own profile" ON profiles
+  FOR SELECT USING (auth.uid() = id);
+
+-- Trigger : créer le profil automatiquement à l'inscription
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN
+  INSERT INTO profiles (id) VALUES (NEW.id) ON CONFLICT DO NOTHING;
+  RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+
+-- Créer le profil pour les utilisateurs déjà existants
+INSERT INTO profiles (id)
+SELECT id FROM auth.users
+ON CONFLICT DO NOTHING;
 
 -- Table pour suivre les utilisations gratuites (par fingerprint)
 CREATE TABLE IF NOT EXISTS free_uses (

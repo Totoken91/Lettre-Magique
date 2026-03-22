@@ -17,6 +17,7 @@ export default function DynamicForm({ letterType }: Props) {
   const [senderAddress, setSenderAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [limitReached, setLimitReached] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleChange = (id: string, value: string) => {
@@ -49,6 +50,9 @@ export default function DynamicForm({ letterType }: Props) {
       });
 
       const data = await res.json();
+      if (res.status === 403 && data.limitReached) {
+        throw new Error("__LIMIT__");
+      }
       if (!res.ok) throw new Error(data.detail || data.error || "Erreur lors de la génération");
       // Stocker le résultat et rediriger vers la page résultat
       sessionStorage.setItem(
@@ -65,7 +69,11 @@ export default function DynamicForm({ letterType }: Props) {
       router.push("/resultat");
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      setError(msg || "Une erreur est survenue. Veuillez réessayer.");
+      if (msg === "__LIMIT__") {
+        setLimitReached(true);
+      } else {
+        setError(msg || "Une erreur est survenue. Veuillez réessayer.");
+      }
     } finally {
       setLoading(false);
     }
@@ -264,6 +272,33 @@ export default function DynamicForm({ letterType }: Props) {
           ))}
         </div>
       </div>
+
+      {limitReached && (
+        <div
+          className="mb-6 p-5 border-[2px]"
+          style={{ borderColor: "var(--ink)", background: "var(--paper2)" }}
+        >
+          <div
+            className="text-[10px] uppercase tracking-[2px] mb-2"
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
+          >
+            Limite atteinte
+          </div>
+          <p
+            className="text-sm leading-[1.6] mb-3"
+            style={{ fontFamily: "var(--font-lora)", color: "var(--ink)" }}
+          >
+            Vous avez utilisé votre courrier gratuit. Passez en <strong>Pro</strong> pour générer des courriers à l&apos;infini.
+          </p>
+          <a
+            href="/#tarifs"
+            className="inline-block px-6 py-2.5 text-xs font-bold uppercase tracking-[0.5px] text-white no-underline"
+            style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
+          >
+            Voir les offres →
+          </a>
+        </div>
+      )}
 
       {error && (
         <div

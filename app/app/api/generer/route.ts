@@ -1,5 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { buildPrompt } from "@/lib/prompts";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -13,6 +15,41 @@ export async function POST(req: Request) {
       return Response.json({ error: "Données manquantes" }, { status: 400 });
     }
 
+    // Vérifier l'authentification
+    const supabase = await createSupabaseServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return Response.json({ error: "Non authentifié" }, { status: 401 });
+    }
+
+    // Vérifier le statut pro
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("is_pro")
+      .eq("id", user.id)
+      .single();
+
+    const isPro = profile?.is_pro === true;
+
+    if (!isPro) {
+      // Compter les lettres déjà générées par cet utilisateur
+      const { count } = await supabaseAdmin
+        .from("letters")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
+      if ((count ?? 0) >= 1) {
+        return Response.json(
+          {
+            error: "Vous avez utilisé votre courrier gratuit. Passez en Pro pour en générer à l'infini.",
+            limitReached: true,
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     const prompt = buildPrompt(type, formData, senderName, senderAddress);
 
     const message = await client.messages.create({
@@ -23,6 +60,17 @@ export async function POST(req: Request) {
 
     const text =
       message.content[0].type === "text" ? message.content[0].text : "";
+
+    // Sauvegarder la lettre générée
+    await supabaseAdmin.from("letters").insert({
+      user_id: user.id,
+      email: user.email,
+      type,
+      type_name: type,
+      form_data: formData,
+      generated_text: text,
+      sender_name: senderName,
+    });
 
     return Response.json({ text });
   } catch (err) {
