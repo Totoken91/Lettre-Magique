@@ -20,6 +20,7 @@ interface Letter {
   type_name: string;
   type: string;
   generated_text: string;
+  sender_name: string | null;
 }
 
 const EMPTY: Profile = {
@@ -40,6 +41,7 @@ export default function ComptePage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -53,7 +55,7 @@ export default function ComptePage() {
           .single(),
         supabase
           .from("letters")
-          .select("id, created_at, type_name, type, generated_text")
+          .select("id, created_at, type_name, type, generated_text, sender_name")
           .eq("user_id", session.user.id)
           .order("created_at", { ascending: false }),
       ]);
@@ -93,6 +95,36 @@ export default function ComptePage() {
       setTimeout(() => setSaved(false), 3000);
     }
     setSaving(false);
+  };
+
+  const handleDownloadPDF = async (letter: Letter) => {
+    setDownloadingId(letter.id);
+    try {
+      const senderAddress = [profile.address, `${profile.postal_code} ${profile.city}`]
+        .filter(Boolean).join("\n");
+      const res = await fetch("/api/pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: letter.generated_text,
+          senderName: letter.sender_name || profile.full_name,
+          senderAddress,
+          typeName: letter.type_name || letter.type,
+        }),
+      });
+      if (!res.ok) throw new Error();
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `lettre-${letter.type}-lettreMagique.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      alert("Erreur lors de la génération du PDF.");
+    } finally {
+      setDownloadingId(null);
+    }
   };
 
   const field = (
@@ -310,10 +342,24 @@ export default function ComptePage() {
 
                   {expandedId === letter.id && (
                     <div
-                      className="px-5 pb-5 text-sm leading-[1.8] whitespace-pre-wrap"
-                      style={{ fontFamily: "var(--font-lora)", color: "var(--ink)", borderTop: "1px solid var(--rule)" }}
+                      style={{ borderTop: "1px solid var(--rule)" }}
                     >
-                      <div className="pt-4">{letter.generated_text}</div>
+                      <div
+                        className="px-5 pt-4 pb-3 text-sm leading-[1.8] whitespace-pre-wrap"
+                        style={{ fontFamily: "var(--font-lora)", color: "var(--ink)" }}
+                      >
+                        {letter.generated_text}
+                      </div>
+                      <div className="px-5 pb-5">
+                        <button
+                          onClick={() => handleDownloadPDF(letter)}
+                          disabled={downloadingId === letter.id}
+                          className="flex items-center gap-2 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50"
+                          style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
+                        >
+                          {downloadingId === letter.id ? "Génération PDF…" : "⬇ Télécharger le PDF"}
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
