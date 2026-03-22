@@ -1,18 +1,11 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals.js";
+import nextVitals from "eslint-config-next/core-web-vitals";
 
-const vitalsArray = Array.isArray(nextVitals) ? nextVitals : [nextVitals];
-
-const eslintConfig = defineConfig([
-  ...vitalsArray,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
-]);
+/** @type {import("eslint").Linter.Config[]} */
+const eslintConfig = [
+  ...nextVitals,
+  {
+    ignores: [".next/**", "out/**", "build/**"],
+  },
+];
 
 export default eslintConfig;

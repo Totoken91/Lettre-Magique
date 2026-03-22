@@ -24,7 +24,7 @@ export default function Footer() {
 
       <div className="flex flex-col items-end gap-2">
         <div className="flex gap-6">
-          <Link href="/#comment-ca-marche" className="hover:text-white transition-colors no-underline" style={{ color: "#555" }}>
+          <Link href="/#comment" className="hover:text-white transition-colors no-underline" style={{ color: "#555" }}>
             Comment ça marche
           </Link>
           <Link href="/#tarifs" className="hover:text-white transition-colors no-underline" style={{ color: "#555" }}>

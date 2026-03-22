@@ -23,7 +23,7 @@ export default function Navbar() {
 
       <div className="flex items-center gap-7">
         <Link
-          href="/#comment-ca-marche"
+          href="/#comment"
           className="nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
           style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
         >

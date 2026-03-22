@@ -17,7 +17,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const { text, typeName } = params;
 
   const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
+  let page = pdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
 
   const timesRoman = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const timesBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
@@ -26,30 +26,32 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const inkColor = rgb(0.051, 0.051, 0.051); // #0d0d0d
   const accentColor = rgb(0.784, 0.294, 0.184); // #c84b2f
   const mutedColor = rgb(0.478, 0.455, 0.408); // #7a7468
+  const ruleColor = rgb(0.784, 0.751, 0.690); // --rule
 
-  // ─── En-tête discret LettreMagique ───
-  page.drawText("LettreMagique.fr", {
-    x: MARGIN,
-    y: A4_HEIGHT - 36,
-    size: 8,
-    font: helvetica,
-    color: accentColor,
-  });
-  page.drawText(`Courrier : ${typeName}`, {
-    x: A4_WIDTH - MARGIN - 120,
-    y: A4_HEIGHT - 36,
-    size: 8,
-    font: helvetica,
-    color: mutedColor,
-  });
+  const drawPageHeader = (p: typeof page) => {
+    p.drawText("LettreMagique.fr", {
+      x: MARGIN,
+      y: A4_HEIGHT - 36,
+      size: 8,
+      font: helvetica,
+      color: accentColor,
+    });
+    p.drawText(`Courrier : ${typeName}`, {
+      x: A4_WIDTH - MARGIN - 120,
+      y: A4_HEIGHT - 36,
+      size: 8,
+      font: helvetica,
+      color: mutedColor,
+    });
+    p.drawLine({
+      start: { x: MARGIN, y: A4_HEIGHT - 44 },
+      end: { x: A4_WIDTH - MARGIN, y: A4_HEIGHT - 44 },
+      thickness: 0.5,
+      color: ruleColor,
+    });
+  };
 
-  // Ligne de séparation en-tête
-  page.drawLine({
-    start: { x: MARGIN, y: A4_HEIGHT - 44 },
-    end: { x: A4_WIDTH - MARGIN, y: A4_HEIGHT - 44 },
-    thickness: 0.5,
-    color: rgb(0.784, 0.751, 0.690), // --rule
-  });
+  drawPageHeader(page);
 
   // ─── Corps de la lettre ───
   let y = A4_HEIGHT - 72;
@@ -58,11 +60,9 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
   for (const rawLine of lines) {
     if (y < MARGIN + 60) {
-      // Nouvelle page si débordement
-      const newPage = pdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
-      // On continue sur la nouvelle page (simplifié)
-      y = A4_HEIGHT - MARGIN;
-      void newPage;
+      page = pdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
+      drawPageHeader(page);
+      y = A4_HEIGHT - 72;
     }
 
     if (rawLine.trim() === "") {
@@ -121,7 +121,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     start: { x: MARGIN, y: footerY + 14 },
     end: { x: A4_WIDTH - MARGIN, y: footerY + 14 },
     thickness: 0.5,
-    color: rgb(0.784, 0.751, 0.690),
+    color: ruleColor,
   });
 
   page.drawText(
