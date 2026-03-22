@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { LETTER_TYPES } from "@/data/letter-types";
 import type { Metadata } from "next";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
   title: "Générer un courrier — LettreMagique",
@@ -8,7 +10,25 @@ export const metadata: Metadata = {
     "Choisissez le type de courrier administratif à générer : résiliation, réclamation, mise en demeure, contestation et plus encore.",
 };
 
-export default function GenerateurPage() {
+export default async function GenerateurPage() {
+  // Vérifier si l'utilisateur a déjà payé (Pro ou crédits achetés)
+  let showFreeInfo = true;
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data: profile } = await getSupabaseAdmin()
+        .from("profiles")
+        .select("is_pro, credits")
+        .eq("id", user.id)
+        .single() as { data: { is_pro: boolean; credits: number } | null };
+      if (profile?.is_pro || (profile?.credits ?? 0) > 0) {
+        showFreeInfo = false;
+      }
+    }
+  } catch {
+    // En cas d'erreur, on affiche la box par défaut
+  }
   return (
     <div className="pt-14">
       <section
@@ -124,7 +144,7 @@ export default function GenerateurPage() {
             ))}
           </div>
 
-          <div
+          {showFreeInfo && <div
             className="mt-8 p-6 border-[2px] flex items-start gap-4"
             style={{ borderColor: "var(--green)" }}
           >
@@ -147,7 +167,7 @@ export default function GenerateurPage() {
               Pas de carte bancaire requise, pas d&apos;inscription. Vous pouvez
               télécharger votre premier PDF immédiatement.
             </p>
-          </div>
+          </div>}
         </div>
       </section>
     </div>
