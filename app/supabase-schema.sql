@@ -117,6 +117,14 @@ ALTER TABLE profiles ADD COLUMN IF NOT EXISTS email_contact TEXT;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT;
 
+-- Table pour éviter d'appliquer deux fois le même paiement (idempotence)
+CREATE TABLE IF NOT EXISTS applied_payment_sessions (
+  session_id TEXT PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id),
+  applied_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE applied_payment_sessions ENABLE ROW LEVEL SECURITY;
+
 -- Pour se passer admin (remplacer par l'UUID réel de votre compte) :
 -- UPDATE profiles SET is_admin = true WHERE id = 'votre-uuid-ici';
 

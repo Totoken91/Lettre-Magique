@@ -59,7 +59,7 @@ function QuotaBadge({ quota }: { quota: Quota | null }) {
           flexShrink: 0,
         }}
       />
-      {remaining}/{quota.limit} lettre{(quota.limit ?? 0) > 1 ? "s" : ""}
+      {remaining} lettre{remaining !== 1 ? "s" : ""}
     </Link>
   );
 }

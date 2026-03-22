@@ -1,10 +1,55 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Stripe from "stripe";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
   title: "Paiement réussi — LettreMagique",
 };
+
+async function applySession(sessionId: string, userId: string) {
+  const admin = getSupabaseAdmin();
+
+  // Idempotence : ne traiter qu'une seule fois
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: existing } = await (admin.from("applied_payment_sessions") as any)
+    .select("session_id")
+    .eq("session_id", sessionId)
+    .single();
+
+  if (existing) return;
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+  if (session.payment_status !== "paid" && session.mode !== "subscription") return;
+  if (session.metadata?.user_id !== userId) return;
+
+  if (session.mode === "subscription") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (admin.from("profiles") as any).update({
+      is_pro: true,
+      stripe_customer_id: session.customer as string,
+      stripe_subscription_id: session.subscription as string,
+    }).eq("id", userId);
+  } else if (session.mode === "payment") {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: profile } = await (admin.from("profiles") as any)
+      .select("credits")
+      .eq("id", userId)
+      .single();
+    const currentCredits = (profile?.credits ?? 0) as number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (admin.from("profiles") as any)
+      .update({ credits: currentCredits + 1 })
+      .eq("id", userId);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (admin.from("applied_payment_sessions") as any)
+    .insert({ session_id: sessionId, user_id: userId });
+}
 
 export default async function PaiementSuccesPage({
   searchParams,
@@ -17,11 +62,18 @@ export default async function PaiementSuccesPage({
 
   if (session_id) {
     try {
+      const supabase = await createSupabaseServerClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
       const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
       const session = await stripe.checkout.sessions.retrieve(session_id);
       isSubscription = session.mode === "subscription";
+
+      if (user) {
+        await applySession(session_id, user.id);
+      }
     } catch {
-      // fallback: show generic message
+      // fallback silencieux
     }
   }
 
@@ -79,7 +131,7 @@ export default async function PaiementSuccesPage({
               className="text-base leading-[1.7] mb-8"
               style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}
             >
-              Vous pouvez maintenant générer votre courrier. Votre crédit a été ajouté à votre compte.
+              Votre crédit a été ajouté à votre compte. Vous pouvez maintenant générer votre courrier.
             </p>
           </>
         )}
