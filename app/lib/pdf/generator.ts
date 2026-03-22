@@ -183,7 +183,21 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   }
 
   const renderLines: RenderLine[] = [];
-  const rawLines = text.split("\n");
+
+  // Strip leading sender lines already shown in the EXPÉDITEUR block
+  const senderLinesToStrip = [senderName, ...senderAddress.split("\n").filter(Boolean)]
+    .map((l) => l.trim().toLowerCase());
+  const allRawLines = text.split("\n");
+  let skipIdx = 0;
+  for (let i = 0; i < allRawLines.length; i++) {
+    const norm = allRawLines[i].trim().toLowerCase();
+    if (norm === "" || senderLinesToStrip.some((sl) => norm === sl)) {
+      skipIdx = i + 1;
+    } else {
+      break;
+    }
+  }
+  const rawLines = allRawLines.slice(skipIdx);
 
   for (const raw of rawLines) {
     if (raw.trim() === "") {
