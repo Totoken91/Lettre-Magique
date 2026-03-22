@@ -17,6 +17,10 @@ export default function ResultatClient() {
   const router = useRouter();
   const [result, setResult] = useState<ResultData | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
+  const [sending, setSending] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<"idle" | "success" | "error">("idle");
 
   useEffect(() => {
     const stored = sessionStorage.getItem("lm_result");
@@ -26,6 +30,31 @@ export default function ResultatClient() {
     }
     setResult(JSON.parse(stored));
   }, [router]);
+
+  const handleSendEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!result || !emailInput) return;
+    setSending(true);
+    setEmailStatus("idle");
+    try {
+      const res = await fetch("/api/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          recipientEmail: emailInput,
+          text: result.text,
+          senderName: result.senderName,
+          senderAddress: result.senderAddress,
+          typeName: result.typeName,
+        }),
+      });
+      setEmailStatus(res.ok ? "success" : "error");
+    } catch {
+      setEmailStatus("error");
+    } finally {
+      setSending(false);
+    }
+  };
 
   const handleDownloadPDF = async () => {
     if (!result) return;
@@ -166,7 +195,7 @@ export default function ResultatClient() {
             <button
               onClick={handleDownloadPDF}
               disabled={downloading}
-              className="w-full py-5 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50"
+              className="w-full py-5 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50 cursor-pointer hover:brightness-90"
               style={{
                 fontFamily: "var(--font-syne)",
                 background: downloading ? "#888" : "var(--accent)",
@@ -174,6 +203,82 @@ export default function ResultatClient() {
             >
               {downloading ? "Génération PDF…" : "⬇ Télécharger le PDF"}
             </button>
+
+            {/* Envoyer par email */}
+            {!showEmailForm ? (
+              <button
+                onClick={() => setShowEmailForm(true)}
+                className="w-full py-4 text-sm font-bold uppercase tracking-[0.5px] transition-all duration-200 cursor-pointer hover:brightness-95"
+                style={{
+                  fontFamily: "var(--font-syne)",
+                  border: "1.5px solid var(--ink)",
+                  color: "var(--ink)",
+                  background: "transparent",
+                }}
+              >
+                ✉ Envoyer par email
+              </button>
+            ) : (
+              <div
+                className="p-5 border-[1.5px]"
+                style={{ borderColor: "var(--ink)" }}
+              >
+                <div
+                  className="text-[10px] uppercase tracking-[2px] mb-4"
+                  style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+                >
+                  Envoyer le PDF par email
+                </div>
+                {emailStatus === "success" ? (
+                  <div
+                    className="text-sm py-3 px-4"
+                    style={{
+                      fontFamily: "var(--font-dm-mono)",
+                      background: "#e8f5e9",
+                      color: "var(--green)",
+                    }}
+                  >
+                    ✓ Email envoyé avec le PDF en pièce jointe.
+                  </div>
+                ) : (
+                  <form onSubmit={handleSendEmail} className="flex gap-2">
+                    <input
+                      type="email"
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      placeholder="destinataire@example.com"
+                      required
+                      className="flex-1 px-4 py-3 text-sm outline-none"
+                      style={{
+                        fontFamily: "var(--font-lora)",
+                        background: "var(--paper2)",
+                        border: "1.5px solid var(--rule)",
+                        color: "var(--ink)",
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={sending}
+                      className="px-5 py-3 text-xs font-bold uppercase tracking-[0.5px] text-white transition-all disabled:opacity-50 cursor-pointer hover:brightness-90"
+                      style={{
+                        fontFamily: "var(--font-syne)",
+                        background: "var(--ink)",
+                      }}
+                    >
+                      {sending ? "…" : "Envoyer"}
+                    </button>
+                  </form>
+                )}
+                {emailStatus === "error" && (
+                  <p
+                    className="mt-2 text-xs"
+                    style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
+                  >
+                    Erreur lors de l&apos;envoi. Vérifiez l&apos;adresse et réessayez.
+                  </p>
+                )}
+              </div>
+            )}
 
             <div
               className="p-4 border text-sm leading-[1.6]"
