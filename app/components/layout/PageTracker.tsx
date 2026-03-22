@@ -20,6 +20,9 @@ export default function PageTracker() {
     // Ne pas tracker les routes admin ou API
     if (pathname.startsWith("/admin") || pathname.startsWith("/api")) return;
 
+    // Ignorer les navigateurs headless (CI, Playwright, Puppeteer, Vercel warmup…)
+    if (navigator.webdriver) return;
+
     try {
       const sessionId = getOrCreateSessionId();
       fetch("/api/track", {

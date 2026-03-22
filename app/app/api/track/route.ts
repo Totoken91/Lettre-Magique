@@ -19,6 +19,17 @@ const BOT_PATTERNS = [
   "pingdom",
   "uptimerobot",
   "statuspage",
+  "headlesschrome",
+  "phantomjs",
+  "playwright",
+  "puppeteer",
+  "selenium",
+  "cypress",
+  "cloudfront",
+  "health",
+  "monitoring",
+  "datadog",
+  "newrelic",
 ];
 
 function isBot(userAgent: string | null): boolean {
@@ -41,10 +52,10 @@ export async function POST(req: Request) {
 
     const admin = getSupabaseAdmin();
 
-    // Une seule visite par session par chemin (upsert sur contrainte unique)
+    // Met à jour last_seen_at à chaque revisite (permet de compter les visiteurs récurrents dans la fenêtre 30j)
     await (admin.from("page_views") as any).upsert(
-      { session_id: sessionId, path: path ?? "/", user_agent: userAgent },
-      { onConflict: "session_id,path", ignoreDuplicates: true }
+      { session_id: sessionId, path: path ?? "/", user_agent: userAgent, created_at: new Date().toISOString() },
+      { onConflict: "session_id,path" }
     );
 
     return Response.json({ ok: true });
