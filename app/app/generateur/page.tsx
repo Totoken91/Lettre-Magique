@@ -93,19 +93,11 @@ export default async function GenerateurPage() {
               <Link
                 key={type.id}
                 href={`/generateur/${type.id}`}
-                className="block p-6 transition-all duration-200 no-underline group"
+                className="block p-6 transition-all duration-200 no-underline group hover:[border-color:var(--ink)] hover:[box-shadow:3px_3px_0_var(--ink)]"
                 style={{
                   background: "var(--white-warm)",
                   border: "1.5px solid var(--rule)",
                   borderRadius: "2px",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--ink)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "3px 3px 0 var(--ink)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "var(--rule)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "none";
                 }}
               >
                 <div className="flex items-start gap-4">
