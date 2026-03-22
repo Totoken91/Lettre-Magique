@@ -31,7 +31,7 @@ export default function Navbar() {
           Comment ça marche
         </Link>
         <Link
-          href="/#tarifs"
+          href="/tarifs"
           className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
           style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
         >

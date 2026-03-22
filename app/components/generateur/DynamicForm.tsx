@@ -24,12 +24,16 @@ export default function DynamicForm({ letterType }: Props) {
       if (!session) return;
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, address, postal_code, city")
+        .select("full_name, address, postal_code, city, phone")
         .eq("id", session.user.id)
         .single();
       if (data?.full_name) setSenderName(data.full_name);
       if (data?.address) {
-        const parts = [data.address, [data.postal_code, data.city].filter(Boolean).join(" ")].filter(Boolean);
+        const parts = [
+          data.address,
+          [data.postal_code, data.city].filter(Boolean).join(" "),
+          data.phone || "",
+        ].filter(Boolean);
         setSenderAddress(parts.join("\n"));
       }
       setProfileLoaded(!!data?.full_name || !!data?.address);
@@ -328,7 +332,7 @@ export default function DynamicForm({ letterType }: Props) {
             Vous avez utilisé votre courrier gratuit. Passez en <strong>Pro</strong> pour générer des courriers à l&apos;infini.
           </p>
           <a
-            href="/#tarifs"
+            href="/tarifs"
             className="inline-block px-6 py-2.5 text-xs font-bold uppercase tracking-[0.5px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
