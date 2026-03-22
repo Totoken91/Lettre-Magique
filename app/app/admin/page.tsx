@@ -23,6 +23,12 @@ interface Stats {
     email: string;
     sender_name: string;
   }[];
+  recentUsers: {
+    id: string;
+    email: string;
+    created_at: string;
+    is_pro: boolean;
+  }[];
 }
 
 async function getStats(): Promise<Stats | null> {
@@ -73,6 +79,27 @@ async function getStats(): Promise<Stats | null> {
   const uniqueVisits30d = new Set((visits30d ?? []).map((r: { session_id: string }) => r.session_id)).size;
   const uniqueVisits7d = new Set((visits7d ?? []).map((r: { session_id: string }) => r.session_id)).size;
 
+  // Derniers inscrits via auth.users
+  const { data: authUsers } = await admin.auth.admin.listUsers({ page: 1, perPage: 15 });
+  const sortedUsers = (authUsers?.users ?? [])
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, 15);
+
+  // Récupérer is_pro pour ces utilisateurs
+  const userIds = sortedUsers.map((u) => u.id);
+  const { data: profilesData } = await (admin.from("profiles") as any)
+    .select("id, is_pro")
+    .in("id", userIds);
+  const proMap: Record<string, boolean> = {};
+  for (const p of profilesData ?? []) proMap[p.id] = p.is_pro;
+
+  const recentUsers = sortedUsers.map((u) => ({
+    id: u.id,
+    email: u.email ?? "—",
+    created_at: u.created_at,
+    is_pro: proMap[u.id] ?? false,
+  }));
+
   return {
     usersCount: usersCount ?? 0,
     lettersCount: lettersCount ?? 0,
@@ -81,6 +108,7 @@ async function getStats(): Promise<Stats | null> {
     uniqueVisits7d,
     proCount: proCount ?? 0,
     recentLetters: recentLetters ?? [],
+    recentUsers,
   };
 }
 
@@ -222,6 +250,66 @@ export default async function AdminPage() {
                       style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
                     >
                       {new Date(letter.created_at).toLocaleDateString("fr-FR", {
+                        day: "numeric", month: "short", year: "numeric",
+                      })}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Derniers inscrits */}
+          <div>
+            <div
+              className="text-[10px] uppercase tracking-[2px] mb-4"
+              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+            >
+              Derniers inscrits
+            </div>
+            <div className="border-[2px]" style={{ borderColor: "var(--rule)" }}>
+              {stats.recentUsers.length === 0 ? (
+                <div
+                  className="px-5 py-4 text-sm"
+                  style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}
+                >
+                  Aucun inscrit encore.
+                </div>
+              ) : (
+                stats.recentUsers.map((u, i) => (
+                  <div
+                    key={u.id}
+                    className="flex items-center justify-between px-5 py-3"
+                    style={{
+                      borderTop: i > 0 ? "1px solid var(--rule)" : undefined,
+                      background: i % 2 === 0 ? "var(--white-warm)" : "var(--paper2)",
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="text-sm"
+                        style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}
+                      >
+                        {u.email}
+                      </div>
+                      {u.is_pro && (
+                        <span
+                          className="text-[9px] uppercase tracking-[1px] px-1.5 py-0.5"
+                          style={{
+                            fontFamily: "var(--font-dm-mono)",
+                            background: "var(--accent)",
+                            color: "#fff",
+                          }}
+                        >
+                          Pro
+                        </span>
+                      )}
+                    </div>
+                    <div
+                      className="text-[11px] shrink-0"
+                      style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+                    >
+                      {new Date(u.created_at).toLocaleDateString("fr-FR", {
                         day: "numeric", month: "short", year: "numeric",
                       })}
                     </div>
