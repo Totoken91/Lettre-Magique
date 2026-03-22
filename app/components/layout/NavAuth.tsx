@@ -36,14 +36,14 @@ export default function NavAuth() {
 
   if (user) {
     return (
-      <div className="flex items-center gap-5">
-        <span
-          className="hidden md:block text-[11px] max-w-[160px] truncate"
-          style={{ fontFamily: "var(--font-dm-mono)", color: "#555" }}
-          title={user.email}
+      <div className="flex items-center gap-4 md:gap-5">
+        <Link
+          href="/compte"
+          className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
+          style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
         >
-          {user.email}
-        </span>
+          Mon compte
+        </Link>
         <Link
           href="/generateur"
           className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
@@ -53,7 +53,7 @@ export default function NavAuth() {
         </Link>
         <button
           onClick={handleSignOut}
-          className="nav-link text-[11px] uppercase tracking-[1.5px] transition-colors duration-200"
+          className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] transition-colors duration-200"
           style={{ fontFamily: "var(--font-dm-mono)", color: "#666", background: "none", border: "none", cursor: "pointer" }}
         >
           Déconnecter

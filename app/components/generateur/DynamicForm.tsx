@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import type { LetterType } from "@/data/letter-types";
 import { supabase } from "@/lib/supabase/client";
 import AuthModal from "./AuthModal";
@@ -15,6 +16,25 @@ export default function DynamicForm({ letterType }: Props) {
   const [values, setValues] = useState<Record<string, string>>({});
   const [senderName, setSenderName] = useState("");
   const [senderAddress, setSenderAddress] = useState("");
+  const [profileLoaded, setProfileLoaded] = useState(false);
+
+  // Pré-remplir avec les coordonnées sauvegardées
+  useEffect(() => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, address, postal_code, city")
+        .eq("id", session.user.id)
+        .single();
+      if (data?.full_name) setSenderName(data.full_name);
+      if (data?.address) {
+        const parts = [data.address, [data.postal_code, data.city].filter(Boolean).join(" ")].filter(Boolean);
+        setSenderAddress(parts.join("\n"));
+      }
+      setProfileLoaded(!!data?.full_name || !!data?.address);
+    });
+  }, []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [limitReached, setLimitReached] = useState(false);
@@ -107,14 +127,31 @@ export default function DynamicForm({ letterType }: Props) {
         className="mb-8 p-6 border-[2px]"
         style={{ borderColor: "var(--rule)" }}
       >
-        <div
-          className="text-[10px] uppercase tracking-[2px] mb-5"
-          style={{
-            fontFamily: "var(--font-dm-mono)",
-            color: "var(--accent)",
-          }}
-        >
-          Vos coordonnées
+        <div className="flex items-center justify-between mb-5">
+          <div
+            className="text-[10px] uppercase tracking-[2px]"
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
+          >
+            Vos coordonnées
+          </div>
+          {profileLoaded && (
+            <Link
+              href="/compte"
+              className="text-[10px] no-underline"
+              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+            >
+              ✎ Modifier
+            </Link>
+          )}
+          {!profileLoaded && (
+            <Link
+              href="/compte"
+              className="text-[10px] no-underline"
+              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--green)" }}
+            >
+              + Sauvegarder mes coordonnées
+            </Link>
+          )}
         </div>
 
         <div className="space-y-4">
