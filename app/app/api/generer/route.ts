@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       .from("profiles")
       .select("is_pro")
       .eq("id", user.id)
-      .single();
+      .single() as { data: { is_pro: boolean } | null };
 
     const isPro = profile?.is_pro === true;
 
