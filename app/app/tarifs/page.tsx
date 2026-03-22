@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import CheckoutButton from "@/components/layout/CheckoutButton";
 
 export const metadata: Metadata = {
   title: "Tarifs — LettreMagique",
@@ -79,13 +80,12 @@ export default function TarifsPage() {
                   </li>
                 ))}
               </ul>
-              <Link
-                href="/generateur"
-                className="mt-8 block text-center py-3.5 text-sm font-bold uppercase tracking-[0.5px] text-white no-underline transition-all duration-200"
+              <CheckoutButton
+                priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ONETIME!}
+                label="Acheter un courrier →"
+                className="mt-8 w-full py-3.5 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-60"
                 style={{ fontFamily: "var(--font-syne)", background: "var(--ink)" }}
-              >
-                Commencer →
-              </Link>
+              />
             </div>
 
             {/* Plan illimité */}
@@ -130,13 +130,12 @@ export default function TarifsPage() {
                   </li>
                 ))}
               </ul>
-              <Link
-                href="/generateur"
-                className="mt-8 block text-center py-3.5 text-sm font-bold uppercase tracking-[0.5px] no-underline transition-all duration-200"
-                style={{ fontFamily: "var(--font-syne)", background: "var(--accent)", color: "white" }}
-              >
-                Passer en Pro →
-              </Link>
+              <CheckoutButton
+                priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_SUB!}
+                label="Passer en Pro →"
+                className="mt-8 w-full py-3.5 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-60"
+                style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
+              />
             </div>
           </div>
 

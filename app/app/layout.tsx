@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollReveal from "@/components/landing/ScrollReveal";
+import PageTracker from "@/components/layout/PageTracker";
 
 export const metadata: Metadata = {
   title: "LettreMagique — Votre courrier administratif rédigé en 2 minutes",
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col antialiased">
         <Navbar />
         <ScrollReveal />
+        <PageTracker />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

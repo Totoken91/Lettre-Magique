@@ -21,6 +21,16 @@ CREATE TABLE IF NOT EXISTS letters (
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   is_pro BOOLEAN NOT NULL DEFAULT false,
+  is_admin BOOLEAN NOT NULL DEFAULT false,
+  credits INTEGER NOT NULL DEFAULT 0,
+  full_name TEXT,
+  address TEXT,
+  postal_code TEXT,
+  city TEXT,
+  phone TEXT,
+  email_contact TEXT,
+  stripe_customer_id TEXT,
+  stripe_subscription_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -77,6 +87,38 @@ CREATE POLICY "Allow insert free_uses" ON free_uses
 
 CREATE POLICY "Allow select free_uses" ON free_uses
   FOR SELECT USING (true);
+
+-- Table de tracking des visites (hors bots)
+CREATE TABLE IF NOT EXISTS page_views (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id TEXT NOT NULL,
+  path TEXT NOT NULL DEFAULT '/',
+  user_agent TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (session_id, path)
+);
+
+CREATE INDEX IF NOT EXISTS page_views_session_idx ON page_views(session_id);
+CREATE INDEX IF NOT EXISTS page_views_created_at_idx ON page_views(created_at DESC);
+
+-- RLS : insertion libre, lecture via service_role uniquement
+ALTER TABLE page_views ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow insert page_views" ON page_views FOR INSERT WITH CHECK (true);
+
+-- Colonnes supplémentaires sur profiles (si migration sur base existante)
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS is_admin BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS credits INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS full_name TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS address TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS postal_code TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS city TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS phone TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS email_contact TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT;
+
+-- Pour se passer admin (remplacer par l'UUID réel de votre compte) :
+-- UPDATE profiles SET is_admin = true WHERE id = 'votre-uuid-ici';
 
 -- Vue analytics (pour le dashboard interne)
 CREATE VIEW letter_stats AS
