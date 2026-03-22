@@ -30,6 +30,19 @@ const SZ_LABEL = 7.5;
 const LH       = 17;   // line height body
 const LH_TIGHT = 14;   // line height in sender block
 
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/^\*\*(.+)\*\*$/, "$1")   // full bold line
+    .replace(/\*\*(.+?)\*\*/g, "$1")   // inline bold
+    .replace(/\*(.+?)\*/g, "$1")       // inline italic
+    .replace(/^_{1,2}(.+)_{1,2}$/, "$1") // underscores
+    .trim();
+}
+
+function isFullBoldMarkdown(text: string): boolean {
+  return /^\*\*(.+)\*\*$/.test(text.trim());
+}
+
 function wrapText(
   text: string,
   font: Awaited<ReturnType<PDFDocument["embedFont"]>>,
@@ -57,10 +70,9 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
   const pdfDoc = await PDFDocument.create();
 
-  const fontRegular = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-  const fontBold    = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
-  const fontMono    = await pdfDoc.embedFont(StandardFonts.Courier);
-  const fontSans    = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const fontRegular  = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+  const fontBold     = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+  const fontSans     = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontSansBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
   // ─── Draw page chrome (header + sidebar + footer) ───────────────────────
@@ -73,7 +85,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       color: C_ACCENT,
     });
 
-    // ── Left accent sidebar (thin, from top bar to footer line) ──
+    // ── Left accent sidebar ──
     page.drawRectangle({
       x: 0, y: 52,
       width: 3, height: A4_H - 5 - 52,
@@ -81,10 +93,10 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       opacity: 0.18,
     });
 
-    // ── Header zone (y = A4_H - 5 - 44 to A4_H - 5) ──
+    // ── Header zone ──
     const headerY = A4_H - 46;
 
-    // Logo mark: small square with "LM"
+    // Logo mark
     page.drawRectangle({
       x: ML, y: headerY + 4,
       width: 22, height: 22,
@@ -138,13 +150,11 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       thickness: 0.4, color: C_RULE,
     });
 
-    // Footer left: disclaimer
     page.drawText("Document généré par LettreMagique · Outil d'aide à la rédaction, ne constitue pas un conseil juridique.", {
       x: ML, y: footerY + 5,
       size: 6.5, font: fontSans, color: C_MUTED,
     });
 
-    // Footer right: page number
     if (totalPages > 1) {
       const pnText = `${pageNum} / ${totalPages}`;
       const pnW = fontSans.widthOfTextAtSize(pnText, 7);
@@ -155,19 +165,13 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     }
   };
 
-  // ─── Parse & render body ─────────────────────────────────────────────────
-  // First pass: split all lines with wrapping to know total pages
-  const rawLines = text.split("\n");
+  // ─── Parse body lines ─────────────────────────────────────────────────────
+  const CONTENT_TOP    = A4_H - 46 - 14;
+  const CONTENT_BOTTOM = 38 + 16 + 10;
 
-  // Header zone bottom = A4_H - 46 - 6 (rule at headerY = A4_H-46)
-  const CONTENT_TOP    = A4_H - 46 - 14;  // just below header rule
-  const CONTENT_BOTTOM = 38 + 16 + 10;    // just above footer rule
-
-  // ── Sender block height estimation ──
   const senderLines = [senderName, ...senderAddress.split("\n").filter(Boolean)];
-  const SENDER_BLOCK_H = 14 + senderLines.length * LH_TIGHT + 14; // padding top + lines + padding bottom
+  const SENDER_BLOCK_H = 14 + senderLines.length * LH_TIGHT + 14;
 
-  // ── Parse body lines ──
   interface RenderLine {
     text: string;
     font: typeof fontRegular;
@@ -179,6 +183,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   }
 
   const renderLines: RenderLine[] = [];
+  const rawLines = text.split("\n");
 
   for (const raw of rawLines) {
     if (raw.trim() === "") {
@@ -186,12 +191,27 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       continue;
     }
 
-    const isBoldLine =
-      /^(Madame|Monsieur|Objet|OBJET|Veuillez|Je vous)/i.test(raw.trim());
-    const isObjet = /^(Objet|OBJET)\s*:/.test(raw.trim());
+    // Détecter si la ligne est en gras markdown avant strip
+    const wasBoldMarkdown = isFullBoldMarkdown(raw.trim());
+
+    // Strip tous les marqueurs markdown
+    const clean = stripMarkdown(raw.trim());
+
+    if (!clean) continue;
+
+    const isListItem = /^[-–•]\s/.test(clean);
+    const isObjet = /^(Objet|OBJET)\s*:/.test(clean);
+    const isBoldLine = wasBoldMarkdown ||
+      /^(Madame|Monsieur|Veuillez|Je vous)/i.test(clean) ||
+      isObjet;
 
     const font = isBoldLine ? fontBold : fontRegular;
-    const wrapped = wrapText(raw.trim(), font, SZ_BODY, BODY_W);
+
+    // Pour les listes, réduire la largeur disponible pour l'indent
+    const indent = isListItem ? 12 : 0;
+    const availW = BODY_W - indent;
+
+    const wrapped = wrapText(clean, font, SZ_BODY, availW);
 
     wrapped.forEach((wl, i) => {
       renderLines.push({
@@ -199,25 +219,23 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
         font,
         size: SZ_BODY,
         color: C_INK,
-        indent: 0,
-        spaceBefore: i === 0 ? 0 : 0,
+        indent,
+        spaceBefore: 0,
         isObjet: isObjet && i === 0,
       });
     });
   }
 
-  // ── Measure total height needed ──
+  // ── Measure total height ──
   const lineH = (rl: RenderLine) => rl.text === "" ? rl.spaceBefore : LH;
 
-  let totalH = SENDER_BLOCK_H + LH; // sender block + gap
+  let totalH = SENDER_BLOCK_H + LH;
   for (const rl of renderLines) totalH += lineH(rl);
 
-  const firstPageH = CONTENT_TOP - CONTENT_BOTTOM;
-  const otherPageH = CONTENT_TOP - CONTENT_BOTTOM;
-
+  const pageH = CONTENT_TOP - CONTENT_BOTTOM;
   let totalPages = 1;
-  let remaining = totalH - firstPageH;
-  while (remaining > 0) { totalPages++; remaining -= otherPageH; }
+  let remaining = totalH - pageH;
+  while (remaining > 0) { totalPages++; remaining -= pageH; }
 
   // ── Create pages ──
   const pages: ReturnType<PDFDocument["addPage"]>[] = [];
@@ -231,20 +249,17 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   let curPage = pages[0];
   let y = CONTENT_TOP;
 
-  // Sender block background
   curPage.drawRectangle({
     x: ML, y: y - SENDER_BLOCK_H,
     width: BODY_W, height: SENDER_BLOCK_H,
     color: C_PAPER,
   });
-  // Left accent stripe on sender block
   curPage.drawRectangle({
     x: ML, y: y - SENDER_BLOCK_H,
     width: 3, height: SENDER_BLOCK_H,
     color: C_ACCENT,
   });
 
-  // "EXPÉDITEUR" label
   y -= 14;
   curPage.drawText("EXPÉDITEUR", {
     x: ML + 12, y,
@@ -252,14 +267,12 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   });
   y -= 4;
 
-  // Sender name (bold)
   y -= LH_TIGHT;
   curPage.drawText(senderName, {
     x: ML + 12, y,
     size: SZ_BODY + 0.5, font: fontBold, color: C_INK,
   });
 
-  // Sender address lines
   for (const addrLine of senderAddress.split("\n").filter(Boolean)) {
     y -= LH_TIGHT;
     curPage.drawText(addrLine, {
@@ -267,9 +280,8 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       size: SZ_BODY - 0.5, font: fontRegular, color: C_INK,
     });
   }
-  y -= 14; // bottom padding
-
-  y -= LH; // gap after sender block
+  y -= 14;
+  y -= LH;
 
   // ── Render body lines ──
   const advancePage = () => {
@@ -288,7 +300,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       continue;
     }
 
-    // OBJET: draw accent underline
+    // OBJET: accent underline
     if (rl.isObjet) {
       const tw = rl.font.widthOfTextAtSize(rl.text, rl.size);
       curPage.drawLine({
@@ -298,16 +310,11 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       });
     }
 
-    // Monospace detection (reference numbers etc.)
-    const isRef = /^\s*[-–]\s/.test(rl.text);
-    const drawFont = isRef ? fontMono : rl.font;
-    const drawSize = isRef ? SZ_BODY - 1 : rl.size;
-
     curPage.drawText(rl.text, {
-      x: ML + rl.indent + (isRef ? 4 : 0),
+      x: ML + rl.indent,
       y,
-      size: drawSize,
-      font: drawFont,
+      size: rl.size,
+      font: rl.font,
       color: rl.color,
     });
 
@@ -319,6 +326,9 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   pdfDoc.setAuthor(senderName);
   pdfDoc.setCreator("LettreMagique · lettre-magique.com");
   pdfDoc.setSubject(`Courrier : ${typeName}`);
+
+  // suppress unused warning
+  void SZ_SMALL;
 
   return pdfDoc.save();
 }
