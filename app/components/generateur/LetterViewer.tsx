@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import PdfPreview from "./PdfPreview";
 
 interface LetterViewerProps {
   text: string;
@@ -166,28 +167,7 @@ export default function LetterViewer({
             {loadingPreview ? "Chargement…" : "↻ Rafraîchir"}
           </button>
         </div>
-        {loadingPreview && !pdfUrl ? (
-          <div
-            className="flex items-center justify-center py-20"
-            style={{ background: "#f5f5f5", color: "var(--muted-lm)", fontFamily: "var(--font-dm-mono)", fontSize: "12px" }}
-          >
-            Génération de l&apos;aperçu PDF…
-          </div>
-        ) : pdfUrl ? (
-          <iframe
-            src={pdfUrl}
-            className="w-full border-none"
-            style={{ height: "700px", background: "#f5f5f5" }}
-            title="Aperçu PDF"
-          />
-        ) : (
-          <div
-            className="flex items-center justify-center py-20"
-            style={{ background: "#f5f5f5", color: "var(--muted-lm)", fontFamily: "var(--font-dm-mono)", fontSize: "12px" }}
-          >
-            Aperçu non disponible
-          </div>
-        )}
+        <PdfPreview pdfUrl={pdfUrl} loading={loadingPreview && !pdfUrl} />
       </div>
 
       {/* ═══ 2. ACTIONS ═══ */}

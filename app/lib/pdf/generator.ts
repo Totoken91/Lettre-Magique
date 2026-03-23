@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb, PDFPage, PDFFont } from "pdf-lib";
 import fs from "fs";
 import path from "path";
 
@@ -9,46 +9,49 @@ interface PDFParams {
   typeName: string;
 }
 
+// ─── Page dimensions ────────────────────────────────────────────────────────
 const A4_W = 595.28;
 const A4_H = 841.89;
-
-// Margins
-const ML = 68;  // left
-const MR = 68;  // right
+const ML = 56;
+const MR = 56;
+const MT = 56;
+const MB = 52;
 const BODY_W = A4_W - ML - MR;
 
-// Colors
-const C_INK    = rgb(0.051, 0.051, 0.051);   // #0d0d0d
-const C_ACCENT = rgb(0.784, 0.294, 0.184);   // #c84b2f
-const C_MUTED  = rgb(0.478, 0.455, 0.408);   // #7a7468
-const C_RULE   = rgb(0.784, 0.751, 0.690);   // #c8c0b0
-const C_PAPER  = rgb(0.961, 0.941, 0.910);   // #f5f0e8
-const C_OBJET  = rgb(0.996, 0.949, 0.941);   // accent tint for objet bg
-const C_WHITE  = rgb(1, 1, 1);
+// ─── Colors ─────────────────────────────────────────────────────────────────
+const C_INK      = rgb(0.12, 0.12, 0.12);
+const C_ACCENT   = rgb(0.784, 0.294, 0.184);   // #c84b2f
+const C_MUTED    = rgb(0.50, 0.48, 0.44);
+const C_LIGHT    = rgb(0.72, 0.70, 0.66);
+const C_RULE     = rgb(0.82, 0.80, 0.76);
+const C_BG_LIGHT = rgb(0.965, 0.955, 0.935);
+const C_WHITE    = rgb(1, 1, 1);
 
-// Typography
-const SZ_BODY  = 10.5;
-const SZ_SMALL = 8;
-const SZ_LABEL = 7.5;
-const LH       = 17.5;  // line height body
-const LH_TIGHT = 13;    // line height in sender block
+// ─── Typography ─────────────────────────────────────────────────────────────
+const SZ_BODY    = 10;
+const SZ_SMALL   = 8.5;
+const SZ_TINY    = 7;
+const SZ_HEADER  = 11;
+const LH_BODY    = 16;
+const LH_SENDER  = 13;
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
 function stripMarkdown(text: string): string {
   return text
-    .replace(/^\*\*(.+)\*\*$/, "$1")
     .replace(/\*\*(.+?)\*\*/g, "$1")
     .replace(/\*(.+?)\*/g, "$1")
-    .replace(/^_{1,2}(.+)_{1,2}$/, "$1")
+    .replace(/_{1,2}(.+?)_{1,2}/g, "$1")
     .trim();
 }
 
-function isFullBoldMarkdown(text: string): boolean {
+function isFullBold(text: string): boolean {
   return /^\*\*(.+)\*\*$/.test(text.trim());
 }
 
 function wrapText(
   text: string,
-  font: Awaited<ReturnType<PDFDocument["embedFont"]>>,
+  font: PDFFont,
   size: number,
   maxW: number
 ): string[] {
@@ -68,308 +71,458 @@ function wrapText(
   return lines;
 }
 
+function drawTextRight(
+  page: PDFPage,
+  text: string,
+  rightX: number,
+  y: number,
+  font: PDFFont,
+  size: number,
+  color: typeof C_INK
+) {
+  const w = font.widthOfTextAtSize(text, size);
+  page.drawText(text, { x: rightX - w, y, size, font, color });
+}
+
+// ─── Main generator ─────────────────────────────────────────────────────────
+
 export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> {
   const { text, senderName, senderAddress, typeName } = params;
 
   const pdfDoc = await PDFDocument.create();
+  const fontReg    = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const fontBold   = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
-  const fontRegular  = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const fontBold     = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const fontItalic   = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
-
-  // Embed logo once
+  // Embed logo
   let logoImage: Awaited<ReturnType<typeof pdfDoc.embedPng>> | null = null;
   try {
     const logoPath = path.join(process.cwd(), "public", "lm-logo.png");
     const logoBytes = fs.readFileSync(logoPath);
     logoImage = await pdfDoc.embedPng(logoBytes);
   } catch {
-    // logo non trouvé — fallback carré LM
+    // fallback handled below
   }
 
-  // ─── Draw page chrome (header + footer) ──────────────────────────────────
-  const drawChrome = (page: ReturnType<PDFDocument["addPage"]>, pageNum: number, totalPages: number) => {
+  // ── Parse the generated text ──────────────────────────────────────────────
+  // The AI output typically contains:
+  //   - Sender info lines (name, address) — we skip these (we have structured data)
+  //   - Phone / date
+  //   - Recipient lines
+  //   - "Objet : ..." line
+  //   - Body paragraphs
+  //   - Closing + signature
+  //
+  // Strategy: detect and extract recipient, date, objet from raw text,
+  // then render everything in a clean structured layout.
 
-    // Top accent bar
-    page.drawRectangle({
-      x: 0, y: A4_H - 4,
-      width: A4_W, height: 4,
-      color: C_ACCENT,
-    });
+  const rawLines = text.split("\n");
 
-    // Header zone
-    const headerY = A4_H - 46;
-
-    // Logo
-    if (logoImage) {
-      const logoH = 28;
-      const logoW = logoImage.width * (logoH / logoImage.height);
-      page.drawImage(logoImage, {
-        x: ML, y: headerY + 2,
-        width: logoW, height: logoH,
-      });
-    } else {
-      // Fallback carré LM
-      page.drawRectangle({
-        x: ML, y: headerY + 4,
-        width: 24, height: 24,
-        color: C_ACCENT,
-      });
-      page.drawText("LM", {
-        x: ML + 3.5, y: headerY + 10,
-        size: 9.5, font: fontBold, color: C_WHITE,
-      });
-    }
-
-    // Brand name + URL (décalé selon présence logo)
-    const logoW = logoImage ? logoImage.width * (28 / logoImage.height) : 24;
-    page.drawText("lettre-magique.com", {
-      x: ML + logoW + 8, y: headerY + 10,
-      size: 6.5, font: fontRegular, color: C_MUTED,
-    });
-
-    // Doc type badge
-    const typeLabel = typeName.toUpperCase();
-    const typeLabelW = fontRegular.widthOfTextAtSize(typeLabel, SZ_LABEL);
-    const badgePadH = 8;
-    const badgePadV = 5;
-    const badgeX = A4_W - MR - typeLabelW - badgePadH * 2;
-    const badgeY = headerY + 8;
-    page.drawRectangle({
-      x: badgeX, y: badgeY,
-      width: typeLabelW + badgePadH * 2, height: SZ_LABEL + badgePadV * 2,
-      color: C_PAPER,
-    });
-    page.drawText(typeLabel, {
-      x: badgeX + badgePadH, y: badgeY + badgePadV + 0.5,
-      size: SZ_LABEL, font: fontRegular, color: C_MUTED,
-    });
-
-    // Header separator
-    page.drawLine({
-      start: { x: ML, y: headerY },
-      end:   { x: A4_W - MR, y: headerY },
-      thickness: 0.5, color: C_RULE,
-    });
-
-    // Footer
-    const footerY = 36;
-    page.drawLine({
-      start: { x: ML, y: footerY + 14 },
-      end:   { x: A4_W - MR, y: footerY + 14 },
-      thickness: 0.4, color: C_RULE,
-    });
-    page.drawText(
-      "Document généré par LettreMagique · Outil d'aide à la rédaction, ne constitue pas un conseil juridique.",
-      { x: ML, y: footerY + 4, size: 6.5, font: fontRegular, color: C_MUTED }
-    );
-
-    if (totalPages > 1) {
-      const pnText = `${pageNum} / ${totalPages}`;
-      const pnW = fontRegular.widthOfTextAtSize(pnText, 7);
-      page.drawText(pnText, {
-        x: A4_W - MR - pnW, y: footerY + 4,
-        size: 7, font: fontRegular, color: C_MUTED,
-      });
-    }
-  };
-
-  // ─── Parse body lines ─────────────────────────────────────────────────────
-  const CONTENT_TOP    = A4_H - 46 - 14;
-  const CONTENT_BOTTOM = 36 + 14 + 12;
-
-  const senderLines = [senderName, ...senderAddress.split("\n").filter(Boolean)];
-  const SENDER_BLOCK_H = 14 + senderLines.length * LH_TIGHT + 14;
-
-  type LineType = "normal" | "bold" | "italic" | "objet" | "spacer";
-
-  interface RenderLine {
-    text: string;
-    font: typeof fontRegular;
-    size: number;
-    color: typeof C_INK;
-    indent: number;
-    spaceBefore: number;
-    type: LineType;
-  }
-
-  const renderLines: RenderLine[] = [];
-
-  // Fuzzy normalizer to detect and skip sender info in the body
+  // Fuzzy match to skip sender info already in header
   const fuzzyNorm = (s: string) =>
     s.toLowerCase()
       .replace(/tél\.?\s*:?\s*/gi, "")
       .replace(/tel\.?\s*:?\s*/gi, "")
+      .replace(/téléphone\s*:?\s*/gi, "")
       .replace(/[-–—]/g, " ")
-      .replace(/[.,;]/g, "")
+      .replace(/[.,;:]/g, "")
       .replace(/\s+/g, " ")
       .trim();
 
-  const senderInfoNorms = [senderName, ...senderAddress.split("\n").filter(Boolean)]
-    .map(fuzzyNorm)
-    .filter(Boolean);
+  const senderParts = [senderName, ...senderAddress.split("\n").filter(Boolean)];
+  const senderNorms = senderParts.map(fuzzyNorm).filter(Boolean);
 
-  const allRawLines = text.split("\n");
-  let skipIdx = 0;
-  for (let i = 0; i < allRawLines.length; i++) {
-    const norm = fuzzyNorm(allRawLines[i]);
-    if (
-      norm === "" ||
-      senderInfoNorms.some((si) => norm === si || norm.includes(si) || si.includes(norm))
-    ) {
-      skipIdx = i + 1;
-    } else {
-      break;
-    }
+  // Detect phone number in sender address
+  const phoneMatch = senderAddress.match(/(0\d[\s.]?\d{2}[\s.]?\d{2}[\s.]?\d{2}[\s.]?\d{2})/);
+  const senderPhone = phoneMatch?.[1] || "";
+
+  // Walk through raw lines, skip sender info at the top
+  let idx = 0;
+  for (; idx < rawLines.length; idx++) {
+    const norm = fuzzyNorm(rawLines[idx]);
+    if (norm === "") continue;
+    const isSenderLine = senderNorms.some(
+      (si) => norm === si || norm.includes(si) || si.includes(norm)
+    );
+    // Also skip phone-only lines
+    const isPhoneLine = /^(tél|tel|téléphone)?\s*:?\s*0\d[\s.]\d{2}/i.test(rawLines[idx].trim());
+    if (!isSenderLine && !isPhoneLine) break;
   }
-  const rawLines = allRawLines.slice(skipIdx);
 
-  for (const raw of rawLines) {
-    if (raw.trim() === "") {
-      renderLines.push({
-        text: "", font: fontRegular, size: SZ_BODY, color: C_INK,
-        indent: 0, spaceBefore: LH * 0.95, type: "spacer",
+  // Now extract structured parts from remaining lines
+  let dateLine = "";
+  const recipientLines: string[] = [];
+  let objetLine = "";
+  const bodyLines: string[] = [];
+  let phase: "pre" | "recipient" | "body" = "pre";
+
+  for (let i = idx; i < rawLines.length; i++) {
+    const line = rawLines[i];
+    const trimmed = line.trim();
+    const clean = stripMarkdown(trimmed);
+
+    // Date detection (e.g. "À Paris, le 23 mars 2026" or "23 mars 2026" or "Paris, le 23/03/2026")
+    if (
+      phase === "pre" &&
+      !dateLine &&
+      (/^\d{1,2}\s+(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+\d{4}/i.test(clean) ||
+       /^(à|a)\s+.+,\s*le\s+\d/i.test(clean) ||
+       /^\d{1,2}[/.\-]\d{1,2}[/.\-]\d{4}$/.test(clean))
+    ) {
+      dateLine = clean;
+      continue;
+    }
+
+    // Objet detection
+    if (/^(objet|OBJET)\s*:/i.test(clean)) {
+      objetLine = clean;
+      phase = "body";
+      continue;
+    }
+
+    // Recipient: lines before "Objet:" or body start, after date
+    if (phase === "pre" || phase === "recipient") {
+      if (trimmed === "") {
+        if (recipientLines.length > 0) phase = "recipient";
+        continue;
+      }
+      // If we hit a salutation, switch to body
+      if (/^(madame|monsieur|cher|chère)/i.test(clean)) {
+        phase = "body";
+        bodyLines.push(trimmed);
+        continue;
+      }
+      if (recipientLines.length < 6) {
+        recipientLines.push(clean);
+        phase = "recipient";
+        continue;
+      }
+    }
+
+    // Body
+    phase = "body";
+    bodyLines.push(trimmed);
+  }
+
+  // If no date was found, use today
+  if (!dateLine) {
+    const now = new Date();
+    const months = [
+      "janvier", "février", "mars", "avril", "mai", "juin",
+      "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+    ];
+    dateLine = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+  }
+
+  // ── Pre-compute body render lines ─────────────────────────────────────────
+
+  type LineKind = "text" | "bold" | "objet" | "list" | "spacer";
+
+  interface RenderLine {
+    text: string;
+    font: PDFFont;
+    size: number;
+    color: typeof C_INK;
+    indent: number;
+    kind: LineKind;
+  }
+
+  const rLines: RenderLine[] = [];
+
+  for (const raw of bodyLines) {
+    if (raw === "") {
+      rLines.push({
+        text: "", font: fontReg, size: SZ_BODY, color: C_INK,
+        indent: 0, kind: "spacer",
       });
       continue;
     }
 
-    const wasBold = isFullBoldMarkdown(raw.trim());
-    const clean = stripMarkdown(raw.trim());
+    const wasBold = isFullBold(raw);
+    const clean = stripMarkdown(raw);
     if (!clean) continue;
 
-    const isListItem = /^[-–•]\s/.test(clean);
-    const isObjet = /^(Objet|OBJET)\s*:/.test(clean);
-
-    // Bold only for: explicit markdown bold AND short lines (salutation, closing, signature)
-    // — never make full paragraphs bold just because they happen to start with "Je vous"
-    const isBold = wasBold && clean.length < 80;
-
-    const font   = isBold ? fontBold : fontRegular;
-    const indent = isListItem ? 14 : 0;
+    const isList = /^[-–•]\s/.test(clean);
+    const isBold = wasBold && clean.length < 100;
+    const font = isBold ? fontBold : fontReg;
+    const indent = isList ? 16 : 0;
     const availW = BODY_W - indent;
 
-    const wrapped = wrapText(clean, font, SZ_BODY, availW);
-    wrapped.forEach((wl, i) => {
-      renderLines.push({
-        text: wl,
-        font,
-        size: SZ_BODY,
-        color: C_INK,
-        indent,
-        spaceBefore: 0,
-        type: isObjet && i === 0 ? "objet" : (isBold ? "bold" : "normal"),
+    for (const wl of wrapText(clean, font, SZ_BODY, availW)) {
+      rLines.push({
+        text: wl, font, size: SZ_BODY, color: C_INK,
+        indent, kind: isList ? "list" : (isBold ? "bold" : "text"),
       });
-    });
+    }
   }
 
-  // ── Measure total height ──
-  const lineH = (rl: RenderLine) => rl.type === "spacer" ? rl.spaceBefore : LH;
+  // ── Calculate page layout ─────────────────────────────────────────────────
 
-  let totalH = SENDER_BLOCK_H + LH;
-  for (const rl of renderLines) totalH += lineH(rl);
+  const HEADER_H = 32;           // brand bar height
+  const FOOTER_H = 28;
+  const contentTop = A4_H - MT - HEADER_H - 12;
+  const contentBottom = MB + FOOTER_H;
+  const pageContentH = contentTop - contentBottom;
 
-  const pageH = CONTENT_TOP - CONTENT_BOTTOM;
+  // First page has sender + recipient blocks before body
+  const senderBlockH = 10 + senderParts.length * LH_SENDER + (senderPhone ? LH_SENDER : 0) + 12;
+  const recipientBlockH = recipientLines.length > 0 ? (recipientLines.length * LH_SENDER + 8) : 0;
+  const dateH = LH_BODY + 4;
+  const objetH = objetLine ? (LH_BODY + 16) : 0;
+  const headerBlocksH = senderBlockH + 16 + recipientBlockH + dateH + 8 + objetH + 8;
+
+  let bodyH = 0;
+  for (const rl of rLines) bodyH += rl.kind === "spacer" ? LH_BODY * 0.7 : LH_BODY;
+
+  const firstPageBody = pageContentH - headerBlocksH;
   let totalPages = 1;
-  let remaining = totalH - pageH;
-  while (remaining > 0) { totalPages++; remaining -= pageH; }
+  let overflow = bodyH - firstPageBody;
+  while (overflow > 0) {
+    totalPages++;
+    overflow -= pageContentH;
+  }
 
-  // ── Create pages ──
-  const pages: ReturnType<PDFDocument["addPage"]>[] = [];
+  // ── Create pages ──────────────────────────────────────────────────────────
+
+  const pages: PDFPage[] = [];
   for (let i = 0; i < totalPages; i++) {
     pages.push(pdfDoc.addPage([A4_W, A4_H]));
   }
-  pages.forEach((p, i) => drawChrome(p, i + 1, totalPages));
 
-  // ── Render sender block on page 1 ──
+  // ── Draw chrome on every page ─────────────────────────────────────────────
+
+  const drawChrome = (page: PDFPage, pageNum: number) => {
+    // White background
+    page.drawRectangle({
+      x: 0, y: 0, width: A4_W, height: A4_H, color: C_WHITE,
+    });
+
+    // Top accent line (thin, elegant)
+    page.drawRectangle({
+      x: 0, y: A4_H - 2.5, width: A4_W, height: 2.5, color: C_ACCENT,
+    });
+
+    // Header bar
+    const headerBarY = A4_H - MT;
+
+    // Logo
+    if (logoImage) {
+      const logoH = 20;
+      const logoW = logoImage.width * (logoH / logoImage.height);
+      page.drawImage(logoImage, {
+        x: ML, y: headerBarY,
+        width: logoW, height: logoH,
+      });
+    } else {
+      page.drawRectangle({
+        x: ML, y: headerBarY + 2, width: 18, height: 18, color: C_ACCENT,
+      });
+      page.drawText("LM", {
+        x: ML + 2.5, y: headerBarY + 7,
+        size: 8, font: fontBold, color: C_WHITE,
+      });
+    }
+
+    // Type badge (right)
+    const typeLabel = typeName.toUpperCase();
+    const typeLabelW = fontReg.widthOfTextAtSize(typeLabel, SZ_TINY);
+    const badgeW = typeLabelW + 14;
+    const badgeX = A4_W - MR - badgeW;
+    const badgeY = headerBarY + 3;
+    page.drawRectangle({
+      x: badgeX, y: badgeY,
+      width: badgeW, height: 15,
+      color: C_BG_LIGHT,
+    });
+    page.drawText(typeLabel, {
+      x: badgeX + 7, y: badgeY + 4.5,
+      size: SZ_TINY, font: fontReg, color: C_MUTED,
+    });
+
+    // Header separator
+    page.drawLine({
+      start: { x: ML, y: headerBarY - 6 },
+      end: { x: A4_W - MR, y: headerBarY - 6 },
+      thickness: 0.4, color: C_RULE,
+    });
+
+    // Footer
+    const footerY = MB;
+
+    // Bottom accent line
+    page.drawRectangle({
+      x: ML, y: footerY + FOOTER_H - 2,
+      width: BODY_W, height: 0.4,
+      color: C_RULE,
+    });
+
+    page.drawText(
+      "Document généré par LettreMagique.com · Outil d'aide à la rédaction — ne constitue pas un conseil juridique.",
+      { x: ML, y: footerY + 10, size: 6, font: fontReg, color: C_LIGHT }
+    );
+
+    if (totalPages > 1) {
+      const pnText = `${pageNum}/${totalPages}`;
+      drawTextRight(page, pnText, A4_W - MR, footerY + 10, fontReg, 6, C_LIGHT);
+    }
+  };
+
+  pages.forEach((p, i) => drawChrome(p, i + 1));
+
+  // ── Render content ────────────────────────────────────────────────────────
+
   let pageIdx = 0;
   let curPage = pages[0];
-  let y = CONTENT_TOP;
+  let y = contentTop;
 
-  // Sender card with left accent border
+  const nextPage = () => {
+    pageIdx++;
+    curPage = pages[pageIdx];
+    y = contentTop;
+  };
+
+  const ensureSpace = (h: number) => {
+    if (y - h < contentBottom) nextPage();
+  };
+
+  // ── SENDER BLOCK (top left) ──
+  // Background card
+  const senderCardY = y - senderBlockH;
   curPage.drawRectangle({
-    x: ML, y: y - SENDER_BLOCK_H,
-    width: BODY_W, height: SENDER_BLOCK_H,
-    color: C_PAPER,
+    x: ML, y: senderCardY,
+    width: BODY_W * 0.52, height: senderBlockH,
+    color: C_BG_LIGHT,
   });
+  // Accent left border
   curPage.drawRectangle({
-    x: ML, y: y - SENDER_BLOCK_H,
-    width: 3, height: SENDER_BLOCK_H,
+    x: ML, y: senderCardY,
+    width: 2.5, height: senderBlockH,
     color: C_ACCENT,
   });
 
   y -= 14;
-  curPage.drawText("EXPÉDITEUR", {
-    x: ML + 12, y,
-    size: SZ_LABEL, font: fontRegular, color: C_MUTED,
-  });
-  y -= 4;
 
-  y -= LH_TIGHT;
+  // Sender name (bold)
   curPage.drawText(senderName, {
-    x: ML + 12, y,
-    size: SZ_BODY + 0.5, font: fontBold, color: C_INK,
+    x: ML + 14, y,
+    size: SZ_HEADER, font: fontBold, color: C_INK,
   });
+  y -= LH_SENDER + 2;
 
-  for (const addrLine of senderAddress.split("\n").filter(Boolean)) {
-    y -= LH_TIGHT;
-    curPage.drawText(addrLine, {
-      x: ML + 12, y,
-      size: SZ_BODY - 0.5, font: fontRegular, color: C_INK,
+  // Sender address lines
+  for (const line of senderAddress.split("\n").filter(Boolean)) {
+    curPage.drawText(line, {
+      x: ML + 14, y,
+      size: SZ_SMALL, font: fontReg, color: C_INK,
     });
+    y -= LH_SENDER;
   }
-  y -= 14;
-  y -= LH;
 
-  // ── Render body lines ──
-  const advancePage = () => {
-    pageIdx++;
-    curPage = pages[pageIdx];
-    y = CONTENT_TOP;
-  };
+  // Sender phone
+  if (senderPhone) {
+    curPage.drawText(senderPhone, {
+      x: ML + 14, y,
+      size: SZ_SMALL, font: fontReg, color: C_MUTED,
+    });
+    y -= LH_SENDER;
+  }
 
-  for (const rl of renderLines) {
-    const h = lineH(rl);
-    if (y - h < CONTENT_BOTTOM) advancePage();
+  y -= 8;
 
-    if (rl.type === "spacer") {
-      y -= rl.spaceBefore;
+  // ── RECIPIENT BLOCK (right-aligned) ──
+  if (recipientLines.length > 0) {
+    y -= 12;
+    const recipX = A4_W - MR - BODY_W * 0.48;
+
+    for (let i = 0; i < recipientLines.length; i++) {
+      const f = i === 0 ? fontBold : fontReg;
+      const sz = i === 0 ? SZ_BODY : SZ_SMALL;
+      curPage.drawText(recipientLines[i], {
+        x: recipX, y,
+        size: sz, font: f, color: C_INK,
+      });
+      y -= LH_SENDER;
+    }
+    y -= 4;
+  }
+
+  // ── DATE (right-aligned) ──
+  y -= 8;
+  drawTextRight(curPage, dateLine, A4_W - MR, y, fontItalic, SZ_SMALL, C_MUTED);
+  y -= LH_BODY + 4;
+
+  // ── OBJET LINE ──
+  if (objetLine) {
+    ensureSpace(LH_BODY + 12);
+
+    // Objet background
+    const objetW = BODY_W;
+    curPage.drawRectangle({
+      x: ML, y: y - 4,
+      width: objetW, height: LH_BODY + 8,
+      color: C_BG_LIGHT,
+    });
+    // Accent left border
+    curPage.drawRectangle({
+      x: ML, y: y - 4,
+      width: 2.5, height: LH_BODY + 8,
+      color: C_ACCENT,
+    });
+
+    curPage.drawText(objetLine, {
+      x: ML + 12, y,
+      size: SZ_BODY, font: fontBold, color: C_ACCENT,
+    });
+    y -= LH_BODY + 16;
+  }
+
+  // ── BODY ──
+  for (const rl of rLines) {
+    if (rl.kind === "spacer") {
+      y -= LH_BODY * 0.7;
       continue;
     }
 
-    // OBJET: pill background + left accent bar
-    if (rl.type === "objet") {
-      const tw = rl.font.widthOfTextAtSize(rl.text, rl.size);
+    ensureSpace(LH_BODY);
+
+    // List item bullet
+    if (rl.kind === "list") {
       curPage.drawRectangle({
-        x: ML, y: y - 3,
-        width: Math.max(tw + 20, BODY_W * 0.6),
-        height: LH - 1,
-        color: C_OBJET,
-      });
-      curPage.drawRectangle({
-        x: ML, y: y - 3,
-        width: 3, height: LH - 1,
+        x: ML + 6, y: y + 3,
+        width: 3, height: 3,
         color: C_ACCENT,
       });
     }
 
     curPage.drawText(rl.text, {
-      x: ML + rl.indent + (rl.type === "objet" ? 8 : 0),
+      x: ML + rl.indent,
       y,
       size: rl.size,
       font: rl.font,
-      color: rl.type === "objet" ? C_ACCENT : rl.color,
+      color: rl.color,
     });
 
-    y -= LH;
+    y -= LH_BODY;
   }
 
-  // ─── Metadata ─────────────────────────────────────────────────────────────
+  // ── Bottom accent stripe ──
+  const stripeY = MB + FOOTER_H + 4;
+  if (pageIdx === pages.length - 1 && y > stripeY + 16) {
+    // Decorative dashed line above footer (only on last page if space)
+    for (let dx = 0; dx < BODY_W; dx += 8) {
+      curPage.drawRectangle({
+        x: ML + dx, y: stripeY,
+        width: 4, height: 1,
+        color: C_RULE,
+      });
+    }
+  }
+
+  // ── Metadata ──────────────────────────────────────────────────────────────
   pdfDoc.setTitle(`${typeName} — LettreMagique`);
   pdfDoc.setAuthor(senderName);
   pdfDoc.setCreator("LettreMagique · lettre-magique.com");
   pdfDoc.setSubject(`Courrier : ${typeName}`);
-
-  void SZ_SMALL; void fontItalic;
 
   return pdfDoc.save();
 }
