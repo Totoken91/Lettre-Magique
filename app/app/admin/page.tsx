@@ -12,6 +12,8 @@ interface Stats {
   usersCount: number;
   lettersCount: number;
   lettersThisWeek: number;
+  anonLettersCount: number;
+  anonLettersThisWeek: number;
   uniqueVisits30d: number;
   uniqueVisits7d: number;
   proCount: number;
@@ -51,6 +53,8 @@ async function getStats(): Promise<Stats | null> {
     { count: usersCount },
     { count: lettersCount },
     { count: lettersThisWeek },
+    { count: anonLettersCount },
+    { count: anonLettersThisWeek },
     { data: visits30d },
     { data: visits7d },
     { data: recentLetters },
@@ -60,6 +64,13 @@ async function getStats(): Promise<Stats | null> {
     (admin.from("letters") as any).select("*", { count: "exact", head: true }),
     (admin.from("letters") as any)
       .select("*", { count: "exact", head: true })
+      .gte("created_at", sevenDaysAgo),
+    (admin.from("letters") as any)
+      .select("*", { count: "exact", head: true })
+      .is("user_id", null),
+    (admin.from("letters") as any)
+      .select("*", { count: "exact", head: true })
+      .is("user_id", null)
       .gte("created_at", sevenDaysAgo),
     (admin.from("page_views") as any)
       .select("session_id")
@@ -104,6 +115,8 @@ async function getStats(): Promise<Stats | null> {
     usersCount: usersCount ?? 0,
     lettersCount: lettersCount ?? 0,
     lettersThisWeek: lettersThisWeek ?? 0,
+    anonLettersCount: anonLettersCount ?? 0,
+    anonLettersThisWeek: anonLettersThisWeek ?? 0,
     uniqueVisits30d,
     uniqueVisits7d,
     proCount: proCount ?? 0,
@@ -199,6 +212,28 @@ export default async function AdminPage() {
               <Stat label="Courriers (7j)" value={stats.lettersThisWeek} />
               <Stat label="Visiteurs uniques (30j)" value={stats.uniqueVisits30d} sub="hors bots" />
               <Stat label="Visiteurs uniques (7j)" value={stats.uniqueVisits7d} sub="hors bots" />
+            </div>
+          </div>
+
+          {/* Essais anonymes */}
+          <div>
+            <div
+              className="text-[10px] uppercase tracking-[2px] mb-4"
+              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+            >
+              Essais sans compte
+            </div>
+            <div className="grid grid-cols-2 gap-[2px]">
+              <Stat
+                label="Courriers gratuits (total)"
+                value={stats.anonLettersCount}
+                sub={`${stats.lettersCount > 0 ? Math.round((stats.anonLettersCount / stats.lettersCount) * 100) : 0}% du total généré`}
+              />
+              <Stat
+                label="Courriers gratuits (7j)"
+                value={stats.anonLettersThisWeek}
+                sub="utilisateurs sans compte"
+              />
             </div>
           </div>
 
