@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { LetterType } from "@/data/letter-types";
 import { supabase } from "@/lib/supabase/client";
-import AuthModal from "./AuthModal";
 
 interface Props {
   letterType: LetterType;
@@ -43,7 +42,6 @@ export default function DynamicForm({ letterType }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [limitReached, setLimitReached] = useState(false);
   const [refused, setRefused] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleChange = (id: string, value: string) => {
     setValues((prev) => ({ ...prev, [id]: value }));
@@ -114,25 +112,11 @@ export default function DynamicForm({ letterType }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isComplete()) return;
-
-    // getSession() lit le cache local (pas de réseau) — plus fiable pour vérifier l'auth
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      setShowAuthModal(true);
-      return;
-    }
-
     await generate();
   };
 
   return (
     <>
-    {showAuthModal && (
-      <AuthModal
-        onSuccess={() => { setShowAuthModal(false); generate(); }}
-        onClose={() => setShowAuthModal(false)}
-      />
-    )}
     <form onSubmit={handleSubmit}>
       {/* Infos expéditeur */}
       <div
@@ -331,21 +315,30 @@ export default function DynamicForm({ letterType }: Props) {
             className="text-[10px] uppercase tracking-[2px] mb-2"
             style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
           >
-            Limite atteinte
+            Courrier gratuit utilisé
           </div>
           <p
-            className="text-sm leading-[1.6] mb-3"
+            className="text-sm leading-[1.6] mb-4"
             style={{ fontFamily: "var(--font-lora)", color: "var(--ink)" }}
           >
-            Vous avez utilisé votre courrier gratuit. Passez en <strong>Pro</strong> pour générer des courriers à l&apos;infini.
+            Vous avez utilisé votre courrier gratuit. Créez un compte pour sauvegarder vos courriers, ou passez en <strong>Pro</strong> pour des courriers illimités.
           </p>
-          <a
-            href="/tarifs"
-            className="inline-block px-6 py-2.5 text-xs font-bold uppercase tracking-[0.5px] text-white no-underline"
-            style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
-          >
-            Voir les offres →
-          </a>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="/signup"
+              className="inline-block px-5 py-2.5 text-xs font-bold uppercase tracking-[0.5px] no-underline"
+              style={{ fontFamily: "var(--font-syne)", background: "var(--ink)", color: "var(--white-warm)" }}
+            >
+              Créer un compte gratuit
+            </a>
+            <a
+              href="/tarifs"
+              className="inline-block px-5 py-2.5 text-xs font-bold uppercase tracking-[0.5px] text-white no-underline"
+              style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
+            >
+              Voir les offres Pro →
+            </a>
+          </div>
         </div>
       )}
 

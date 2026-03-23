@@ -45,7 +45,7 @@ export default async function Home() {
             className="text-[11px] uppercase tracking-[3px] mb-7 animate-fade-up-1"
             style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
           >
-            Courriers administratifs générés par IA
+            Le courrier qui fait bouger les choses
           </div>
 
           <h1
@@ -56,9 +56,9 @@ export default async function Home() {
               color: "var(--white-warm)",
             }}
           >
-            Votre courrier
+            Faites plier
             <br />
-            rédigé en
+            votre assurance,
             <br />
             <em
               style={{
@@ -68,7 +68,7 @@ export default async function Home() {
                 fontWeight: 500,
               }}
             >
-              2 minutes
+              votre opérateur.
             </em>
           </h1>
 
@@ -76,9 +76,9 @@ export default async function Home() {
             className="text-lg max-w-[500px] leading-[1.7] mb-11 animate-fade-up-3"
             style={{ fontFamily: "var(--font-lora)", color: "#888" }}
           >
-            Résiliation, réclamation, mise en demeure, contestation — répondez
-            à 3 questions, obtenez un courrier professionnel personnalisé.
-            Export PDF immédiat.
+            Résiliation refusée ? Remboursement bloqué ? Facture erronée ?
+            Générez un courrier solide et personnalisé en 30 secondes —
+            sans inscription, export PDF immédiat.
           </p>
 
           <div className="flex gap-4 items-center flex-wrap animate-fade-up-4">
@@ -104,7 +104,7 @@ export default async function Home() {
           >
             {[
               { val: "2 min", label: "Au lieu de 30 minutes" },
-              { val: "1er", label: "Courrier gratuit" },
+              { val: "1er", label: "Sans inscription" },
               { val: "PDF", label: "Prêt à envoyer" },
               { val: "100%", label: "Personnalisé par IA" },
             ].map((s) => (
@@ -652,7 +652,7 @@ export default async function Home() {
             className="text-[11px] uppercase tracking-[3px] mb-5"
             style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
           >
-            Commencer maintenant
+            Essayez maintenant — sans inscription
           </div>
           <h2
             className="font-extrabold tracking-[-1.5px] leading-[1.1] mb-4"
@@ -680,17 +680,17 @@ export default async function Home() {
             className="text-base mb-9 leading-[1.7]"
             style={{ fontFamily: "var(--font-lora)", color: "#777" }}
           >
-            Créez votre compte en 30 secondes et générez votre premier courrier
-            professionnel gratuitement. Sans carte bancaire.
+            Générez votre premier courrier professionnel maintenant.
+            Aucun compte requis, aucune carte bancaire. Résultat en 30 secondes.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/signup"
+              href="/generateur"
               className="btn-primary inline-flex items-center justify-center gap-2.5 px-10 py-4 text-sm font-bold text-white uppercase tracking-[0.5px] no-underline transition-all duration-200"
               style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
             >
-              Créer mon compte gratuit →
+              Générer un courrier →
             </Link>
             <Link
               href="/login"
@@ -709,7 +709,7 @@ export default async function Home() {
             className="mt-6 text-[10px] uppercase tracking-[1px]"
             style={{ fontFamily: "var(--font-dm-mono)", color: "#444" }}
           >
-            Gratuit · 1er courrier offert · Aucun engagement
+            Gratuit · Sans inscription · Aucun engagement
           </div>
         </div>
       </section>
