@@ -71,12 +71,23 @@ export default async function GenerateurTypePage({ params }: Props) {
             </em>
           </h1>
           <p
-            className="text-base leading-[1.7]"
+            className="text-base leading-[1.7] mb-5"
             style={{ fontFamily: "var(--font-lora)", color: "#888" }}
           >
             Répondez aux questions ci-dessous. L&apos;IA générera un courrier
             personnalisé et professionnel en quelques secondes.
           </p>
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-[1px]"
+            style={{
+              fontFamily: "var(--font-dm-mono)",
+              color: "var(--green)",
+              border: "1px solid #2d6a4f55",
+              background: "#2d6a4f18",
+            }}
+          >
+            ✓ Gratuit · Sans inscription · Sans carte bancaire
+          </div>
         </div>
       </section>
 

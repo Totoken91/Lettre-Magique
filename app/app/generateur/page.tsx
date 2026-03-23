@@ -72,12 +72,32 @@ export default async function GenerateurPage() {
             </em>
           </h1>
           <p
-            className="text-base max-w-[500px] leading-[1.7]"
+            className="text-base max-w-[500px] leading-[1.7] mb-5"
             style={{ fontFamily: "var(--font-lora)", color: "#888" }}
           >
-            Sélectionnez une catégorie ci-dessous. Premier courrier 100% gratuit,
-            sans inscription.
+            Sélectionnez une catégorie ci-dessous.
           </p>
+          <div className="flex flex-wrap gap-3">
+            {[
+              "✓ 1er courrier gratuit",
+              "✓ Sans inscription",
+              "✓ Sans carte bancaire",
+              "✓ PDF prêt à envoyer",
+            ].map((item) => (
+              <span
+                key={item}
+                className="text-[10px] uppercase tracking-[1px] px-3 py-1.5"
+                style={{
+                  fontFamily: "var(--font-dm-mono)",
+                  color: "var(--green)",
+                  border: "1px solid #2d6a4f55",
+                  background: "#2d6a4f18",
+                }}
+              >
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 

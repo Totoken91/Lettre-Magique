@@ -410,7 +410,7 @@ export default function DynamicForm({ letterType }: Props) {
           color: "var(--muted-lm)",
         }}
       >
-        Premier courrier gratuit · Aucune carte requise
+        Gratuit · <strong style={{ color: "var(--green)" }}>Sans inscription</strong> · Sans carte bancaire
       </p>
     </form>
     </>
