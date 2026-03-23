@@ -6,6 +6,8 @@ interface PDFParams {
   text: string;
   senderName: string;
   senderAddress: string;
+  senderPhone?: string;
+  senderEmail?: string;
   typeName: string;
 }
 
@@ -87,7 +89,8 @@ function drawTextRight(
 // ─── Main generator ─────────────────────────────────────────────────────────
 
 export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> {
-  const { text, senderName, senderAddress, typeName } = params;
+  const { text, senderName, senderAddress, senderPhone: rawPhone, senderEmail, typeName } = params;
+  const senderPhone = rawPhone?.trim() || "";
 
   const pdfDoc = await PDFDocument.create();
   const fontReg    = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -132,9 +135,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const senderParts = [senderName, ...senderAddress.split("\n").filter(Boolean)];
   const senderNorms = senderParts.map(fuzzyNorm).filter(Boolean);
 
-  // Detect phone number in sender address
-  const phoneMatch = senderAddress.match(/(0\d[\s.]?\d{2}[\s.]?\d{2}[\s.]?\d{2}[\s.]?\d{2})/);
-  const senderPhone = phoneMatch?.[1] || "";
+  // senderPhone comes as a dedicated param — no need to extract from address
 
   // Phone line detector (all formats: 0781452482 / 07 81 45 24 82 / 07.81.45.24.82)
   const isPhoneLine = (s: string) =>
@@ -275,7 +276,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const pageContentH = contentTop - contentBottom;
 
   // First page has sender + recipient blocks SIDE BY SIDE before body
-  const senderBlockH = 14 + senderParts.length * LH_SENDER + (senderPhone ? LH_SENDER : 0) + 14;
+  const senderBlockH = 14 + senderParts.length * LH_SENDER + (senderPhone ? LH_SENDER : 0) + (senderEmail ? LH_SENDER : 0) + 14;
   const recipientBlockH = recipientLines.length > 0 ? (recipientLines.length * LH_SENDER + 4) : 0;
   const addrRowH = Math.max(senderBlockH, recipientBlockH);
   const dateH = LH_BODY + 4;
@@ -414,7 +415,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
   // Vertical centering: compute total text span then align to card center
   const senderAddrLines = senderAddress.split("\n").filter(Boolean);
-  const numSenderLines = 1 + senderAddrLines.length + (senderPhone ? 1 : 0);
+  const numSenderLines = 1 + senderAddrLines.length + (senderPhone ? 1 : 0) + (senderEmail ? 1 : 0);
   const senderTextSpan = (numSenderLines - 1) * LH_SENDER;
   const senderCardCenterY = addrRowBottomY + addrRowH / 2;
   let sy = senderCardCenterY + senderTextSpan / 2;
@@ -435,6 +436,14 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
   if (senderPhone) {
     curPage.drawText(senderPhone, {
+      x: ML + 14, y: sy,
+      size: SZ_SMALL, font: fontReg, color: C_MUTED,
+    });
+    sy -= LH_SENDER;
+  }
+
+  if (senderEmail) {
+    curPage.drawText(senderEmail, {
       x: ML + 14, y: sy,
       size: SZ_SMALL, font: fontReg, color: C_MUTED,
     });

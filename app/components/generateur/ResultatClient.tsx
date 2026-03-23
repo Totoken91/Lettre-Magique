@@ -13,6 +13,8 @@ interface ResultData {
   typeName: string;
   senderName: string;
   senderAddress: string;
+  senderPhone?: string;
+  senderEmail?: string;
   formData: Record<string, string>;
 }
 
@@ -123,6 +125,8 @@ export default function ResultatClient() {
             typeName={result.typeName}
             senderName={result.senderName}
             senderAddress={result.senderAddress}
+            senderPhone={result.senderPhone}
+            senderEmail={result.senderEmail}
             isLoggedIn={isLoggedIn ?? false}
             onAuthRequired={() => setShowAuthModal(true)}
           />

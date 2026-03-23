@@ -2,7 +2,7 @@ import { generateLetterPDF } from "@/lib/pdf/generator";
 
 export async function POST(req: Request) {
   try {
-    const { text, senderName, senderAddress, typeName } = await req.json();
+    const { text, senderName, senderAddress, senderPhone, senderEmail, typeName } = await req.json();
 
     if (!text) {
       return Response.json({ error: "Texte manquant" }, { status: 400 });
@@ -12,6 +12,8 @@ export async function POST(req: Request) {
       text,
       senderName,
       senderAddress,
+      senderPhone,
+      senderEmail,
       typeName,
     });
 

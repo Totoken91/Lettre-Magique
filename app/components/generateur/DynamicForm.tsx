@@ -15,6 +15,8 @@ export default function DynamicForm({ letterType }: Props) {
   const [values, setValues] = useState<Record<string, string>>({});
   const [senderName, setSenderName] = useState("");
   const [senderAddress, setSenderAddress] = useState("");
+  const [senderPhone, setSenderPhone] = useState("");
+  const [senderEmail, setSenderEmail] = useState("");
   const [profileLoaded, setProfileLoaded] = useState(false);
 
   // Pré-remplir avec les coordonnées sauvegardées
@@ -23,7 +25,7 @@ export default function DynamicForm({ letterType }: Props) {
       if (!session) return;
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, address, postal_code, city, phone")
+        .select("full_name, address, postal_code, city, phone, email_contact")
         .eq("id", session.user.id)
         .single();
       if (data?.full_name) setSenderName(data.full_name);
@@ -31,10 +33,11 @@ export default function DynamicForm({ letterType }: Props) {
         const parts = [
           data.address,
           [data.postal_code, data.city].filter(Boolean).join(" "),
-          data.phone || "",
         ].filter(Boolean);
         setSenderAddress(parts.join("\n"));
       }
+      if (data?.phone) setSenderPhone(data.phone);
+      if (data?.email_contact) setSenderEmail(data.email_contact);
       setProfileLoaded(!!data?.full_name || !!data?.address);
     });
   }, []);
@@ -70,6 +73,8 @@ export default function DynamicForm({ letterType }: Props) {
           formData: values,
           senderName,
           senderAddress,
+          senderPhone,
+          senderEmail,
         }),
       });
 
@@ -90,6 +95,8 @@ export default function DynamicForm({ letterType }: Props) {
           typeName: letterType.name,
           senderName,
           senderAddress,
+          senderPhone,
+          senderEmail,
           formData: values,
         })
       );
@@ -189,7 +196,7 @@ export default function DynamicForm({ letterType }: Props) {
               onChange={(e) => setSenderAddress(e.target.value)}
               placeholder={"12 rue de la Paix\n75001 Paris"}
               required
-              rows={3}
+              rows={2}
               className="w-full px-4 py-3 text-sm outline-none transition-colors resize-none"
               style={{
                 fontFamily: "var(--font-lora)",
@@ -198,6 +205,54 @@ export default function DynamicForm({ letterType }: Props) {
                 color: "var(--ink)",
               }}
             />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="sender-phone"
+                className="block text-[11px] uppercase tracking-[1.5px] mb-2"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+              >
+                Téléphone <span style={{ color: "var(--light-lm)" }}>(optionnel)</span>
+              </label>
+              <input
+                id="sender-phone"
+                type="tel"
+                value={senderPhone}
+                onChange={(e) => setSenderPhone(e.target.value)}
+                placeholder="06 00 00 00 00"
+                className="w-full px-4 py-3 text-sm outline-none transition-colors"
+                style={{
+                  fontFamily: "var(--font-lora)",
+                  background: "var(--paper2)",
+                  border: "1.5px solid var(--rule)",
+                  color: "var(--ink)",
+                }}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="sender-email"
+                className="block text-[11px] uppercase tracking-[1.5px] mb-2"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+              >
+                Email <span style={{ color: "var(--light-lm)" }}>(optionnel)</span>
+              </label>
+              <input
+                id="sender-email"
+                type="email"
+                value={senderEmail}
+                onChange={(e) => setSenderEmail(e.target.value)}
+                placeholder="vous@example.com"
+                className="w-full px-4 py-3 text-sm outline-none transition-colors"
+                style={{
+                  fontFamily: "var(--font-lora)",
+                  background: "var(--paper2)",
+                  border: "1.5px solid var(--rule)",
+                  color: "var(--ink)",
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
