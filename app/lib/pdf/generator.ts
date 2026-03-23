@@ -274,12 +274,13 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const contentBottom = MB + FOOTER_H;
   const pageContentH = contentTop - contentBottom;
 
-  // First page has sender + recipient blocks before body
-  const senderBlockH = 10 + senderParts.length * LH_SENDER + (senderPhone ? LH_SENDER : 0) + 12;
-  const recipientBlockH = recipientLines.length > 0 ? (recipientLines.length * LH_SENDER + 8) : 0;
+  // First page has sender + recipient blocks SIDE BY SIDE before body
+  const senderBlockH = 14 + senderParts.length * LH_SENDER + (senderPhone ? LH_SENDER : 0) + 14;
+  const recipientBlockH = recipientLines.length > 0 ? (recipientLines.length * LH_SENDER + 4) : 0;
+  const addrRowH = Math.max(senderBlockH, recipientBlockH);
   const dateH = LH_BODY + 4;
-  const objetH = objetLine ? (LH_BODY + 16) : 0;
-  const headerBlocksH = senderBlockH + 16 + recipientBlockH + dateH + 8 + objetH + 8;
+  const objetH = objetLine ? (LH_BODY + 20) : 0;
+  const headerBlocksH = addrRowH + 20 + dateH + 12 + objetH + 12;
 
   let bodyH = 0;
   for (const rl of rLines) bodyH += rl.kind === "spacer" ? LH_BODY * 0.7 : LH_BODY;
@@ -395,71 +396,66 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     if (y - h < contentBottom) nextPage();
   };
 
-  // ── SENDER BLOCK (top left) ──
-  // Background card
-  const senderCardY = y - senderBlockH;
+  // ── SENDER (left) + RECIPIENT (right) at the same vertical level ──
+  const addrRowTopY = y;            // save Y for both blocks
+  const addrRowBottomY = y - addrRowH;
+
+  // Sender card background
   curPage.drawRectangle({
-    x: ML, y: senderCardY,
-    width: BODY_W * 0.52, height: senderBlockH,
+    x: ML, y: addrRowBottomY,
+    width: BODY_W * 0.50, height: addrRowH,
     color: C_BG_LIGHT,
   });
-  // Accent left border
   curPage.drawRectangle({
-    x: ML, y: senderCardY,
-    width: 2.5, height: senderBlockH,
+    x: ML, y: addrRowBottomY,
+    width: 2.5, height: addrRowH,
     color: C_ACCENT,
   });
 
-  y -= 14;
+  let sy = addrRowTopY - 14;
 
-  // Sender name (bold)
   curPage.drawText(senderName, {
-    x: ML + 14, y,
+    x: ML + 14, y: sy,
     size: SZ_HEADER, font: fontBold, color: C_INK,
   });
-  y -= LH_SENDER + 2;
+  sy -= LH_SENDER + 2;
 
-  // Sender address lines
   for (const line of senderAddress.split("\n").filter(Boolean)) {
     curPage.drawText(line, {
-      x: ML + 14, y,
+      x: ML + 14, y: sy,
       size: SZ_SMALL, font: fontReg, color: C_INK,
     });
-    y -= LH_SENDER;
+    sy -= LH_SENDER;
   }
 
-  // Sender phone
   if (senderPhone) {
     curPage.drawText(senderPhone, {
-      x: ML + 14, y,
+      x: ML + 14, y: sy,
       size: SZ_SMALL, font: fontReg, color: C_MUTED,
     });
-    y -= LH_SENDER;
   }
 
-  y -= 8;
-
-  // ── RECIPIENT BLOCK (right-aligned) ──
+  // Recipient block — right column, same top Y
   if (recipientLines.length > 0) {
-    y -= 12;
-    const recipX = A4_W - MR - BODY_W * 0.48;
-
+    const recipX = ML + BODY_W * 0.54;
+    let ry = addrRowTopY - 10;
     for (let i = 0; i < recipientLines.length; i++) {
       const f = i === 0 ? fontBold : fontReg;
       const sz = i === 0 ? SZ_BODY : SZ_SMALL;
       curPage.drawText(recipientLines[i], {
-        x: recipX, y,
+        x: recipX, y: ry,
         size: sz, font: f, color: C_INK,
       });
-      y -= LH_SENDER;
+      ry -= LH_SENDER;
     }
-    y -= 4;
   }
 
+  // Advance Y past both blocks
+  y = addrRowBottomY - 20;
+
   // ── DATE (right-aligned) ──
-  y -= 8;
   drawTextRight(curPage, dateLine, A4_W - MR, y, fontItalic, SZ_SMALL, C_MUTED);
-  y -= LH_BODY + 4;
+  y -= LH_BODY + 12;
 
   // ── OBJET LINE ──
   if (objetLine) {
