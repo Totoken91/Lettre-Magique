@@ -49,6 +49,7 @@ export default function LetterViewer({
   const [recipientEmail, setRecipientEmail] = useState("");
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailResult, setEmailResult] = useState<"idle" | "sent" | "error">("idle");
+  const [includeSender, setIncludeSender] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
 
@@ -111,7 +112,11 @@ export default function LetterViewer({
       const res = await fetch("/api/send-letter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recipientEmail, ...pdfPayload }),
+        body: JSON.stringify({
+          recipientEmail,
+          ...pdfPayload,
+          senderEmail: includeSender ? senderEmail : undefined,
+        }),
       });
       if (!res.ok) throw new Error("Send failed");
       setEmailResult("sent");
@@ -268,11 +273,27 @@ export default function LetterViewer({
               value={recipientEmail}
               onChange={(e) => setRecipientEmail(e.target.value)}
               placeholder="Email du destinataire"
-              className="w-full px-4 py-3 text-sm outline-none mb-4"
+              className="w-full px-4 py-3 text-sm outline-none mb-3"
               style={{ fontFamily: "var(--font-lora)", background: "var(--paper2)", border: "1.5px solid var(--rule)", color: "var(--ink)" }}
               onKeyDown={(e) => e.key === "Enter" && handleSendEmail()}
               autoFocus
             />
+            {senderEmail && (
+              <label className="flex items-center gap-2 mb-4 cursor-pointer select-none" style={{ fontFamily: "var(--font-dm-mono)" }}>
+                <input
+                  type="checkbox"
+                  checked={includeSender}
+                  onChange={(e) => setIncludeSender(e.target.checked)}
+                  className="w-4 h-4 accent-[var(--accent)] cursor-pointer"
+                />
+                <span className="text-xs" style={{ color: "var(--muted-lm)" }}>
+                  Inclure mon adresse pour être recontacté
+                  {includeSender && senderEmail && (
+                    <span style={{ color: "var(--ink)" }}> ({senderEmail})</span>
+                  )}
+                </span>
+              </label>
+            )}
             {emailResult === "sent" && (
               <div className="mb-4 p-3 text-sm" style={{ fontFamily: "var(--font-dm-mono)", background: "#e8f5e9", color: "var(--green)" }}>
                 ✓ Email envoyé avec succès
