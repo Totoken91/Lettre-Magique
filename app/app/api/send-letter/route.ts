@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     // Send via Resend
     const { error } = await getResend().emails.send({
-      from: `LettreMagique <${process.env.RESEND_FROM_EMAIL || "courrier@lettre-magique.fr"}>`,
+      from: `LettreMagique <${process.env.RESEND_FROM_EMAIL || "courrier@lettre-magique.com"}>`,
       to: recipientEmail,
       subject: `${typeName || "Courrier"} — envoyé via LettreMagique`,
       html: `
