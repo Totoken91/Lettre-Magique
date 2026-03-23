@@ -82,9 +82,9 @@ export default async function GenerateurPage() {
                 className="text-[10px] uppercase tracking-[1px] px-3 py-1.5"
                 style={{
                   fontFamily: "var(--font-dm-mono)",
-                  color: "var(--green)",
-                  border: "1px solid #2d6a4f55",
-                  background: "#2d6a4f18",
+                  color: "#d4f1e4",
+                  border: "1px solid #4ade8055",
+                  background: "#4ade8012",
                 }}
               >
                 {item}
