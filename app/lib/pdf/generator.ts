@@ -317,23 +317,35 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     // Header bar
     const headerBarY = A4_H - MT;
 
-    // Logo
+    // Logo + brand name
+    let logoEndX = ML;
     if (logoImage) {
-      const logoH = 20;
+      const logoH = 26;
       const logoW = logoImage.width * (logoH / logoImage.height);
       page.drawImage(logoImage, {
-        x: ML, y: headerBarY,
+        x: ML, y: headerBarY - 3,
         width: logoW, height: logoH,
       });
+      logoEndX = ML + logoW + 6;
     } else {
       page.drawRectangle({
-        x: ML, y: headerBarY + 2, width: 18, height: 18, color: C_ACCENT,
+        x: ML, y: headerBarY - 1, width: 22, height: 22, color: C_ACCENT,
       });
       page.drawText("LM", {
-        x: ML + 2.5, y: headerBarY + 7,
-        size: 8, font: fontBold, color: C_WHITE,
+        x: ML + 3, y: headerBarY + 5,
+        size: 10, font: fontBold, color: C_WHITE,
       });
+      logoEndX = ML + 28;
     }
+    // Brand text
+    page.drawText("Lettre", {
+      x: logoEndX, y: headerBarY + 4,
+      size: 9, font: fontBold, color: C_INK,
+    });
+    page.drawText("Magique", {
+      x: logoEndX + fontBold.widthOfTextAtSize("Lettre", 9), y: headerBarY + 4,
+      size: 9, font: fontBold, color: C_ACCENT,
+    });
 
     // Type badge (right)
     const typeLabel = typeName.toUpperCase();
@@ -449,10 +461,12 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     });
   }
 
-  // Recipient block — right column, same top Y
+  // Recipient block — right column, vertically centered like sender
   if (recipientLines.length > 0) {
     const recipX = ML + BODY_W * 0.54;
-    let ry = addrRowTopY - 10;
+    const recipTextSpan = (recipientLines.length - 1) * LH_SENDER;
+    const recipCenterY = addrRowBottomY + addrRowH / 2;
+    let ry = recipCenterY + recipTextSpan / 2;
     for (let i = 0; i < recipientLines.length; i++) {
       const f = i === 0 ? fontBold : fontReg;
       const sz = i === 0 ? SZ_BODY : SZ_SMALL;

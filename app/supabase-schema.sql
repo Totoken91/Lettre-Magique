@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS letters (
   paid BOOLEAN DEFAULT false,
   stripe_session_id TEXT,
   email TEXT,
-  user_id UUID REFERENCES auth.users(id)
+  user_id UUID REFERENCES auth.users(id),
+  is_favorite BOOLEAN NOT NULL DEFAULT false
 );
 
 -- Table des profils utilisateurs (statut pro)
@@ -124,6 +125,13 @@ CREATE TABLE IF NOT EXISTS applied_payment_sessions (
   applied_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE applied_payment_sessions ENABLE ROW LEVEL SECURITY;
+
+-- Migration : ajouter la colonne is_favorite si elle n'existe pas
+ALTER TABLE letters ADD COLUMN IF NOT EXISTS is_favorite BOOLEAN NOT NULL DEFAULT false;
+
+-- Politique : mise à jour par propriétaire
+CREATE POLICY "Users can update own letters" ON letters
+  FOR UPDATE USING (auth.uid() = user_id);
 
 -- Pour se passer admin (remplacer par l'UUID réel de votre compte) :
 -- UPDATE profiles SET is_admin = true WHERE id = 'votre-uuid-ici';

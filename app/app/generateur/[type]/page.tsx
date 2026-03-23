@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { LETTER_TYPES } from "@/data/letter-types";
 import DynamicForm from "@/components/generateur/DynamicForm";
+import StepBar from "@/components/generateur/StepBar";
 
 type Props = {
   params: Promise<{ type: string }>;
@@ -42,14 +43,15 @@ export default async function GenerateurTypePage({ params }: Props) {
           }}
         />
         <div className="max-w-[700px] mx-auto">
+          <StepBar current={2} />
           <div
-            className="text-[11px] uppercase tracking-[3px] mb-5"
+            className="text-[11px] uppercase tracking-[2px] mb-2 mt-[-8px]"
             style={{
               fontFamily: "var(--font-dm-mono)",
-              color: "var(--accent)",
+              color: "var(--muted-lm)",
             }}
           >
-            Étape 2 / 2 · {letterType.emoji} {letterType.name}
+            {letterType.emoji} {letterType.name}
           </div>
           <h1
             className="font-extrabold leading-[0.92] tracking-[-2px] mb-4"

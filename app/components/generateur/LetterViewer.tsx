@@ -45,7 +45,10 @@ export default function LetterViewer({
   const [editedText, setEditedText] = useState(text);
   const [editing, setEditing] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const [emailStatus, setEmailStatus] = useState<"idle" | "copied">("idle");
+  const [emailDialog, setEmailDialog] = useState(false);
+  const [recipientEmail, setRecipientEmail] = useState("");
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailResult, setEmailResult] = useState<"idle" | "sent" | "error">("idle");
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
 
@@ -100,15 +103,24 @@ export default function LetterViewer({
     onTextChange?.(newText);
   };
 
-  const handleEmailClick = () => {
-    navigator.clipboard.writeText(currentText).catch(() => {});
-    const subject = encodeURIComponent(`${typeName} — LettreMagique`);
-    const body = encodeURIComponent(currentText);
-    const fullUrl = `mailto:?subject=${subject}&body=${body}`;
-    window.location.href =
-      fullUrl.length <= 1800 ? fullUrl : `mailto:?subject=${subject}`;
-    setEmailStatus("copied");
-    setTimeout(() => setEmailStatus("idle"), 3500);
+  const handleSendEmail = async () => {
+    if (!recipientEmail.trim()) return;
+    setSendingEmail(true);
+    setEmailResult("idle");
+    try {
+      const res = await fetch("/api/send-letter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recipientEmail, ...pdfPayload }),
+      });
+      if (!res.ok) throw new Error("Send failed");
+      setEmailResult("sent");
+      setTimeout(() => { setEmailDialog(false); setEmailResult("idle"); setRecipientEmail(""); }, 2500);
+    } catch {
+      setEmailResult("error");
+    } finally {
+      setSendingEmail(false);
+    }
   };
 
   const triggerDownload = async () => {
@@ -217,20 +229,76 @@ export default function LetterViewer({
         </button>
 
         <button
-          onClick={handleEmailClick}
+          onClick={() => {
+            if (!isLoggedIn && onAuthRequired) { onAuthRequired(); return; }
+            setEmailDialog(true);
+          }}
           className="w-full py-4 text-sm font-bold uppercase tracking-[0.5px] transition-all duration-200 cursor-pointer hover:brightness-95"
           style={{
             fontFamily: "var(--font-syne)",
             border: "1.5px solid var(--ink)",
-            color: emailStatus === "copied" ? "var(--green, #2e7d32)" : "var(--ink)",
+            color: "var(--ink)",
             background: "transparent",
           }}
         >
-          {emailStatus === "copied"
-            ? "✓ Lettre copiée — colle-la dans ton email"
-            : "✉ Envoyer par email"}
+          ✉ Envoyer par email
         </button>
       </div>
+
+      {/* Email dialog */}
+      {emailDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setEmailDialog(false)}>
+          <div
+            className="w-full max-w-[440px] p-6"
+            style={{ background: "var(--paper)", border: "2px solid var(--rule)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-[10px] uppercase tracking-[2px] mb-4" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>
+              Envoyer le courrier par email
+            </div>
+            <p className="text-sm mb-4" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}>
+              Le PDF sera envoyé en pièce jointe à l&apos;adresse indiquée.
+            </p>
+            <input
+              type="email"
+              value={recipientEmail}
+              onChange={(e) => setRecipientEmail(e.target.value)}
+              placeholder="Email du destinataire"
+              className="w-full px-4 py-3 text-sm outline-none mb-4"
+              style={{ fontFamily: "var(--font-lora)", background: "var(--paper2)", border: "1.5px solid var(--rule)", color: "var(--ink)" }}
+              onKeyDown={(e) => e.key === "Enter" && handleSendEmail()}
+              autoFocus
+            />
+            {emailResult === "sent" && (
+              <div className="mb-4 p-3 text-sm" style={{ fontFamily: "var(--font-dm-mono)", background: "#e8f5e9", color: "var(--green)" }}>
+                ✓ Email envoyé avec succès
+              </div>
+            )}
+            {emailResult === "error" && (
+              <div className="mb-4 p-3 text-sm" style={{ fontFamily: "var(--font-dm-mono)", background: "#fde8e4", color: "var(--accent)" }}>
+                Erreur d&apos;envoi. Vérifiez l&apos;adresse et réessayez.
+              </div>
+            )}
+            <div className="flex gap-3">
+              <button
+                onClick={handleSendEmail}
+                disabled={sendingEmail || !recipientEmail.includes("@")}
+                className="flex-1 py-3 text-sm font-bold uppercase tracking-[0.5px] text-white disabled:opacity-50 cursor-pointer"
+                style={{ fontFamily: "var(--font-syne)", background: "var(--accent)", border: "none" }}
+              >
+                {sendingEmail ? "Envoi…" : "Envoyer le PDF"}
+              </button>
+              <button
+                onClick={() => setEmailDialog(false)}
+                className="px-5 py-3 text-sm uppercase tracking-[0.5px] cursor-pointer"
+                style={{ fontFamily: "var(--font-syne)", background: "transparent", border: "1.5px solid var(--rule)", color: "var(--muted-lm)" }}
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ═══ 3. TEXTE ÉDITABLE (en dessous) ═══ */}
       <div

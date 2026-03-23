@@ -3,6 +3,7 @@ import { LETTER_TYPES } from "@/data/letter-types";
 import type { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import StepBar from "@/components/generateur/StepBar";
 
 export const metadata: Metadata = {
   title: "Générer un courrier — LettreMagique",
@@ -43,15 +44,7 @@ export default async function GenerateurPage() {
           }}
         />
         <div className="max-w-[980px] mx-auto">
-          <div
-            className="text-[11px] uppercase tracking-[3px] mb-6"
-            style={{
-              fontFamily: "var(--font-dm-mono)",
-              color: "var(--accent)",
-            }}
-          >
-            Étape 1 / 2
-          </div>
+          <StepBar current={1} />
           <h1
             className="font-extrabold leading-[0.92] tracking-[-2px] mb-5"
             style={{

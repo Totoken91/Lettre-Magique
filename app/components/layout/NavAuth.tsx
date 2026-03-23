@@ -129,6 +129,19 @@ export default function NavAuth() {
             Mon compte
           </Link>
           <QuotaBadge quota={quota} />
+          {quota && !quota.isPro && (
+            <Link
+              href="/tarifs"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[1px] no-underline transition-opacity duration-200 hover:opacity-90"
+              style={{
+                fontFamily: "var(--font-syne)",
+                background: "var(--accent)",
+                color: "#fff",
+              }}
+            >
+              Passer Pro
+            </Link>
+          )}
           {quota?.isAdmin && (
             <Link
               href="/admin"
@@ -233,6 +246,16 @@ export default function NavAuth() {
                 >
                   {quota.isPro ? "Pro · Illimité" : `${quota.remaining ?? 0} lettre${(quota.remaining ?? 0) !== 1 ? "s" : ""} restante${(quota.remaining ?? 0) !== 1 ? "s" : ""}`}
                 </div>
+              )}
+              {quota && !quota.isPro && (
+                <Link
+                  href="/tarifs"
+                  onClick={() => setMenuOpen(false)}
+                  className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b font-bold"
+                  style={{ fontFamily: "var(--font-syne)", color: "var(--accent)", borderColor: "#222" }}
+                >
+                  Passer Pro →
+                </Link>
               )}
               <Link
                 href="/compte"
