@@ -4,6 +4,25 @@ import type { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import StepBar from "@/components/generateur/StepBar";
+import {
+  MailX, AlertCircle, Scale, ShieldAlert, DoorOpen,
+  BadgeDollarSign, Undo2, CalendarClock, FileCheck, PenLine,
+  type LucideProps,
+} from "lucide-react";
+import type { ComponentType } from "react";
+
+const TYPE_ICONS: Record<string, ComponentType<LucideProps>> = {
+  "resiliation":      MailX,
+  "reclamation":      AlertCircle,
+  "mise-en-demeure":  Scale,
+  "contestation":     ShieldAlert,
+  "conge-locataire":  DoorOpen,
+  "remboursement":    BadgeDollarSign,
+  "retractation":     Undo2,
+  "delai-paiement":   CalendarClock,
+  "attestation":      FileCheck,
+  "courrier-libre":   PenLine,
+};
 
 export const metadata: Metadata = {
   title: "Générer un courrier — LettreMagique",
@@ -114,7 +133,12 @@ export default async function GenerateurPage() {
                 }}
               >
                 <div className="flex items-start gap-4">
-                  <div className="text-3xl shrink-0">{type.emoji}</div>
+                  <div
+                    className="shrink-0 flex items-center justify-center w-10 h-10"
+                    style={{ background: "var(--paper2)", border: "1px solid var(--rule)" }}
+                  >
+                    {(() => { const Icon = TYPE_ICONS[type.id]; return Icon ? <Icon size={18} strokeWidth={1.5} color="var(--accent)" /> : null; })()}
+                  </div>
                   <div className="flex-1">
                     <div
                       className="text-base font-bold mb-1 transition-colors"
