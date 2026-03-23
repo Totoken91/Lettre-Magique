@@ -2,7 +2,11 @@ import { Resend } from "resend";
 import { generateLetterPDF } from "@/lib/pdf/generator";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) throw new Error("RESEND_API_KEY non configurée");
+  return new Resend(key);
+}
 
 export async function POST(req: Request) {
   try {
@@ -29,7 +33,7 @@ export async function POST(req: Request) {
     });
 
     // Send via Resend
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: `LettreMagique <${process.env.RESEND_FROM_EMAIL || "courrier@lettre-magique.fr"}>`,
       to: recipientEmail,
       subject: `${typeName || "Courrier"} — envoyé via LettreMagique`,
