@@ -54,13 +54,13 @@ export async function POST(req: Request) {
     });
 
     if (error) {
-      console.error("Resend error:", error);
-      return Response.json({ error: "Erreur d'envoi" }, { status: 500 });
+      console.error("Resend error:", JSON.stringify(error));
+      return Response.json({ error: "Erreur d'envoi", detail: error }, { status: 500 });
     }
 
     return Response.json({ success: true });
   } catch (err) {
     console.error("Send letter error:", err);
-    return Response.json({ error: "Erreur serveur" }, { status: 500 });
+    return Response.json({ error: "Erreur serveur", detail: String(err) }, { status: 500 });
   }
 }
