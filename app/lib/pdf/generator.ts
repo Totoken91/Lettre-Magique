@@ -1,4 +1,6 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import fs from "fs";
+import path from "path";
 
 interface PDFParams {
   text: string;
@@ -75,6 +77,16 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const fontBold     = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontItalic   = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
+  // Embed logo once
+  let logoImage: Awaited<ReturnType<typeof pdfDoc.embedPng>> | null = null;
+  try {
+    const logoPath = path.join(process.cwd(), "public", "lm-logo.png");
+    const logoBytes = fs.readFileSync(logoPath);
+    logoImage = await pdfDoc.embedPng(logoBytes);
+  } catch {
+    // logo non trouvé — fallback carré LM
+  }
+
   // ─── Draw page chrome (header + footer) ──────────────────────────────────
   const drawChrome = (page: ReturnType<PDFDocument["addPage"]>, pageNum: number, totalPages: number) => {
 
@@ -88,28 +100,31 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     // Header zone
     const headerY = A4_H - 46;
 
-    // Logo square
-    page.drawRectangle({
-      x: ML, y: headerY + 4,
-      width: 24, height: 24,
-      color: C_ACCENT,
-    });
-    page.drawText("LM", {
-      x: ML + 3.5, y: headerY + 10,
-      size: 9.5, font: fontBold, color: C_WHITE,
-    });
+    // Logo
+    if (logoImage) {
+      const logoH = 28;
+      const logoW = logoImage.width * (logoH / logoImage.height);
+      page.drawImage(logoImage, {
+        x: ML, y: headerY + 2,
+        width: logoW, height: logoH,
+      });
+    } else {
+      // Fallback carré LM
+      page.drawRectangle({
+        x: ML, y: headerY + 4,
+        width: 24, height: 24,
+        color: C_ACCENT,
+      });
+      page.drawText("LM", {
+        x: ML + 3.5, y: headerY + 10,
+        size: 9.5, font: fontBold, color: C_WHITE,
+      });
+    }
 
-    // Brand name
-    page.drawText("Lettre", {
-      x: ML + 32, y: headerY + 16,
-      size: 10.5, font: fontBold, color: C_INK,
-    });
-    page.drawText("Magique", {
-      x: ML + 32 + fontBold.widthOfTextAtSize("Lettre", 10.5), y: headerY + 16,
-      size: 10.5, font: fontBold, color: C_ACCENT,
-    });
+    // Brand name + URL (décalé selon présence logo)
+    const logoW = logoImage ? logoImage.width * (28 / logoImage.height) : 24;
     page.drawText("lettre-magique.com", {
-      x: ML + 32, y: headerY + 5,
+      x: ML + logoW + 8, y: headerY + 10,
       size: 6.5, font: fontRegular, color: C_MUTED,
     });
 
