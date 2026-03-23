@@ -147,17 +147,15 @@ export default async function GenerateurPage() {
                             {ex}
                           </span>
                         ))}
-                        {type.seoExamples.length > 3 && (
-                          <span
-                            className="text-[9px] uppercase tracking-[0.5px] px-2 py-0.5"
-                            style={{
-                              fontFamily: "var(--font-dm-mono)",
-                              color: "var(--light-lm)",
-                            }}
-                          >
-                            +{type.seoExamples.length - 3} autres…
-                          </span>
-                        )}
+                        <span
+                          className="text-[9px] px-1 py-0.5"
+                          style={{
+                            fontFamily: "var(--font-dm-mono)",
+                            color: "var(--light-lm)",
+                          }}
+                        >
+                          {type.seoExamples.length > 3 ? `+${type.seoExamples.length - 3} autres…` : "…"}
+                        </span>
                       </div>
                     )}
                   </div>
