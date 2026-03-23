@@ -97,15 +97,8 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const fontBold   = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
-  // Embed logo
-  let logoImage: Awaited<ReturnType<typeof pdfDoc.embedPng>> | null = null;
-  try {
-    const logoPath = path.join(process.cwd(), "public", "lm-logo.png");
-    const logoBytes = fs.readFileSync(logoPath);
-    logoImage = await pdfDoc.embedPng(logoBytes);
-  } catch {
-    // fallback handled below
-  }
+  // No logo image — use LM square fallback
+  const logoImage = null;
 
   // ── Parse the generated text ──────────────────────────────────────────────
   // The AI output typically contains:
