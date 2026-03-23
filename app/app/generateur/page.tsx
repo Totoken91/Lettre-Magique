@@ -154,7 +154,7 @@ export default async function GenerateurPage() {
                             color: "var(--light-lm)",
                           }}
                         >
-                          {type.seoExamples.length > 3 ? `+${type.seoExamples.length - 3} autres…` : "…"}
+                          {"…"}
                         </span>
                       </div>
                     )}
