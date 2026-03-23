@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { LETTER_TYPES } from "@/data/letter-types";
 import HeroCTA from "@/components/landing/HeroCTA";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import LetterTypeIcon from "@/components/ui/LetterTypeIcon";
 
 export default async function Home() {
   const supabase = await createSupabaseServerClient();
@@ -153,7 +154,7 @@ export default async function Home() {
                 className="block px-[18px] py-5 text-center transition-colors duration-200 no-underline cat-card"
                 style={{ background: "var(--paper)" }}
               >
-                <div className="text-2xl mb-2">{type.emoji}</div>
+                <div className="flex justify-center mb-2"><LetterTypeIcon typeId={type.id} size={22} /></div>
                 <div
                   className="text-[13px] font-bold mb-1"
                   style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}

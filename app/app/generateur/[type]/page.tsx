@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { LETTER_TYPES } from "@/data/letter-types";
 import DynamicForm from "@/components/generateur/DynamicForm";
 import StepBar from "@/components/generateur/StepBar";
+import LetterTypeIcon from "@/components/ui/LetterTypeIcon";
 
 type Props = {
   params: Promise<{ type: string }>;
@@ -51,7 +52,7 @@ export default async function GenerateurTypePage({ params }: Props) {
               color: "var(--muted-lm)",
             }}
           >
-            {letterType.emoji} {letterType.name}
+            <LetterTypeIcon typeId={letterType.id} size={14} /> {letterType.name}
           </div>
           <h1
             className="font-extrabold leading-[0.92] tracking-[-2px] mb-4"

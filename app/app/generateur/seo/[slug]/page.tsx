@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LETTER_TYPES } from "@/data/letter-types";
+import LetterTypeIcon from "@/components/ui/LetterTypeIcon";
 
 interface SeoPage {
   slug: string;
@@ -144,7 +145,7 @@ export default async function SeoPage({ params }: { params: Promise<{ slug: stri
         <div className="absolute bottom-0 left-0 right-0 h-[4px]" style={{ background: "repeating-linear-gradient(90deg, var(--accent) 0, var(--accent) 20px, transparent 20px, transparent 24px)" }} />
         <div className="max-w-[780px] mx-auto">
           <div className="text-[11px] uppercase tracking-[3px] mb-5" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>
-            {letterType?.emoji} {letterType?.name}
+            {letterType && <LetterTypeIcon typeId={letterType.id} size={14} color="var(--accent)" />} {letterType?.name}
           </div>
           <h1 className="font-extrabold leading-[0.92] tracking-[-2px] mb-5" style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(30px, 4vw, 50px)" }}>
             {page.h1}
