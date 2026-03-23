@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { Mail } from "lucide-react";
 
 interface Props {
   onSuccess: () => void;
@@ -84,7 +85,7 @@ export default function AuthModal({ onSuccess, onClose, context = "generate" }: 
           {confirmSent ? (
             /* Email sent state */
             <div className="text-center py-4">
-              <div className="text-4xl mb-4">✉️</div>
+              <div className="flex justify-center mb-4"><Mail size={36} strokeWidth={1.5} color="var(--accent)" /></div>
               <h2
                 className="text-xl font-extrabold mb-3"
                 style={{ fontFamily: "var(--font-syne)" }}

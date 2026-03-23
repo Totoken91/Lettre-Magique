@@ -4,6 +4,7 @@ import { LETTER_TYPES } from "@/data/letter-types";
 import HeroCTA from "@/components/landing/HeroCTA";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import LetterTypeIcon from "@/components/ui/LetterTypeIcon";
+import { FolderOpen, PenLine, FileText } from "lucide-react";
 
 export default async function Home() {
   const supabase = await createSupabaseServerClient();
@@ -294,7 +295,7 @@ export default async function Home() {
             {[
               {
                 num: "01",
-                emoji: "🗂️",
+                icon: <FolderOpen size={20} strokeWidth={1.5} />,
                 accent: "var(--ink)",
                 tag: "Choisissez",
                 title: "Le type de courrier",
@@ -303,7 +304,7 @@ export default async function Home() {
               },
               {
                 num: "02",
-                emoji: "✍️",
+                icon: <PenLine size={20} strokeWidth={1.5} />,
                 accent: "var(--accent)",
                 tag: "Répondez",
                 title: "À 3-4 questions",
@@ -312,7 +313,7 @@ export default async function Home() {
               },
               {
                 num: "03",
-                emoji: "📄",
+                icon: <FileText size={20} strokeWidth={1.5} />,
                 accent: "var(--green)",
                 tag: "Téléchargez",
                 title: "Votre PDF prêt à envoyer",
@@ -333,7 +334,7 @@ export default async function Home() {
                   >
                     {step.num}
                   </span>
-                  <span className="text-2xl leading-none">{step.emoji}</span>
+                  <span className="leading-none" style={{ color: step.accent }}>{step.icon}</span>
                 </div>
 
                 {/* Tag + title */}

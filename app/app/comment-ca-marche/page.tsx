@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FolderOpen, PenLine, Bot, FileText } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Comment ça marche — LettreMagique",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 const steps = [
   {
     num: "01",
-    emoji: "🗂️",
+    icon: "folder",
     accent: "var(--ink)",
     tag: "Choisissez",
     title: "Le type de courrier",
@@ -26,7 +27,7 @@ const steps = [
   },
   {
     num: "02",
-    emoji: "✍️",
+    icon: "pen",
     accent: "var(--accent)",
     tag: "Répondez",
     title: "À 3-4 questions simples",
@@ -40,7 +41,7 @@ const steps = [
   },
   {
     num: "03",
-    emoji: "🤖",
+    icon: "bot",
     accent: "var(--accent)",
     tag: "L'IA rédige",
     title: "Votre courrier personnalisé",
@@ -54,7 +55,7 @@ const steps = [
   },
   {
     num: "04",
-    emoji: "📄",
+    icon: "file",
     accent: "var(--green)",
     tag: "Téléchargez",
     title: "Votre PDF prêt à envoyer",
@@ -155,7 +156,12 @@ export default function CommentCaMarche() {
                 >
                   {step.num}
                 </span>
-                <span className="text-2xl leading-none">{step.emoji}</span>
+                <span className="leading-none" style={{ color: step.accent }}>
+                  {step.icon === "folder" && <FolderOpen size={20} strokeWidth={1.5} />}
+                  {step.icon === "pen" && <PenLine size={20} strokeWidth={1.5} />}
+                  {step.icon === "bot" && <Bot size={20} strokeWidth={1.5} />}
+                  {step.icon === "file" && <FileText size={20} strokeWidth={1.5} />}
+                </span>
                 <span
                   className="text-[10px] uppercase tracking-[2px]"
                   style={{ fontFamily: "var(--font-dm-mono)", color: step.accent }}

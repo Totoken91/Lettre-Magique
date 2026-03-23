@@ -444,7 +444,7 @@ export default function LetterViewer({
         page professionnelle et les mentions légales applicables.
         <br />
         <strong style={{ color: "var(--ink)" }}>
-          Créé avec LettreMagique.fr
+          Créé avec LettreMagique.com
         </strong>{" "}
         — outil d&apos;aide à la rédaction, ne constitue pas un conseil
         juridique.
