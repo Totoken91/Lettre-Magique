@@ -54,9 +54,12 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         {/* Cookie banner script */}
-        <script src="/silktide-consent-manager.js" />
         <script dangerouslySetInnerHTML={{ __html: `
-silktideCookieBannerManager.updateCookieBannerConfig({
+(function() {
+  var s = document.createElement('script');
+  s.src = '/silktide-consent-manager.js';
+  s.onload = function() {
+    silktideCookieBannerManager.updateCookieBannerConfig({
   background: { showBackground: true },
   cookieIcon: { position: "bottomLeft" },
   cookieTypes: [
@@ -112,6 +115,9 @@ silktideCookieBannerManager.updateCookieBannerConfig({
   },
   position: { banner: "bottomLeft" }
 });
+  };
+  document.body.appendChild(s);
+})();
         ` }} />
       </body>
     </html>
