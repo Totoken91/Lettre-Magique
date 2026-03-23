@@ -44,6 +44,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
           rel="stylesheet"
         />
+        {/* Cookie banner */}
+        <link rel="stylesheet" href="/silktide-consent-manager.css" />
       </head>
       <body className="min-h-full flex flex-col antialiased">
         <Navbar />
@@ -51,6 +53,66 @@ export default function RootLayout({
         <PageTracker />
         <main className="flex-1">{children}</main>
         <Footer />
+        {/* Cookie banner script */}
+        <script src="/silktide-consent-manager.js" />
+        <script dangerouslySetInnerHTML={{ __html: `
+silktideCookieBannerManager.updateCookieBannerConfig({
+  background: { showBackground: true },
+  cookieIcon: { position: "bottomLeft" },
+  cookieTypes: [
+    {
+      id: "necessary",
+      name: "Nécessaires",
+      description: "<p>Ces cookies sont indispensables au fonctionnement du site. Ils ne peuvent pas être désactivés.</p>",
+      required: true,
+      onAccept: function() {}
+    },
+    {
+      id: "analytics",
+      name: "Analytiques",
+      description: "<p>Ces cookies nous aident à améliorer le site en mesurant les pages les plus visitées et les parcours des utilisateurs.</p>",
+      defaultValue: true,
+      onAccept: function() {
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+        dataLayer.push({ event: 'consent_accepted_analytics' });
+      },
+      onReject: function() {
+        gtag('consent', 'update', { analytics_storage: 'denied' });
+      }
+    },
+    {
+      id: "advertising",
+      name: "Publicitaires",
+      description: "<p>Ces cookies permettent d'afficher des publicités personnalisées en fonction de votre navigation.</p>",
+      onAccept: function() {
+        gtag('consent', 'update', { ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' });
+        dataLayer.push({ event: 'consent_accepted_advertising' });
+      },
+      onReject: function() {
+        gtag('consent', 'update', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+      }
+    }
+  ],
+  text: {
+    banner: {
+      description: "<p>Nous utilisons des cookies pour améliorer votre expérience, personnaliser le contenu et analyser notre trafic. <a href=\\"/politique-cookies\\" target=\\"_blank\\">Politique de cookies.</a></p>",
+      acceptAllButtonText: "Tout accepter",
+      acceptAllButtonAccessibleLabel: "Accepter tous les cookies",
+      rejectNonEssentialButtonText: "Refuser les non-essentiels",
+      rejectNonEssentialButtonAccessibleLabel: "Refuser les cookies non-essentiels",
+      preferencesButtonText: "Préférences",
+      preferencesButtonAccessibleLabel: "Gérer mes préférences"
+    },
+    preferences: {
+      title: "Personnalisez vos préférences",
+      description: "<p>Nous respectons votre vie privée. Vous pouvez choisir de ne pas autoriser certains types de cookies. Vos préférences s'appliquent sur l'ensemble du site.</p>",
+      creditLinkText: "Obtenir cette bannière gratuitement",
+      creditLinkAccessibleLabel: "Obtenir cette bannière gratuitement"
+    }
+  },
+  position: { banner: "bottomLeft" }
+});
+        ` }} />
       </body>
     </html>
   );
