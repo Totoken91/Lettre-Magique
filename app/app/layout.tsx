@@ -61,7 +61,7 @@ export default function RootLayout({
   s.onload = function() {
     silktideCookieBannerManager.updateCookieBannerConfig({
   background: { showBackground: true },
-  cookieIcon: { show: false },
+  cookieIcon: { position: "bottomLeft" },
   cookieTypes: [
     {
       id: "necessary",
