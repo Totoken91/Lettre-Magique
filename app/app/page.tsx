@@ -99,7 +99,7 @@ export default async function Home() {
 
           {/* Stats */}
           <div
-            className="flex gap-12 flex-wrap mt-16 pt-10"
+            className="flex gap-6 sm:gap-12 flex-wrap mt-16 pt-10"
             style={{ borderTop: "1px solid #222" }}
           >
             {[

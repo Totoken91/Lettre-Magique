@@ -99,7 +99,7 @@ export default async function GenerateurPage() {
           <div
             className="grid gap-4"
             style={{
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(min(280px, 100%), 1fr))",
             }}
           >
             {LETTER_TYPES.map((type) => (

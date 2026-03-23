@@ -217,8 +217,8 @@ export default function NavAuth() {
       {/* Mobile dropdown menu */}
       {menuOpen && (
         <div
-          className="md:hidden fixed top-14 left-0 right-0 z-40 flex flex-col"
-          style={{ background: "var(--ink)", borderBottom: "2px solid var(--accent)" }}
+          className="md:hidden fixed top-14 left-0 right-0 z-40 flex flex-col overflow-y-auto"
+          style={{ background: "var(--ink)", borderBottom: "2px solid var(--accent)", maxHeight: "calc(100dvh - 56px)" }}
         >
           <Link
             href="/#comment"

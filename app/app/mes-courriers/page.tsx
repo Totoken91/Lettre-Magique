@@ -168,7 +168,7 @@ export default function MesCourriersPage() {
                   {filtered.length} courrier{filtered.length > 1 ? "s" : ""}
                 </div>
 
-                <div className="flex flex-col gap-[2px] max-h-[500px] overflow-y-auto">
+                <div className="flex flex-col gap-[2px] max-h-[40dvh] md:max-h-[500px] overflow-y-auto">
                   {filtered.map((letter) => (
                     <button
                       key={letter.id}

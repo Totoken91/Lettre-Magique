@@ -45,7 +45,7 @@ export default function TarifsPage() {
           >
             {/* Plan à l'unité */}
             <div
-              className="p-8 md:p-10 relative border-b-[2px] md:border-b-0 md:border-r-[2px]"
+              className="p-6 sm:p-8 md:p-10 relative border-b-[2px] md:border-b-0 md:border-r-[2px]"
               style={{ borderColor: "var(--ink)" }}
             >
               <div
@@ -90,7 +90,7 @@ export default function TarifsPage() {
 
             {/* Plan illimité */}
             <div
-              className="p-8 md:p-10 relative"
+              className="p-6 sm:p-8 md:p-10 relative"
               style={{ background: "var(--ink)", color: "var(--white-warm)" }}
             >
               <div

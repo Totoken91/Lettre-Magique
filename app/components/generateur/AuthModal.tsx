@@ -80,7 +80,7 @@ export default function AuthModal({ onSuccess, onClose, context = "generate" }: 
           ×
         </button>
 
-        <div className="p-8">
+        <div className="p-5 sm:p-8">
           {confirmSent ? (
             /* Email sent state */
             <div className="text-center py-4">
