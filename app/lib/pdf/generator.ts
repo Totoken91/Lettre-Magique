@@ -338,13 +338,9 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       logoEndX = ML + 28;
     }
     // Brand text
-    page.drawText("Lettre", {
+    page.drawText("LM", {
       x: logoEndX, y: headerBarY + 4,
       size: 9, font: fontBold, color: C_INK,
-    });
-    page.drawText("Magique", {
-      x: logoEndX + fontBold.widthOfTextAtSize("Lettre", 9), y: headerBarY + 4,
-      size: 9, font: fontBold, color: C_ACCENT,
     });
 
     // Type badge (right)
