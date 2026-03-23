@@ -256,9 +256,13 @@ export default function LetterViewer({
             <div className="text-[10px] uppercase tracking-[2px] mb-4" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>
               Envoyer le courrier par email
             </div>
-            <p className="text-sm mb-4" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}>
+            <p className="text-sm mb-3" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}>
               Le PDF sera envoyé en pièce jointe à l&apos;adresse indiquée.
             </p>
+            <div className="flex items-center gap-2 mb-4 px-3 py-2 text-xs" style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1px solid var(--rule)", color: "var(--muted-lm)" }}>
+              <span style={{ color: "var(--accent)" }}>✦</span>
+              Expédié depuis <strong style={{ color: "var(--ink)" }}>courrier@lettre-magique.com</strong>
+            </div>
             <input
               type="email"
               value={recipientEmail}
