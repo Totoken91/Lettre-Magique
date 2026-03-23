@@ -24,7 +24,7 @@ export default function Navbar() {
 
       <div className="flex items-center gap-4 md:gap-7">
         <Link
-          href="/#comment"
+          href="/comment-ca-marche"
           className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
           style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
         >
@@ -36,6 +36,13 @@ export default function Navbar() {
           style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
         >
           Tarifs
+        </Link>
+        <Link
+          href="/compte"
+          className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
+          style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
+        >
+          Mes courriers
         </Link>
         <NavAuth />
       </div>

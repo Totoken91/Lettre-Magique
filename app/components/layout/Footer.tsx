@@ -28,7 +28,7 @@ export default function Footer() {
         <div className="flex flex-col items-start md:items-end gap-3">
           {/* Nav links */}
           <div className="flex flex-wrap gap-4 md:gap-6">
-            <Link href="/#comment" className="hover:text-white transition-colors no-underline" style={{ color: "#555" }}>
+            <Link href="/comment-ca-marche" className="hover:text-white transition-colors no-underline" style={{ color: "#555" }}>
               Comment ça marche
             </Link>
             <Link href="/tarifs" className="hover:text-white transition-colors no-underline" style={{ color: "#555" }}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -15,11 +15,26 @@ interface ResultData {
 
 const EMAIL_KEY = "lm_lead_email";
 
+/** Render minimal markdown (bold, italic) to HTML */
+function renderMarkdown(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/\n/g, "<br />");
+}
+
 export default function ResultatClient() {
   const router = useRouter();
   const [result, setResult] = useState<ResultData | null>(null);
+  const [editedText, setEditedText] = useState("");
+  const [editing, setEditing] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [emailStatus, setEmailStatus] = useState<"idle" | "copied">("idle");
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [loadingPreview, setLoadingPreview] = useState(false);
 
   // Email gate
   const [showGate, setShowGate] = useState(false);
@@ -32,14 +47,41 @@ export default function ResultatClient() {
       router.push("/generateur");
       return;
     }
-    setResult(JSON.parse(stored));
+    const parsed = JSON.parse(stored);
+    setResult(parsed);
+    setEditedText(parsed.text);
   }, [router]);
+
+  /** Current text (edited or original) */
+  const currentText = editedText || result?.text || "";
+
+  /** Generate PDF preview blob URL */
+  const generatePdfPreview = useCallback(async () => {
+    if (!result) return;
+    setLoadingPreview(true);
+    // Revoke previous blob URL
+    if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    try {
+      const res = await fetch("/api/pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...result, text: currentText }),
+      });
+      if (!res.ok) throw new Error("PDF error");
+      const blob = await res.blob();
+      setPdfUrl(URL.createObjectURL(blob));
+    } catch {
+      // silently fail preview
+    } finally {
+      setLoadingPreview(false);
+    }
+  }, [result, currentText, pdfUrl]);
 
   const handleEmailClick = () => {
     if (!result) return;
-    navigator.clipboard.writeText(result.text).catch(() => {});
+    navigator.clipboard.writeText(currentText).catch(() => {});
     const subject = encodeURIComponent(`${result.typeName} — LettreMagique`);
-    const body = encodeURIComponent(result.text);
+    const body = encodeURIComponent(currentText);
     const fullUrl = `mailto:?subject=${subject}&body=${body}`;
     window.location.href = fullUrl.length <= 1800 ? fullUrl : `mailto:?subject=${subject}`;
     setEmailStatus("copied");
@@ -53,7 +95,7 @@ export default function ResultatClient() {
       const res = await fetch("/api/pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(result),
+        body: JSON.stringify({ ...result, text: currentText }),
       });
       if (!res.ok) throw new Error("PDF error");
       const blob = await res.blob();
@@ -165,7 +207,9 @@ export default function ResultatClient() {
             className="text-base leading-[1.7]"
             style={{ fontFamily: "var(--font-lora)", color: "#888" }}
           >
-            Vérifiez le contenu ci-dessous, puis téléchargez votre PDF.
+  
+            Vérifiez le contenu ci-dessous, modifiez-le si besoin, puis
+            téléchargez votre PDF.
           </p>
         </div>
       </section>
@@ -191,29 +235,92 @@ export default function ResultatClient() {
                   color: "var(--muted-lm)",
                 }}
               >
-                Aperçu du courrier
+                {editing ? "Mode édition" : "Aperçu du courrier"}
               </span>
-              <span
-                className="text-[10px] uppercase tracking-[1px] px-2 py-0.5"
-                style={{
-                  fontFamily: "var(--font-dm-mono)",
-                  background: "var(--green)",
-                  color: "white",
-                }}
-              >
-                IA Claude
-              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => {
+                    if (editing) {
+                      // Exiting edit mode — revoke stale PDF preview
+                      if (pdfUrl) { URL.revokeObjectURL(pdfUrl); setPdfUrl(null); }
+                    }
+                    setEditing(!editing);
+                  }}
+                  className="text-[10px] uppercase tracking-[1px] px-2.5 py-1 cursor-pointer border transition-colors duration-200"
+                  style={{
+                    fontFamily: "var(--font-dm-mono)",
+                    background: editing ? "var(--accent)" : "transparent",
+                    color: editing ? "white" : "var(--muted-lm)",
+                    borderColor: editing ? "var(--accent)" : "var(--rule)",
+                  }}
+                >
+                  {editing ? "✓ Valider" : "✎ Éditer"}
+                </button>
+                <span
+                  className="text-[10px] uppercase tracking-[1px] px-2 py-0.5"
+                  style={{
+                    fontFamily: "var(--font-dm-mono)",
+                    background: "var(--green)",
+                    color: "white",
+                  }}
+                >
+                  IA Claude
+                </span>
+              </div>
             </div>
-            <div
-              className="p-8 leading-[1.9] text-[15px] whitespace-pre-wrap"
+            {editing ? (
+              <textarea
+                value={editedText}
+                onChange={(e) => setEditedText(e.target.value)}
+                className="w-full p-8 leading-[1.9] text-[15px] outline-none resize-y border-none"
+                style={{
+                  fontFamily: "var(--font-lora)",
+                  background: "var(--white-warm)",
+                  color: "var(--ink)",
+                  minHeight: "400px",
+                }}
+              />
+            ) : (
+              <div
+                className="p-8 leading-[1.9] text-[15px]"
+                style={{
+                  fontFamily: "var(--font-lora)",
+                  background: "var(--white-warm)",
+                  color: "var(--ink)",
+                }}
+                dangerouslySetInnerHTML={{ __html: renderMarkdown(currentText) }}
+              />
+            )}
+          </div>
+
+          {/* Aperçu PDF */}
+          <div className="mb-8">
+            <button
+              onClick={generatePdfPreview}
+              disabled={loadingPreview}
+              className="mb-4 px-5 py-2.5 text-[11px] uppercase tracking-[1.5px] cursor-pointer transition-all duration-200 hover:brightness-95 disabled:opacity-50"
               style={{
-                fontFamily: "var(--font-lora)",
-                background: "var(--white-warm)",
+                fontFamily: "var(--font-dm-mono)",
+                border: "1.5px solid var(--ink)",
+                background: "transparent",
                 color: "var(--ink)",
               }}
             >
-              {result.text}
-            </div>
+              {loadingPreview ? "Génération…" : pdfUrl ? "↻ Rafraîchir l'aperçu PDF" : "👁 Voir l'aperçu PDF"}
+            </button>
+            {pdfUrl && (
+              <div
+                className="border-[2px]"
+                style={{ borderColor: "var(--rule)" }}
+              >
+                <iframe
+                  src={pdfUrl}
+                  className="w-full border-none"
+                  style={{ height: "700px", background: "#f5f5f5" }}
+                  title="Aperçu PDF"
+                />
+              </div>
+            )}
           </div>
 
           {/* Actions */}
