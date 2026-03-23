@@ -136,6 +136,16 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const phoneMatch = senderAddress.match(/(0\d[\s.]?\d{2}[\s.]?\d{2}[\s.]?\d{2}[\s.]?\d{2})/);
   const senderPhone = phoneMatch?.[1] || "";
 
+  // Phone line detector (all formats: 0781452482 / 07 81 45 24 82 / 07.81.45.24.82)
+  const isPhoneLine = (s: string) =>
+    /^(tél\.?\s*:?\s*|tel\.?\s*:?\s*|téléphone\s*:?\s*)?0\d[\s.]?\d{2}[\s.]?\d{2}[\s.]?\d{2}[\s.]?\d{2}$/i.test(s.trim());
+
+  // Date line detector
+  const isDateLine = (s: string) =>
+    /^\d{1,2}\s+(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+\d{4}/i.test(s) ||
+    /^(à|a)\s+.+,\s*le\s+\d/i.test(s) ||
+    /^\d{1,2}[/.\-]\d{1,2}[/.\-]\d{4}$/.test(s);
+
   // Walk through raw lines, skip sender info at the top
   let idx = 0;
   for (; idx < rawLines.length; idx++) {
@@ -144,9 +154,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     const isSenderLine = senderNorms.some(
       (si) => norm === si || norm.includes(si) || si.includes(norm)
     );
-    // Also skip phone-only lines
-    const isPhoneLine = /^(tél|tel|téléphone)?\s*:?\s*0\d[\s.]\d{2}/i.test(rawLines[idx].trim());
-    if (!isSenderLine && !isPhoneLine) break;
+    if (!isSenderLine && !isPhoneLine(rawLines[idx])) break;
   }
 
   // Now extract structured parts from remaining lines
@@ -161,17 +169,17 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     const trimmed = line.trim();
     const clean = stripMarkdown(trimmed);
 
-    // Date detection (e.g. "À Paris, le 23 mars 2026" or "23 mars 2026" or "Paris, le 23/03/2026")
-    if (
-      phase === "pre" &&
-      !dateLine &&
-      (/^\d{1,2}\s+(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+\d{4}/i.test(clean) ||
-       /^(à|a)\s+.+,\s*le\s+\d/i.test(clean) ||
-       /^\d{1,2}[/.\-]\d{1,2}[/.\-]\d{4}$/.test(clean))
-    ) {
+    // Skip phone-only lines anywhere in the header zone
+    if (phase !== "body" && isPhoneLine(clean)) continue;
+
+    // Date detection — only before body starts, take first match
+    if (phase !== "body" && !dateLine && isDateLine(clean)) {
       dateLine = clean;
       continue;
     }
+
+    // Skip duplicate/extra date lines in header zone
+    if (phase !== "body" && isDateLine(clean)) continue;
 
     // Objet detection
     if (/^(objet|OBJET)\s*:/i.test(clean)) {
@@ -180,18 +188,20 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       continue;
     }
 
-    // Recipient: lines before "Objet:" or body start, after date
+    // Recipient: lines before "Objet:" or salutation
     if (phase === "pre" || phase === "recipient") {
       if (trimmed === "") {
+        // Empty line after recipient lines → confirmed recipient block
         if (recipientLines.length > 0) phase = "recipient";
         continue;
       }
-      // If we hit a salutation, switch to body
+      // Salutation → start of body
       if (/^(madame|monsieur|cher|chère)/i.test(clean)) {
         phase = "body";
         bodyLines.push(trimmed);
         continue;
       }
+      // Add to recipient block (max 6 lines)
       if (recipientLines.length < 6) {
         recipientLines.push(clean);
         phase = "recipient";
@@ -199,7 +209,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       }
     }
 
-    // Body
+    // Everything else → body
     phase = "body";
     bodyLines.push(trimmed);
   }
