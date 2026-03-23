@@ -50,6 +50,13 @@ export default function LetterViewer({
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailResult, setEmailResult] = useState<"idle" | "sent" | "error">("idle");
   const [includeSender, setIncludeSender] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(currentText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
 
@@ -176,19 +183,33 @@ export default function LetterViewer({
           >
             Aperçu PDF
           </span>
-          <button
-            onClick={generatePdfPreview}
-            disabled={loadingPreview}
-            className="text-[10px] uppercase tracking-[1px] px-2.5 py-1 cursor-pointer border transition-colors duration-200 disabled:opacity-50"
-            style={{
-              fontFamily: "var(--font-dm-mono)",
-              background: "transparent",
-              color: "var(--muted-lm)",
-              borderColor: "var(--rule)",
-            }}
-          >
-            {loadingPreview ? "Chargement…" : "↻ Rafraîchir"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleCopy}
+              className="text-[10px] uppercase tracking-[1px] px-2.5 py-1 cursor-pointer border transition-colors duration-200"
+              style={{
+                fontFamily: "var(--font-dm-mono)",
+                background: copied ? "var(--ink)" : "transparent",
+                color: copied ? "white" : "var(--muted-lm)",
+                borderColor: copied ? "var(--ink)" : "var(--rule)",
+              }}
+            >
+              {copied ? "✓ Copié" : "⎘ Copier"}
+            </button>
+            <button
+              onClick={generatePdfPreview}
+              disabled={loadingPreview}
+              className="text-[10px] uppercase tracking-[1px] px-2.5 py-1 cursor-pointer border transition-colors duration-200 disabled:opacity-50"
+              style={{
+                fontFamily: "var(--font-dm-mono)",
+                background: "transparent",
+                color: "var(--muted-lm)",
+                borderColor: "var(--rule)",
+              }}
+            >
+              {loadingPreview ? "Chargement…" : "↻ Rafraîchir"}
+            </button>
+          </div>
         </div>
         <PdfPreview pdfUrl={pdfUrl} loading={loadingPreview && !pdfUrl} />
       </div>
@@ -342,11 +363,22 @@ export default function LetterViewer({
           </span>
           <div className="flex items-center gap-3">
             <button
+              onClick={handleCopy}
+              className="text-[10px] uppercase tracking-[1px] px-2.5 py-1 cursor-pointer border transition-colors duration-200"
+              style={{
+                fontFamily: "var(--font-dm-mono)",
+                background: copied ? "var(--ink)" : "transparent",
+                color: copied ? "white" : "var(--muted-lm)",
+                borderColor: copied ? "var(--ink)" : "var(--rule)",
+              }}
+            >
+              {copied ? "✓ Copié" : "⎘ Copier"}
+            </button>
+            <button
               onClick={() => {
                 if (editing && pdfUrl) {
                   URL.revokeObjectURL(pdfUrl);
                   setPdfUrl(null);
-                  // Auto-refresh PDF preview after edit
                   setTimeout(() => generatePdfPreview(), 50);
                 }
                 setEditing(!editing);
