@@ -14,15 +14,6 @@ interface Profile {
   email_contact: string;
 }
 
-interface Letter {
-  id: string;
-  created_at: string;
-  type_name: string;
-  type: string;
-  generated_text: string;
-  sender_name: string | null;
-}
-
 const EMPTY: Profile = {
   full_name: "",
   address: "",
@@ -35,42 +26,31 @@ const EMPTY: Profile = {
 export default function ComptePage() {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>(EMPTY);
-  const [letters, setLetters] = useState<Letter[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { router.push("/login"); return; }
 
-      const [profileRes, lettersRes] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("full_name, address, postal_code, city, phone, email_contact")
-          .eq("id", session.user.id)
-          .single(),
-        supabase
-          .from("letters")
-          .select("id, created_at, type_name, type, generated_text, sender_name")
-          .eq("user_id", session.user.id)
-          .order("created_at", { ascending: false }),
-      ]);
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, address, postal_code, city, phone, email_contact")
+        .eq("id", session.user.id)
+        .single();
 
-      if (profileRes.data) {
+      if (data) {
         setProfile({
-          full_name: profileRes.data.full_name ?? "",
-          address: profileRes.data.address ?? "",
-          postal_code: profileRes.data.postal_code ?? "",
-          city: profileRes.data.city ?? "",
-          phone: profileRes.data.phone ?? "",
-          email_contact: profileRes.data.email_contact ?? "",
+          full_name: data.full_name ?? "",
+          address: data.address ?? "",
+          postal_code: data.postal_code ?? "",
+          city: data.city ?? "",
+          phone: data.phone ?? "",
+          email_contact: data.email_contact ?? "",
         });
       }
-      if (lettersRes.data) setLetters(lettersRes.data as Letter[]);
       setLoading(false);
     });
   }, [router]);
@@ -95,36 +75,6 @@ export default function ComptePage() {
       setTimeout(() => setSaved(false), 3000);
     }
     setSaving(false);
-  };
-
-  const handleDownloadPDF = async (letter: Letter) => {
-    setDownloadingId(letter.id);
-    try {
-      const senderAddress = [profile.address, `${profile.postal_code} ${profile.city}`]
-        .filter(Boolean).join("\n");
-      const res = await fetch("/api/pdf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: letter.generated_text,
-          senderName: letter.sender_name || profile.full_name,
-          senderAddress,
-          typeName: letter.type_name || letter.type,
-        }),
-      });
-      if (!res.ok) throw new Error();
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `lettre-${letter.type}-lettreMagique.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch {
-      alert("Erreur lors de la génération du PDF.");
-    } finally {
-      setDownloadingId(null);
-    }
   };
 
   const field = (
@@ -284,88 +234,17 @@ export default function ComptePage() {
               {saving ? "Sauvegarde…" : "Sauvegarder mes coordonnées →"}
             </button>
           </form>
-        </div>
-      </section>
 
-      {/* ═══ HISTORIQUE ═══ */}
-      <section
-        className="px-4 md:px-16 py-10 md:py-16"
-        style={{ borderTop: "1px solid var(--rule)", background: "var(--paper2)" }}
-      >
-        <div className="max-w-[700px] mx-auto">
-          <div
-            className="text-[10px] uppercase tracking-[2px] mb-6"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
-          >
-            Mes courriers générés
-          </div>
-
-          {letters.length === 0 ? (
-            <div
-              className="p-6 border-[2px] text-sm text-center"
-              style={{ borderColor: "var(--rule)", color: "var(--muted-lm)", fontFamily: "var(--font-lora)" }}
+          {/* Lien vers mes courriers */}
+          <div className="mt-8 text-center">
+            <Link
+              href="/mes-courriers"
+              className="text-sm no-underline font-semibold"
+              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
             >
-              Aucun courrier généré pour l&apos;instant.{" "}
-              <Link href="/generateur" className="no-underline font-semibold" style={{ color: "var(--accent)" }}>
-                Générer mon premier courrier →
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-[2px]">
-              {letters.map((letter) => (
-                <div key={letter.id} style={{ border: "2px solid var(--rule)", background: "var(--white-warm)" }}>
-                  <button
-                    onClick={() => setExpandedId(expandedId === letter.id ? null : letter.id)}
-                    className="w-full flex items-center justify-between px-5 py-4 text-left"
-                    style={{ background: "none", border: "none", cursor: "pointer" }}
-                  >
-                    <div>
-                      <div
-                        className="text-sm font-bold"
-                        style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}
-                      >
-                        {letter.type_name || letter.type}
-                      </div>
-                      <div
-                        className="text-[10px] mt-0.5"
-                        style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
-                      >
-                        {new Date(letter.created_at).toLocaleDateString("fr-FR", {
-                          day: "numeric", month: "long", year: "numeric"
-                        })}
-                      </div>
-                    </div>
-                    <span style={{ color: "var(--muted-lm)", fontSize: 18 }}>
-                      {expandedId === letter.id ? "▲" : "▼"}
-                    </span>
-                  </button>
-
-                  {expandedId === letter.id && (
-                    <div
-                      style={{ borderTop: "1px solid var(--rule)" }}
-                    >
-                      <div
-                        className="px-5 pt-4 pb-3 text-sm leading-[1.8] whitespace-pre-wrap"
-                        style={{ fontFamily: "var(--font-lora)", color: "var(--ink)" }}
-                      >
-                        {letter.generated_text}
-                      </div>
-                      <div className="px-5 pb-5">
-                        <button
-                          onClick={() => handleDownloadPDF(letter)}
-                          disabled={downloadingId === letter.id}
-                          className="flex items-center gap-2 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50"
-                          style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
-                        >
-                          {downloadingId === letter.id ? "Génération PDF…" : "⬇ Télécharger le PDF"}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+              Voir mes courriers générés →
+            </Link>
+          </div>
         </div>
       </section>
     </div>

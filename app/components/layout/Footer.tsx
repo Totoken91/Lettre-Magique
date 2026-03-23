@@ -37,6 +37,9 @@ export default function Footer() {
             <Link href="/generateur" className="hover:text-white transition-colors no-underline" style={{ color: "#555" }}>
               Générer
             </Link>
+            <Link href="/mes-courriers" className="hover:text-white transition-colors no-underline" style={{ color: "#555" }}>
+              Mes courriers
+            </Link>
           </div>
 
           {/* Legal links */}
