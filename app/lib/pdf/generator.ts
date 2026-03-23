@@ -412,7 +412,12 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     color: C_ACCENT,
   });
 
-  let sy = addrRowTopY - 14;
+  // Vertical centering: compute total text span then align to card center
+  const senderAddrLines = senderAddress.split("\n").filter(Boolean);
+  const numSenderLines = 1 + senderAddrLines.length + (senderPhone ? 1 : 0);
+  const senderTextSpan = (numSenderLines - 1) * LH_SENDER;
+  const senderCardCenterY = addrRowBottomY + addrRowH / 2;
+  let sy = senderCardCenterY + senderTextSpan / 2;
 
   curPage.drawText(senderName, {
     x: ML + 14, y: sy,
@@ -420,7 +425,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   });
   sy -= LH_SENDER + 2;
 
-  for (const line of senderAddress.split("\n").filter(Boolean)) {
+  for (const line of senderAddrLines) {
     curPage.drawText(line, {
       x: ML + 14, y: sy,
       size: SZ_SMALL, font: fontReg, color: C_INK,
@@ -475,8 +480,11 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       color: C_ACCENT,
     });
 
+    // Center text vertically in the objet rect (rect: y-4 → y-4+LH_BODY+8)
+    const objetRectCenterY = (y - 4) + (LH_BODY + 8) / 2;
+    const objetTextY = objetRectCenterY - SZ_BODY * 0.3;
     curPage.drawText(objetLine, {
-      x: ML + 12, y,
+      x: ML + 12, y: objetTextY,
       size: SZ_BODY, font: fontBold, color: C_ACCENT,
     });
     y -= LH_BODY + 16;
