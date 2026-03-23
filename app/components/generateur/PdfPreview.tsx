@@ -3,40 +3,37 @@
 import { useEffect, useRef, useState } from "react";
 
 interface PdfPreviewProps {
-  /** PDF blob URL or null if not yet generated */
   pdfUrl: string | null;
   loading?: boolean;
 }
 
-/**
- * Renders a PDF as canvas images — no browser toolbar.
- * Uses pdf.js to render each page at 2x resolution for sharp display.
- */
+type Status = "idle" | "loading" | "done" | "error";
+
 export default function PdfPreview({ pdfUrl, loading }: PdfPreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [pageImages, setPageImages] = useState<string[]>([]);
-  const [rendering, setRendering] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
 
   useEffect(() => {
     if (!pdfUrl) {
       setPageImages([]);
+      setStatus("idle");
       return;
     }
 
     let cancelled = false;
 
     async function renderPdf() {
-      setRendering(true);
+      setStatus("loading");
       try {
-        // Dynamic import to keep it client-only
         const pdfjsLib = await import("pdfjs-dist");
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
         const pdfBytes = await fetch(pdfUrl!).then((r) => r.arrayBuffer());
         const pdf = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
 
         const images: string[] = [];
-        const scale = 2; // 2x for retina sharpness
+        const scale = 2;
 
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
@@ -51,11 +48,13 @@ export default function PdfPreview({ pdfUrl, loading }: PdfPreviewProps) {
           images.push(canvas.toDataURL("image/png"));
         }
 
-        if (!cancelled) setPageImages(images);
-      } catch {
-        // silently fail
-      } finally {
-        if (!cancelled) setRendering(false);
+        if (!cancelled) {
+          setPageImages(images);
+          setStatus("done");
+        }
+      } catch (err) {
+        console.error("[PdfPreview] render error:", err);
+        if (!cancelled) setStatus("error");
       }
     }
 
@@ -63,7 +62,7 @@ export default function PdfPreview({ pdfUrl, loading }: PdfPreviewProps) {
     return () => { cancelled = true; };
   }, [pdfUrl]);
 
-  if (loading || rendering) {
+  if (loading || status === "loading" || status === "idle") {
     return (
       <div
         className="flex items-center justify-center py-20"
@@ -74,12 +73,14 @@ export default function PdfPreview({ pdfUrl, loading }: PdfPreviewProps) {
           fontSize: "12px",
         }}
       >
-        Génération de l&apos;aperçu…
+        {loading || status === "loading"
+          ? "Génération de l\u2019aperçu\u202f…"
+          : "\u00a0"}
       </div>
     );
   }
 
-  if (pageImages.length === 0) {
+  if (status === "error" || pageImages.length === 0) {
     return (
       <div
         className="flex items-center justify-center py-20"
@@ -107,11 +108,7 @@ export default function PdfPreview({ pdfUrl, loading }: PdfPreviewProps) {
           src={src}
           alt={`Page ${i + 1}`}
           className="w-full max-w-full shadow-lg"
-          style={{
-            maxWidth: "100%",
-            height: "auto",
-            background: "white",
-          }}
+          style={{ maxWidth: "100%", height: "auto", background: "white" }}
           draggable={false}
         />
       ))}
