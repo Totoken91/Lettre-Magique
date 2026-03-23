@@ -97,8 +97,15 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const fontBold   = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
-  // No logo image — use LM square fallback
-  const logoImage = null;
+  // Embed logo
+  let logoImage: Awaited<ReturnType<typeof pdfDoc.embedPng>> | null = null;
+  try {
+    const logoPath = path.join(process.cwd(), "public", "lm-logo.png");
+    const logoBytes = fs.readFileSync(logoPath);
+    logoImage = await pdfDoc.embedPng(logoBytes);
+  } catch {
+    // fallback handled below
+  }
 
   // ── Parse the generated text ──────────────────────────────────────────────
   // The AI output typically contains:
@@ -310,8 +317,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     // Header bar
     const headerBarY = A4_H - MT;
 
-    // Logo + brand name
-    let logoEndX = ML;
+    // Logo only — no brand text
     if (logoImage) {
       const logoH = 26;
       const logoW = logoImage.width * (logoH / logoImage.height);
@@ -319,7 +325,6 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
         x: ML, y: headerBarY - 3,
         width: logoW, height: logoH,
       });
-      logoEndX = ML + logoW + 6;
     } else {
       page.drawRectangle({
         x: ML, y: headerBarY - 1, width: 22, height: 22, color: C_ACCENT,
@@ -328,13 +333,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
         x: ML + 3, y: headerBarY + 5,
         size: 10, font: fontBold, color: C_WHITE,
       });
-      logoEndX = ML + 28;
     }
-    // Brand text
-    page.drawText("LM", {
-      x: logoEndX, y: headerBarY + 4,
-      size: 9, font: fontBold, color: C_INK,
-    });
 
     // Type badge (right)
     const typeLabel = typeName.toUpperCase();

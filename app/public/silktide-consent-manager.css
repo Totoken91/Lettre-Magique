@@ -470,41 +470,7 @@
 
 /* Cookie Icon */
 #silktide-cookie-icon {
-  display: none;
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  justify-content: center;
-  align-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 4px;
-  padding: 0px;
-  border: none;
-  background-color: #1d1d1b;
-  cursor: pointer;
-  box-shadow: 0px 2px 8px 0px #0000003a;
-  pointer-events: auto;
-  animation: silktide-fadeIn 0.3s ease-in-out forwards;
-}
-
-#silktide-cookie-icon.bottomRight {
-  left: auto;
-  right: 10px;
-}
-
-/* Masquer le SVG cookie, afficher logo LM à la place */
-#silktide-cookie-icon svg {
-  display: none;
-}
-
-#silktide-cookie-icon::after {
-  content: "LM";
-  font-family: "Syne", sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.5px;
+  display: none !important;
 }
 
 /* --------------------------------
