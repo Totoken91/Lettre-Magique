@@ -3,6 +3,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase/client";
+import AuthModal from "./AuthModal";
 
 interface ResultData {
   text: string;
@@ -12,8 +14,6 @@ interface ResultData {
   senderAddress: string;
   formData: Record<string, string>;
 }
-
-const EMAIL_KEY = "lm_lead_email";
 
 /** Render minimal markdown (bold, italic) to HTML */
 function renderMarkdown(text: string): string {
@@ -36,10 +36,9 @@ export default function ResultatClient() {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
 
-  // Email gate
-  const [showGate, setShowGate] = useState(false);
-  const [gateEmail, setGateEmail] = useState("");
-  const [gateError, setGateError] = useState("");
+  // Auth state
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("lm_result");
@@ -50,6 +49,11 @@ export default function ResultatClient() {
     const parsed = JSON.parse(stored);
     setResult(parsed);
     setEditedText(parsed.text);
+
+    // Check auth
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsLoggedIn(!!user);
+    });
   }, [router]);
 
   /** Current text (edited or original) */
@@ -59,7 +63,6 @@ export default function ResultatClient() {
   const generatePdfPreview = useCallback(async () => {
     if (!result) return;
     setLoadingPreview(true);
-    // Revoke previous blob URL
     if (pdfUrl) URL.revokeObjectURL(pdfUrl);
     try {
       const res = await fetch("/api/pdf", {
@@ -113,38 +116,16 @@ export default function ResultatClient() {
   };
 
   const handleDownloadClick = () => {
-    const alreadyCaptured = typeof window !== "undefined" && localStorage.getItem(EMAIL_KEY);
-    if (alreadyCaptured) {
+    if (!isLoggedIn) {
+      setShowAuthModal(true);
+    } else {
       triggerDownload();
-    } else {
-      setShowGate(true);
     }
   };
 
-  const handleGateSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (gateEmail && !gateEmail.includes("@")) {
-      setGateError("Email invalide");
-      return;
-    }
-    if (gateEmail) {
-      const emailToSave = gateEmail.toLowerCase().trim();
-      localStorage.setItem(EMAIL_KEY, emailToSave);
-      fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: emailToSave }),
-      }).catch(() => {});
-    } else {
-      localStorage.setItem(EMAIL_KEY, "skipped");
-    }
-    setShowGate(false);
-    triggerDownload();
-  };
-
-  const handleGateSkip = () => {
-    localStorage.setItem(EMAIL_KEY, "skipped");
-    setShowGate(false);
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
+    setIsLoggedIn(true);
     triggerDownload();
   };
 
@@ -161,6 +142,15 @@ export default function ResultatClient() {
 
   return (
     <>
+      {/* Auth modal */}
+      {showAuthModal && (
+        <AuthModal
+          context="download"
+          onSuccess={handleAuthSuccess}
+          onClose={() => setShowAuthModal(false)}
+        />
+      )}
+
       {/* Header */}
       <section
         className="relative overflow-hidden px-4 md:px-16 py-10 md:py-16"
@@ -207,7 +197,6 @@ export default function ResultatClient() {
             className="text-base leading-[1.7]"
             style={{ fontFamily: "var(--font-lora)", color: "#888" }}
           >
-  
             Vérifiez le contenu ci-dessous, modifiez-le si besoin, puis
             téléchargez votre PDF.
           </p>
@@ -241,7 +230,6 @@ export default function ResultatClient() {
                 <button
                   onClick={() => {
                     if (editing) {
-                      // Exiting edit mode — revoke stale PDF preview
                       if (pdfUrl) { URL.revokeObjectURL(pdfUrl); setPdfUrl(null); }
                     }
                     setEditing(!editing);
@@ -326,8 +314,8 @@ export default function ResultatClient() {
           {/* Actions */}
           <div className="flex flex-col gap-4">
 
-            {/* Email gate — s'affiche au premier clic sur Télécharger */}
-            {showGate && (
+            {/* Bandeau inscription si non connecté */}
+            {isLoggedIn === false && (
               <div
                 className="p-5 border-[2px]"
                 style={{
@@ -339,74 +327,34 @@ export default function ResultatClient() {
                   className="text-[11px] uppercase tracking-[1.5px] mb-1"
                   style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
                 >
-                  Votre PDF est prêt
+                  Inscription requise
                 </p>
                 <p
-                  className="text-[14px] leading-[1.5] mb-4"
+                  className="text-[14px] leading-[1.5] mb-0"
                   style={{ fontFamily: "var(--font-lora)", color: "var(--ink)" }}
                 >
-                  Laissez votre email pour recevoir vos prochaines lettres sans
-                  retaper vos informations.
+                  Créez un compte gratuit pour télécharger votre PDF. Vos courriers
+                  seront sauvegardés dans votre espace personnel.
                 </p>
-                <form onSubmit={handleGateSubmit} className="flex flex-col gap-3">
-                  <div className="flex gap-2">
-                    <input
-                      type="email"
-                      value={gateEmail}
-                      onChange={(e) => { setGateEmail(e.target.value); setGateError(""); }}
-                      placeholder="votre@email.fr"
-                      className="flex-1 px-4 py-3 text-sm outline-none border"
-                      style={{
-                        fontFamily: "var(--font-dm-mono)",
-                        borderColor: gateError ? "#c0392b" : "var(--rule)",
-                        background: "var(--white-warm)",
-                        color: "var(--ink)",
-                      }}
-                    />
-                    <button
-                      type="submit"
-                      disabled={downloading}
-                      className="px-5 py-3 text-sm font-bold uppercase tracking-[0.5px] text-white cursor-pointer"
-                      style={{
-                        fontFamily: "var(--font-syne)",
-                        background: "var(--accent)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {downloading ? "…" : "Télécharger →"}
-                    </button>
-                  </div>
-                  {gateError && (
-                    <p className="text-[11px]" style={{ color: "#c0392b", fontFamily: "var(--font-dm-mono)" }}>
-                      {gateError}
-                    </p>
-                  )}
-                  <button
-                    type="button"
-                    onClick={handleGateSkip}
-                    className="text-left text-[11px] underline cursor-pointer bg-transparent border-none p-0"
-                    style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
-                  >
-                    Télécharger sans laisser mon email →
-                  </button>
-                </form>
               </div>
             )}
 
-            {/* Bouton principal — masqué quand le gate est affiché */}
-            {!showGate && (
-              <button
-                onClick={handleDownloadClick}
-                disabled={downloading}
-                className="w-full py-5 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50 cursor-pointer hover:brightness-90"
-                style={{
-                  fontFamily: "var(--font-syne)",
-                  background: downloading ? "#888" : "var(--accent)",
-                }}
-              >
-                {downloading ? "Génération PDF…" : "⬇ Télécharger le PDF"}
-              </button>
-            )}
+            {/* Bouton principal */}
+            <button
+              onClick={handleDownloadClick}
+              disabled={downloading}
+              className="w-full py-5 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50 cursor-pointer hover:brightness-90"
+              style={{
+                fontFamily: "var(--font-syne)",
+                background: downloading ? "#888" : "var(--accent)",
+              }}
+            >
+              {downloading
+                ? "Génération PDF…"
+                : isLoggedIn === false
+                ? "Créer un compte pour télécharger le PDF"
+                : "⬇ Télécharger le PDF"}
+            </button>
 
             {/* Ouvrir la boite mail */}
             <button

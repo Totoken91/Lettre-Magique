@@ -6,9 +6,10 @@ import { supabase } from "@/lib/supabase/client";
 interface Props {
   onSuccess: () => void;
   onClose: () => void;
+  context?: "generate" | "download";
 }
 
-export default function AuthModal({ onSuccess, onClose }: Props) {
+export default function AuthModal({ onSuccess, onClose, context = "generate" }: Props) {
   const [mode, setMode] = useState<"signup" | "login">("signup");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -122,7 +123,11 @@ export default function AuthModal({ onSuccess, onClose }: Props) {
                   style={{ fontFamily: "var(--font-syne)" }}
                 >
                   {mode === "signup"
-                    ? "Créez votre compte pour générer votre courrier"
+                    ? context === "download"
+                      ? "Créez votre compte pour télécharger le PDF"
+                      : "Créez votre compte pour générer votre courrier"
+                    : context === "download"
+                    ? "Connectez-vous pour télécharger le PDF"
                     : "Connectez-vous pour générer votre courrier"}
                 </h2>
                 {mode === "signup" && (
@@ -212,7 +217,11 @@ export default function AuthModal({ onSuccess, onClose }: Props) {
                   {loading
                     ? "…"
                     : mode === "signup"
-                    ? "Créer mon compte et générer →"
+                    ? context === "download"
+                      ? "Créer mon compte et télécharger →"
+                      : "Créer mon compte et générer →"
+                    : context === "download"
+                    ? "Se connecter et télécharger →"
                     : "Se connecter et générer →"}
                 </button>
               </form>

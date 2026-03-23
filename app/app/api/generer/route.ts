@@ -95,17 +95,16 @@ export async function POST(req: Request) {
       return Response.json({ error: "refused", text }, { status: 422 });
     }
 
-    if (!isAnonymous && user) {
-      await (getSupabaseAdmin().from("letters") as any).insert({
-        user_id: user.id,
-        email: user.email,
-        type,
-        type_name: type,
-        form_data: formData,
-        generated_text: text,
-        sender_name: senderName,
-      });
-    }
+    // Sauvegarder le courrier (anonyme ou authentifié)
+    await (getSupabaseAdmin().from("letters") as any).insert({
+      user_id: user?.id ?? null,
+      email: user ? user.email : "free try",
+      type,
+      type_name: type,
+      form_data: formData,
+      generated_text: text,
+      sender_name: senderName,
+    });
 
     const response = Response.json({ text });
     if (isAnonymous) {
