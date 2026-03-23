@@ -13,11 +13,18 @@ interface ResultData {
   formData: Record<string, string>;
 }
 
+const EMAIL_KEY = "lm_lead_email";
+
 export default function ResultatClient() {
   const router = useRouter();
   const [result, setResult] = useState<ResultData | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [emailStatus, setEmailStatus] = useState<"idle" | "copied">("idle");
+
+  // Email gate
+  const [showGate, setShowGate] = useState(false);
+  const [gateEmail, setGateEmail] = useState("");
+  const [gateError, setGateError] = useState("");
 
   useEffect(() => {
     const stored = sessionStorage.getItem("lm_result");
@@ -39,7 +46,7 @@ export default function ResultatClient() {
     setTimeout(() => setEmailStatus("idle"), 3500);
   };
 
-  const handleDownloadPDF = async () => {
+  const triggerDownload = async () => {
     if (!result) return;
     setDownloading(true);
     try {
@@ -61,6 +68,42 @@ export default function ResultatClient() {
     } finally {
       setDownloading(false);
     }
+  };
+
+  const handleDownloadClick = () => {
+    const alreadyCaptured = typeof window !== "undefined" && localStorage.getItem(EMAIL_KEY);
+    if (alreadyCaptured) {
+      triggerDownload();
+    } else {
+      setShowGate(true);
+    }
+  };
+
+  const handleGateSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (gateEmail && !gateEmail.includes("@")) {
+      setGateError("Email invalide");
+      return;
+    }
+    if (gateEmail) {
+      const emailToSave = gateEmail.toLowerCase().trim();
+      localStorage.setItem(EMAIL_KEY, emailToSave);
+      fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailToSave }),
+      }).catch(() => {});
+    } else {
+      localStorage.setItem(EMAIL_KEY, "skipped");
+    }
+    setShowGate(false);
+    triggerDownload();
+  };
+
+  const handleGateSkip = () => {
+    localStorage.setItem(EMAIL_KEY, "skipped");
+    setShowGate(false);
+    triggerDownload();
   };
 
   if (!result) {
@@ -175,17 +218,88 @@ export default function ResultatClient() {
 
           {/* Actions */}
           <div className="flex flex-col gap-4">
-            <button
-              onClick={handleDownloadPDF}
-              disabled={downloading}
-              className="w-full py-5 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50 cursor-pointer hover:brightness-90"
-              style={{
-                fontFamily: "var(--font-syne)",
-                background: downloading ? "#888" : "var(--accent)",
-              }}
-            >
-              {downloading ? "Génération PDF…" : "⬇ Télécharger le PDF"}
-            </button>
+
+            {/* Email gate — s'affiche au premier clic sur Télécharger */}
+            {showGate && (
+              <div
+                className="p-5 border-[2px]"
+                style={{
+                  borderColor: "var(--accent)",
+                  background: "var(--paper2)",
+                }}
+              >
+                <p
+                  className="text-[11px] uppercase tracking-[1.5px] mb-1"
+                  style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
+                >
+                  Votre PDF est prêt
+                </p>
+                <p
+                  className="text-[14px] leading-[1.5] mb-4"
+                  style={{ fontFamily: "var(--font-lora)", color: "var(--ink)" }}
+                >
+                  Laissez votre email pour recevoir vos prochaines lettres sans
+                  retaper vos informations.
+                </p>
+                <form onSubmit={handleGateSubmit} className="flex flex-col gap-3">
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={gateEmail}
+                      onChange={(e) => { setGateEmail(e.target.value); setGateError(""); }}
+                      placeholder="votre@email.fr"
+                      className="flex-1 px-4 py-3 text-sm outline-none border"
+                      style={{
+                        fontFamily: "var(--font-dm-mono)",
+                        borderColor: gateError ? "#c0392b" : "var(--rule)",
+                        background: "var(--white-warm)",
+                        color: "var(--ink)",
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={downloading}
+                      className="px-5 py-3 text-sm font-bold uppercase tracking-[0.5px] text-white cursor-pointer"
+                      style={{
+                        fontFamily: "var(--font-syne)",
+                        background: "var(--accent)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {downloading ? "…" : "Télécharger →"}
+                    </button>
+                  </div>
+                  {gateError && (
+                    <p className="text-[11px]" style={{ color: "#c0392b", fontFamily: "var(--font-dm-mono)" }}>
+                      {gateError}
+                    </p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleGateSkip}
+                    className="text-left text-[11px] underline cursor-pointer bg-transparent border-none p-0"
+                    style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+                  >
+                    Télécharger sans laisser mon email →
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* Bouton principal — masqué quand le gate est affiché */}
+            {!showGate && (
+              <button
+                onClick={handleDownloadClick}
+                disabled={downloading}
+                className="w-full py-5 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50 cursor-pointer hover:brightness-90"
+                style={{
+                  fontFamily: "var(--font-syne)",
+                  background: downloading ? "#888" : "var(--accent)",
+                }}
+              >
+                {downloading ? "Génération PDF…" : "⬇ Télécharger le PDF"}
+              </button>
+            )}
 
             {/* Ouvrir la boite mail */}
             <button

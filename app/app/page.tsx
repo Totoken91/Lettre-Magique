@@ -272,7 +272,7 @@ export default async function Home() {
         }}
       >
         <div className="max-w-[980px] mx-auto">
-          <div className="flex items-baseline gap-5 mb-12 reveal">
+          <div className="flex items-baseline gap-5 mb-10 reveal">
             <span
               className="text-[11px] font-medium"
               style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
@@ -288,77 +288,88 @@ export default async function Home() {
             </h2>
           </div>
 
-          <div className="relative mt-12 reveal">
-            <div
-              className="absolute left-[24px] top-0 bottom-0 w-[2px]"
-              style={{ background: "var(--rule)" }}
-            />
+          {/* 3 cards — grid desktop, stack mobile */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px reveal" style={{ background: "var(--rule)" }}>
             {[
               {
-                num: "1",
-                color: "var(--ink)",
-                tag: "Choix",
-                title: "Choisissez le type de courrier",
-                desc: "Résiliation, réclamation, mise en demeure, contestation, demande… 10 catégories couvrent 95% des besoins administratifs du quotidien.",
+                num: "01",
+                emoji: "🗂️",
+                accent: "var(--ink)",
+                tag: "Choisissez",
+                title: "Le type de courrier",
+                desc: "Résiliation, réclamation, mise en demeure… 10 catégories, tous les cas du quotidien.",
                 badge: null,
               },
               {
-                num: "2",
-                color: "var(--accent)",
-                tag: "Questions",
-                title: "Répondez à 3-4 questions",
-                desc: "Qui est le destinataire ? Quel est le motif ? Depuis quand ? Le formulaire s'adapte selon le type de courrier — jamais plus de 4 questions.",
-                badge: "→ Moins de 60 secondes",
+                num: "02",
+                emoji: "✍️",
+                accent: "var(--accent)",
+                tag: "Répondez",
+                title: "À 3-4 questions",
+                desc: "Destinataire, motif, contexte. Le formulaire s'adapte — jamais plus de 4 champs.",
+                badge: "< 60 secondes",
               },
               {
-                num: "3",
-                color: "var(--green)",
-                tag: "Résultat",
-                title: "Téléchargez votre PDF",
-                desc: "Un courrier professionnel, personnalisé, avec les mentions légales à jour, en PDF prêt à imprimer ou envoyer. Formules de politesse incluses. Ton adapté à la situation.",
-                badge: "→ Prêt à envoyer en recommandé",
+                num: "03",
+                emoji: "📄",
+                accent: "var(--green)",
+                tag: "Téléchargez",
+                title: "Votre PDF prêt à envoyer",
+                desc: "Mise en page professionnelle, mentions légales, formules de politesse. Prêt pour recommandé.",
+                badge: "Gratuit · Sans inscription",
               },
             ].map((step) => (
-              <div key={step.num} className="flex gap-7 mb-10 relative">
-                <div
-                  className="shrink-0 w-[50px] h-[50px] rounded-full flex items-center justify-center text-sm font-extrabold relative z-10 text-white"
-                  style={{
-                    fontFamily: "var(--font-syne)",
-                    background: step.color,
-                    border: "3px solid var(--paper)",
-                  }}
-                >
-                  {step.num}
+              <div
+                key={step.num}
+                className="flex flex-col gap-4 p-7 md:p-8"
+                style={{ background: "var(--white-warm)" }}
+              >
+                {/* Numéro + emoji */}
+                <div className="flex items-center gap-3">
+                  <span
+                    className="text-[11px] font-medium"
+                    style={{ fontFamily: "var(--font-dm-mono)", color: step.accent }}
+                  >
+                    {step.num}
+                  </span>
+                  <span className="text-2xl leading-none">{step.emoji}</span>
                 </div>
-                <div className="flex-1 pt-2">
+
+                {/* Tag + title */}
+                <div>
                   <div
                     className="text-[10px] uppercase tracking-[2px] mb-1"
-                    style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
+                    style={{ fontFamily: "var(--font-dm-mono)", color: step.accent }}
                   >
                     {step.tag}
                   </div>
                   <h3
-                    className="text-lg font-bold mb-2"
+                    className="text-[17px] font-bold leading-[1.25]"
                     style={{ fontFamily: "var(--font-syne)" }}
                   >
                     {step.title}
                   </h3>
-                  <p className="text-[15px] leading-[1.65]" style={{ color: "#555" }}>
-                    {step.desc}
-                  </p>
-                  {step.badge && (
-                    <div
-                      className="inline-block text-[11px] px-3 py-1 mt-2.5 font-medium"
-                      style={{
-                        fontFamily: "var(--font-dm-mono)",
-                        background: "var(--paper2)",
-                        color: "var(--green)",
-                      }}
-                    >
-                      {step.badge}
-                    </div>
-                  )}
                 </div>
+
+                {/* Desc */}
+                <p className="text-[14px] leading-[1.6]" style={{ color: "#666" }}>
+                  {step.desc}
+                </p>
+
+                {/* Badge */}
+                {step.badge && (
+                  <div
+                    className="self-start text-[10px] uppercase tracking-[1px] px-2.5 py-1"
+                    style={{
+                      fontFamily: "var(--font-dm-mono)",
+                      background: "#2d6a4f18",
+                      color: "var(--green)",
+                      border: "1px solid #2d6a4f33",
+                    }}
+                  >
+                    ✓ {step.badge}
+                  </div>
+                )}
               </div>
             ))}
           </div>
