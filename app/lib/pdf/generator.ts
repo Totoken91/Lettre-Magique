@@ -319,7 +319,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
     // Logo only — no brand text
     if (logoImage) {
-      const logoH = 26;
+      const logoH = 20;
       const logoW = logoImage.width * (logoH / logoImage.height);
       page.drawImage(logoImage, {
         x: ML, y: headerBarY - 3,
