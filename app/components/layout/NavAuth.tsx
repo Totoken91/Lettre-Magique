@@ -178,7 +178,7 @@ export default function NavAuth() {
       {/* Dropdown menu */}
       {menuOpen && (
         <div
-          className="fixed top-14 left-0 right-0 z-40 flex flex-col overflow-y-auto"
+          className="menu-slide-down fixed top-14 left-0 right-0 z-40 flex flex-col overflow-y-auto"
           style={{ background: "var(--ink)", borderBottom: "2px solid var(--accent)", maxHeight: "calc(100dvh - 56px)" }}
         >
           {user ? (

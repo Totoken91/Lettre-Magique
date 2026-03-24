@@ -222,6 +222,15 @@ body::before {
   box-shadow: 0 8px 24px rgba(200,75,47,0.3);
 }
 
+/* Hamburger menu slide-down */
+@keyframes menuSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.menu-slide-down {
+  animation: menuSlideDown 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Scroll reveal — hidden only when JS is active */
 .reveal {
   transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
