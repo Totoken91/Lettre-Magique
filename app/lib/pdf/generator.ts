@@ -39,6 +39,21 @@ const LH_SENDER  = 13;
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
+/** Replace non-Latin-1 characters with ASCII equivalents for pdf-lib compatibility */
+function sanitizePdf(text: string): string {
+  return text
+    .replace(/[\u2018\u2019\u201A\u201B]/g, "'")  // curly single quotes → straight
+    .replace(/[\u201C\u201D\u201E\u201F]/g, '"')  // curly double quotes → straight
+    .replace(/\u2014|\u2015/g, '--')              // em dash → --
+    .replace(/\u2013/g, '-')                      // en dash → -
+    .replace(/\u2026/g, '...')                    // ellipsis → ...
+    .replace(/\u00AB/g, '<<').replace(/\u00BB/g, '>>')  // guillemets
+    .replace(/\u2039/g, '<').replace(/\u203A/g, '>')
+    .replace(/\u2022/g, '-')                      // bullet → -
+    .replace(/\u00A0/g, ' ')                      // non-breaking space → space
+    .replace(/[^\x00-\xFF]/g, '?');               // remaining non-Latin-1 → ?
+}
+
 function stripMarkdown(text: string): string {
   return text
     .replace(/\*\*(.+?)\*\*/g, "$1")
@@ -89,8 +104,12 @@ function drawTextRight(
 // ─── Main generator ─────────────────────────────────────────────────────────
 
 export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> {
-  const { text, senderName, senderAddress, senderPhone: rawPhone, senderEmail, typeName } = params;
-  const senderPhone = rawPhone?.trim() || "";
+  const text         = sanitizePdf(params.text);
+  const senderName   = sanitizePdf(params.senderName);
+  const senderAddress = sanitizePdf(params.senderAddress);
+  const senderPhone  = sanitizePdf(params.senderPhone?.trim() || "");
+  const senderEmail  = sanitizePdf(params.senderEmail || "");
+  const typeName     = sanitizePdf(params.typeName);
 
   const pdfDoc = await PDFDocument.create();
   const fontReg    = await pdfDoc.embedFont(StandardFonts.Helvetica);
