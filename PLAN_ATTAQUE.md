@@ -154,4 +154,38 @@ STRIPE_PRICE_SUB=price_...         # 4,99€/mois
 
 ---
 
-*Plan créé le 21 mars 2026 — MVP en cours — dernière mise à jour 22 mars 2026*
+## Objectif futur — LM Mail (envoi postal automatisé)
+
+> **LM Mail = levier business majeur.** La génération du courrier c'est 1,99 €, l'envoi via LM Mail c'est +0,50 € (ou inclus dans le plan Pro). Ça augmente l'ARPU sans friction. Et surtout, ça crée de la valeur que ChatGPT ne pourra jamais offrir.
+
+### Pourquoi c'est stratégique
+
+- **Moat défensif** : un LLM génère du texte, mais il n'envoie pas de courrier recommandé. LM Mail transforme LettreMagique en service complet.
+- **ARPU x1.25 minimum** : chaque courrier à 1,99 € + 0,50 € d'envoi = +25% de revenu par transaction.
+- **Rétention** : un utilisateur qui a envoyé un courrier via LM Mail revient pour le suivi (accusé de réception, relance).
+- **Upsell naturel** : inclure LM Mail dans le plan Pro (4,99 €/mois) justifie le prix et augmente la conversion free → Pro.
+
+### Modèle de pricing envisagé
+
+| Offre | Génération | Envoi LM Mail |
+|-------|-----------|---------------|
+| Gratuit (1er courrier) | 0 € | Non disponible |
+| À l'unité | 1,99 € | +0,50 € |
+| Pro (4,99 €/mois) | Illimité | Inclus (5/mois) puis 0,30 € |
+
+### Intégration technique
+
+- API d'envoi postal (ex: Maileva, Merci Facteur API, ou La Poste API Courrier)
+- Workflow : PDF généré → confirmation utilisateur → paiement → envoi API → tracking AR
+- Stockage du statut d'envoi en base (`letter_send_status`: pending, sent, delivered, returned)
+- Dashboard : suivi des courriers envoyés avec statut temps réel
+
+### Priorité
+
+- Phase 1 (maintenant) : valider le PMF avec la génération seule
+- Phase 2 (après 100 utilisateurs payants) : intégrer LM Mail en beta
+- Phase 3 : LM Mail devient l'argument différenciant n°1 dans le marketing
+
+---
+
+*Plan créé le 21 mars 2026 — MVP en cours — dernière mise à jour 24 mars 2026*
