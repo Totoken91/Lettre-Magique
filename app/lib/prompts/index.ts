@@ -1,3 +1,5 @@
+import { findCompanyAddress } from "@/data/company-addresses";
+
 const TODAY = () => {
   const d = new Date();
   return d.toLocaleDateString("fr-FR", {
@@ -13,17 +15,28 @@ Règles OBLIGATOIRES :
 - Format standard courrier français : Expéditeur (déjà fourni) / Date / Destinataire / Objet / Corps / Formule de politesse / Signature
 - Ton : formel, professionnel, direct, sans agressivité
 - Longueur : 150–250 mots maximum
-- Aucun crochet, aucun placeholder dans le résultat final
+- INTERDIT : Ne jamais utiliser de crochets [] ou de texte placeholder. Si une information manque (adresse, numéro, etc.), ne pas l'inclure dans le courrier plutôt que mettre un placeholder
+- Ne jamais écrire [Adresse], [Nom], [Numéro] ou toute forme de [texte entre crochets]
 - RÉFÉRENCES LÉGALES OBLIGATOIRES : Tu DOIS citer au moins 2 articles de loi pertinents avec leur numéro exact (ex : art. L217-4 du Code de la consommation, art. 1231-1 du Code civil, art. L113-5 du Code des assurances). Ces références doivent être intégrées naturellement dans le texte, jamais en note de bas de page.
 `.trim();
 
 function header(senderName: string, senderAddress: string, recipient: string) {
+  // Try to find known company address
+  const company = findCompanyAddress(recipient);
+  const recipientBlock = company
+    ? [
+        company.name,
+        company.service,
+        ...(company.postalCode && company.city ? [`${company.postalCode} ${company.city}`] : []),
+      ].join("\n")
+    : recipient;
+
   return `${senderName}
 ${senderAddress}
 
 ${TODAY()}
 
-${recipient}`;
+${recipientBlock}`;
 }
 
 export function buildPrompt(

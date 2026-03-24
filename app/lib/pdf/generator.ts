@@ -68,6 +68,11 @@ function stripMarkdown(text: string): string {
     .trim();
 }
 
+/** Remove lines containing [placeholder] brackets — safety net for AI output */
+function stripPlaceholderLines(lines: string[]): string[] {
+  return lines.filter((line) => !/\[.*?\]/.test(line));
+}
+
 function isFullBold(text: string): boolean {
   return /^\*\*(.+)\*\*$/.test(text.trim());
 }
@@ -243,6 +248,15 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     dateLine = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
   }
 
+  // Filter out lines containing [placeholder] brackets
+  const filteredRecipientLines = stripPlaceholderLines(recipientLines);
+  const filteredBodyLines = stripPlaceholderLines(bodyLines);
+  // Replace arrays in-place
+  recipientLines.length = 0;
+  recipientLines.push(...filteredRecipientLines);
+  bodyLines.length = 0;
+  bodyLines.push(...filteredBodyLines);
+
   // ── Build render lines ─────────────────────────────────────────────────────
 
   type LineKind = "text" | "bold" | "objet" | "list" | "spacer";
@@ -282,20 +296,49 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     }
   }
 
-  // Remove sender name from end of body when signature block is active
+  // Pre-process: when signature block is active, extract closing elements from body
+  let extractedClosingFormula = "";
   if (signatureMode) {
+    const faitARegex = /^fait\s+(a|à)\s+/i;
+    const closingRegex = /^(cordialement|veuillez agr[ée]er|je vous prie|recevez|dans l.attente)/i;
     const nameNorm = senderName.trim().toLowerCase();
-    // Find last non-spacer line
-    let lastIdx = rLines.length - 1;
-    while (lastIdx >= 0 && rLines[lastIdx].kind === "spacer") lastIdx--;
-    if (
-      lastIdx >= 0 &&
-      rLines[lastIdx].text.trim().toLowerCase().includes(nameNorm.split(" ")[0].toLowerCase())
-    ) {
-      rLines.splice(lastIdx); // remove name and any trailing spacers
-      while (rLines.length > 0 && rLines[rLines.length - 1].kind === "spacer") {
+    const firstNameNorm = nameNorm.split(" ")[0].toLowerCase();
+
+    // Remove trailing: sender name, "Fait à...", closing formula (from end)
+    // Step 1: Remove trailing spacers
+    while (rLines.length > 0 && rLines[rLines.length - 1].kind === "spacer") rLines.pop();
+
+    // Step 2: Remove sender name if it's the last line
+    if (rLines.length > 0) {
+      const lastText = rLines[rLines.length - 1].text.trim().toLowerCase();
+      if (lastText.includes(firstNameNorm)) {
         rLines.pop();
+        while (rLines.length > 0 && rLines[rLines.length - 1].kind === "spacer") rLines.pop();
       }
+    }
+
+    // Step 3: Remove "Fait à..." lines from the end
+    while (rLines.length > 0) {
+      const last = rLines[rLines.length - 1];
+      if (last.kind === "spacer") { rLines.pop(); continue; }
+      if (faitARegex.test(last.text.trim())) { rLines.pop(); continue; }
+      break;
+    }
+
+    // Step 4: Extract closing formula from end (e.g. "Cordialement," or "Veuillez agréer...")
+    const trailingLines: string[] = [];
+    let searchIdx = rLines.length - 1;
+    while (searchIdx >= 0 && rLines[searchIdx].kind === "spacer") searchIdx--;
+    // Collect contiguous non-spacer lines at the end
+    while (searchIdx >= 0 && rLines[searchIdx].kind !== "spacer") {
+      trailingLines.unshift(rLines[searchIdx].text);
+      searchIdx--;
+    }
+    const candidate = trailingLines.join(" ").trim();
+    if (closingRegex.test(candidate)) {
+      extractedClosingFormula = candidate;
+      rLines.splice(searchIdx + 1); // remove from the start of the closing block
+      while (rLines.length > 0 && rLines[rLines.length - 1].kind === "spacer") rLines.pop();
     }
   }
 
@@ -305,7 +348,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     : [];
   const LH_OBJET_LINE = SZ_OBJET + 4; // line height within objet block
   const objetBoxH = objetWrapped.length > 0
-    ? objetWrapped.length * LH_OBJET_LINE + (refNumber ? 16 : 0) + 14
+    ? objetWrapped.length * LH_OBJET_LINE + 14
     : 0;
   const objetH = objetBoxH > 0 ? objetBoxH + 16 : 0;
 
@@ -328,8 +371,9 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   for (const rl of rLines) bodyH += rl.kind === "spacer" ? LH_BODY * 0.7 : LH_BODY;
 
   // Add signature block height if applicable
+  // Fait à + closing formula + signature space + name
   const SIG_BLOCK_H = signatureMode
-    ? 8 + 12 + (signatureMode === "print" ? 65 : 55) + LH_BODY + 16
+    ? 8 + LH_BODY + 4 + LH_BODY * 2 + (signatureMode === "print" ? 80 + LH_BODY : 55) + 16
     : 0;
   bodyH += SIG_BLOCK_H;
 
@@ -481,14 +525,6 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
       objetTextY -= LH_OBJET_LINE;
     }
 
-    // Ref number sub-line at bottom of box (if present)
-    if (refNumber) {
-      curPage.drawText(
-        sanitizePdf(`Réf. ${refNumber}`),
-        { x: ML + 12, y: y - 4 + 5, size: 7, font: fontReg, color: C_MUTED }
-      );
-    }
-
     y -= objetBoxH + 16;
   }
 
@@ -512,38 +548,44 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   // ── SIGNATURE BLOCK ───────────────────────────────────────────────────────
   if (signatureMode) {
     const city = extractCity(senderAddress);
-    const faitAText = sanitizePdf(`Fait à ${city}, le ${dateLine}`);
+    const faitAText = sanitizePdf(`Fait a ${city}, le ${dateLine}`);
 
     ensureSpace(SIG_BLOCK_H);
-    y -= 8; // small gap after closing formula
+    y -= 8;
 
-    // "Fait à [city], le [date]"
+    // 1. "Fait à [city], le [date]" (9pt, grey) — BEFORE closing formula
     curPage.drawText(faitAText, { x: ML, y, size: 8, font: fontReg, color: C_MUTED });
-    y -= 14;
+    y -= LH_BODY + 4;
 
+    // 2. Closing formula (extracted during pre-processing)
+    if (extractedClosingFormula) {
+      const closingWrapped = wrapText(sanitizePdf(extractedClosingFormula), fontReg, SZ_BODY, BODY_W);
+      for (const cl of closingWrapped) {
+        ensureSpace(LH_BODY);
+        curPage.drawText(cl, { x: ML, y, size: SZ_BODY, font: fontReg, color: C_INK });
+        y -= LH_BODY;
+      }
+      y -= 4;
+    }
+
+    // 3. Signature
     if (signatureMode === "print") {
-      // Signature label + subtle underline
-      curPage.drawText("Signature :", { x: ML, y, size: 8, font: fontReg, color: C_LIGHT });
-      curPage.drawLine({
-        start: { x: ML + 68, y: y + 2 },
-        end: { x: ML + BODY_W * 0.45, y: y + 2 },
-        thickness: 0.5, color: C_LIGHT,
-      });
-      y -= 60; // empty space for handwritten signature
+      // Empty space for handwritten signature (80px) then bold name
+      y -= 80;
+      curPage.drawText(sanitizePdf(senderName), { x: ML, y, size: SZ_BODY, font: fontBold, color: C_INK });
+      y -= LH_BODY;
     } else if (signatureMode === "typed" && sigImage) {
-      // Embed cursive signature image
+      // Cursive signature image only — no name below (signature IS the name)
       const sigH = 50;
       const sigW = Math.min(sigImage.width * (sigH / sigImage.height), BODY_W * 0.55);
       curPage.drawImage(sigImage, { x: ML, y: y - sigH, width: sigW, height: sigH });
       y -= sigH + 8;
     } else {
-      // typed mode but no image: minimal space
+      // typed mode but no image: space + name
       y -= 35;
+      curPage.drawText(sanitizePdf(senderName), { x: ML, y, size: SZ_BODY, font: fontBold, color: C_INK });
+      y -= LH_BODY;
     }
-
-    // Bold sender name
-    curPage.drawText(sanitizePdf(senderName), { x: ML, y, size: SZ_BODY, font: fontBold, color: C_INK });
-    y -= LH_BODY;
   }
 
   // ── Bottom dashed stripe ──────────────────────────────────────────────────
