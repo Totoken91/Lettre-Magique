@@ -144,7 +144,7 @@ export default function ComptePage() {
         <div className="max-w-[700px] mx-auto">
           <div
             className="text-[11px] uppercase tracking-[3px] mb-5"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
           >
             Mon compte
           </div>

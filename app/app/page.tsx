@@ -45,7 +45,7 @@ export default async function Home() {
 
           <div
             className="text-[11px] uppercase tracking-[3px] mb-7 animate-fade-up-1"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
           >
             Le courrier qui fait bouger les choses
           </div>
@@ -663,7 +663,7 @@ export default async function Home() {
         <div className="max-w-[540px] mx-auto">
           <div
             className="text-[11px] uppercase tracking-[3px] mb-5"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
           >
             Essayez maintenant — sans inscription
           </div>

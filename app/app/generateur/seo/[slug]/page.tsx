@@ -144,8 +144,8 @@ export default async function SeoPage({ params }: { params: Promise<{ slug: stri
       <section className="relative overflow-hidden px-4 md:px-16 py-12 md:py-20" style={{ background: "var(--ink)", color: "var(--white-warm)" }}>
         <div className="absolute bottom-0 left-0 right-0 h-[4px]" style={{ background: "repeating-linear-gradient(90deg, var(--accent) 0, var(--accent) 20px, transparent 20px, transparent 24px)" }} />
         <div className="max-w-[780px] mx-auto">
-          <div className="text-[11px] uppercase tracking-[3px] mb-5" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>
-            {letterType && <LetterTypeIcon typeId={letterType.id} size={14} color="var(--accent)" />} {letterType?.name}
+          <div className="text-[11px] uppercase tracking-[3px] mb-5" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}>
+            {letterType && <LetterTypeIcon typeId={letterType.id} size={14} color="var(--rule)" />} {letterType?.name}
           </div>
           <h1 className="font-extrabold leading-[0.92] tracking-[-2px] mb-5" style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(30px, 4vw, 50px)" }}>
             {page.h1}

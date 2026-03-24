@@ -108,7 +108,7 @@ export default function MesCourriersPage() {
       <section className="relative overflow-hidden px-4 md:px-16 py-10 md:py-16" style={{ background: "var(--ink)", color: "var(--white-warm)" }}>
         <div className="absolute bottom-0 left-0 right-0 h-[4px]" style={{ background: "repeating-linear-gradient(90deg, var(--accent) 0, var(--accent) 20px, transparent 20px, transparent 24px)" }} />
         <div className="max-w-[980px] mx-auto">
-          <div className="text-[11px] uppercase tracking-[3px] mb-5" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>Mon espace</div>
+          <div className="text-[11px] uppercase tracking-[3px] mb-5" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}>Mon espace</div>
           <h1 className="font-extrabold leading-[0.92] tracking-[-2px]" style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(28px, 3.5vw, 44px)" }}>
             Mes{" "}<em style={{ color: "var(--accent)", fontStyle: "italic", fontFamily: "var(--font-lora)", fontWeight: 500 }}>courriers</em>
           </h1>
