@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import FooterWrapper from "@/components/layout/FooterWrapper";
 import ScrollReveal from "@/components/landing/ScrollReveal";
 import PageTracker from "@/components/layout/PageTracker";
 
@@ -52,7 +52,7 @@ export default function RootLayout({
         <ScrollReveal />
         <PageTracker />
         <main className="flex-1">{children}</main>
-        <Footer />
+        <FooterWrapper />
         {/* Cookie banner script */}
         <script dangerouslySetInnerHTML={{ __html: `
 (function() {
