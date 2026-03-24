@@ -103,8 +103,8 @@ export default async function Home() {
       <section className="px-4 md:px-16 py-8 md:py-12 reveal" style={{ background: "var(--white-warm)", borderBottom: "1px solid var(--rule)" }}>
         <div className="max-w-[980px] mx-auto">
           <h2
-            className="font-extrabold tracking-[-0.5px] mb-6"
-            style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(20px, 2.5vw, 26px)", color: "var(--ink)" }}
+            className="font-extrabold tracking-[-0.5px] mb-4 sm:mb-6"
+            style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(18px, 2.5vw, 26px)", color: "var(--ink)" }}
           >
             Quel courrier avez-vous besoin ?
           </h2>
@@ -140,9 +140,9 @@ export default async function Home() {
       {/* ═══ 01 — POURQUOI C'EST PÉNIBLE ═══ */}
       <section className="px-4 md:px-16 py-12 md:py-20 reveal">
         <div className="max-w-[980px] mx-auto">
-          <div className="flex items-baseline gap-5 mb-12">
-            <span className="text-[11px] font-medium" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>01</span>
-            <h2 className="text-[clamp(26px,3.5vw,34px)] font-extrabold tracking-[-1px] leading-[1.1]" style={{ fontFamily: "var(--font-syne)" }}>
+          <div className="flex items-baseline gap-3 sm:gap-5 mb-8 sm:mb-12">
+            <span className="text-[11px] font-medium shrink-0" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>01</span>
+            <h2 className="text-[clamp(22px,3.5vw,34px)] font-extrabold tracking-[-1px] leading-[1.15]" style={{ fontFamily: "var(--font-syne)" }}>
               Pourquoi c&apos;est <span style={{ color: "var(--accent)" }}>pénible</span> aujourd&apos;hui
             </h2>
           </div>
@@ -196,9 +196,9 @@ export default async function Home() {
         style={{ background: "var(--white-warm)", borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)" }}
       >
         <div className="max-w-[980px] mx-auto">
-          <div className="flex items-baseline gap-5 mb-10 reveal">
-            <span className="text-[11px] font-medium" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>02</span>
-            <h2 className="text-[clamp(26px,3.5vw,34px)] font-extrabold tracking-[-1px] leading-[1.1]" style={{ fontFamily: "var(--font-syne)" }}>
+          <div className="flex items-baseline gap-3 sm:gap-5 mb-8 sm:mb-10 reveal">
+            <span className="text-[11px] font-medium shrink-0" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>02</span>
+            <h2 className="text-[clamp(22px,3.5vw,34px)] font-extrabold tracking-[-1px] leading-[1.15]" style={{ fontFamily: "var(--font-syne)" }}>
               Simple comme <span style={{ color: "var(--accent)" }}>3 clics</span>
             </h2>
           </div>
@@ -258,9 +258,9 @@ export default async function Home() {
       {/* ═══ 03 — EXEMPLES ═══ */}
       <section id="exemples" className="px-4 md:px-16 py-12 md:py-20 reveal">
         <div className="max-w-[980px] mx-auto">
-          <div className="flex items-baseline gap-5 mb-4">
-            <span className="text-[11px] font-medium" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>03</span>
-            <h2 className="text-[clamp(26px,3.5vw,34px)] font-extrabold tracking-[-1px] leading-[1.1]" style={{ fontFamily: "var(--font-syne)" }}>
+          <div className="flex items-baseline gap-3 sm:gap-5 mb-4">
+            <span className="text-[11px] font-medium shrink-0" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>03</span>
+            <h2 className="text-[clamp(22px,3.5vw,34px)] font-extrabold tracking-[-1px] leading-[1.15]" style={{ fontFamily: "var(--font-syne)" }}>
               Exemples de courriers <span style={{ color: "var(--accent)" }}>générés</span>
             </h2>
           </div>
@@ -303,9 +303,9 @@ export default async function Home() {
       {/* ═══ 04 — TARIFS ═══ */}
       <section id="tarifs" className="px-4 md:px-16 py-12 md:py-20" style={{ background: "var(--white-warm)", borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)" }}>
         <div className="max-w-[980px] mx-auto reveal">
-          <div className="flex items-baseline gap-5 mb-8">
-            <span className="text-[11px] font-medium" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>04</span>
-            <h2 className="text-[clamp(26px,3.5vw,34px)] font-extrabold tracking-[-1px] leading-[1.1]" style={{ fontFamily: "var(--font-syne)" }}>
+          <div className="flex items-baseline gap-3 sm:gap-5 mb-6 sm:mb-8">
+            <span className="text-[11px] font-medium shrink-0" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>04</span>
+            <h2 className="text-[clamp(22px,3.5vw,34px)] font-extrabold tracking-[-1px] leading-[1.15]" style={{ fontFamily: "var(--font-syne)" }}>
               Un courrier coûte moins cher <span style={{ color: "var(--accent)" }}>qu&apos;un timbre</span>
             </h2>
           </div>

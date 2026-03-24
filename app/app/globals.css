@@ -309,3 +309,20 @@ body::before {
     font-size: 16px !important;
   }
 }
+
+/* Mobile heading overflow fix */
+@media (max-width: 480px) {
+  h1, h2, h3 {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+}
+
+/* Mobile section spacing — reduce vertical gaps */
+@media (max-width: 768px) {
+  section {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+}

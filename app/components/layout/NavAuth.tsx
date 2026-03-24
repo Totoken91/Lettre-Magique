@@ -136,7 +136,6 @@ export default function NavAuth() {
       {user ? (
         /* ── Connecté ── */
         <div className="flex items-center gap-4">
-          {/* Visible */}
           <Link
             href="/mes-courriers"
             className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
@@ -144,10 +143,12 @@ export default function NavAuth() {
           >
             Mes courriers
           </Link>
-          <QuotaBadge quota={quota} />
+          <div className="hidden md:flex">
+            <QuotaBadge quota={quota} />
+          </div>
           <Link
             href="/generateur"
-            className="nav-cta px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            className="hidden md:inline-flex nav-cta px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
             Générer
@@ -166,7 +167,7 @@ export default function NavAuth() {
           </Link>
           <Link
             href="/generateur"
-            className="nav-cta px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            className="hidden md:inline-flex nav-cta px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
             Générer →
@@ -183,6 +184,14 @@ export default function NavAuth() {
         >
           {user ? (
             <>
+              <Link
+                href="/generateur"
+                onClick={() => setMenuOpen(false)}
+                className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b font-bold"
+                style={{ fontFamily: "var(--font-syne)", color: "var(--accent)", borderColor: "#333" }}
+              >
+                Générer un courrier →
+              </Link>
               <Link
                 href="/mes-courriers"
                 onClick={() => setMenuOpen(false)}
@@ -245,6 +254,14 @@ export default function NavAuth() {
             </>
           ) : (
             <>
+              <Link
+                href="/generateur"
+                onClick={() => setMenuOpen(false)}
+                className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b font-bold"
+                style={{ fontFamily: "var(--font-syne)", color: "var(--accent)", borderColor: "#333" }}
+              >
+                Générer un courrier →
+              </Link>
               <Link
                 href="/#comment"
                 onClick={() => setMenuOpen(false)}
