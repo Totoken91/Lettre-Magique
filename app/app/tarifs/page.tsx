@@ -66,20 +66,19 @@ export default function TarifsPage() {
               <p className="text-sm mb-6 leading-[1.5]" style={{ color: "var(--muted-lm)" }}>
                 Payez uniquement quand vous en avez besoin. Pas d&apos;abonnement.
               </p>
-              <ul style={{ listStyle: "none", fontSize: "14px", lineHeight: "2.2" }}>
+              <div style={{ fontSize: "14px", lineHeight: "2.2" }}>
                 {[
-                  "1er courrier gratuit",
                   "Courrier personnalisé par IA",
                   "Export PDF immédiat",
                   "Mentions légales à jour",
                   "Tous types de courriers",
                 ].map((f) => (
-                  <li key={f} style={{ color: "var(--ink)" }}>
+                  <div key={f} style={{ color: "var(--ink)" }}>
                     <span style={{ color: "var(--green)", marginRight: 8 }}>✓</span>
                     {f}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
               <CheckoutButton
                 priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ONETIME!}
                 label="Acheter un courrier →"
@@ -101,7 +100,7 @@ export default function TarifsPage() {
               </div>
               <div
                 className="text-[10px] uppercase tracking-[2px] mb-2.5"
-                style={{ fontFamily: "var(--font-dm-mono)", color: "#555" }}
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
               >
                 Abonnement
               </div>
@@ -110,26 +109,26 @@ export default function TarifsPage() {
                 style={{ fontFamily: "var(--font-syne)" }}
               >
                 4,99€{" "}
-                <small className="text-base font-normal" style={{ color: "#555" }}>
+                <small className="text-base font-normal" style={{ color: "var(--rule)" }}>
                   / mois
                 </small>
               </div>
-              <p className="text-sm mb-6 leading-[1.5]" style={{ color: "#555" }}>
+              <p className="text-sm mb-6 leading-[1.5]" style={{ color: "var(--rule)" }}>
                 Courriers illimités. Idéal si vous gérez des démarches régulières.
               </p>
-              <ul style={{ listStyle: "none", fontSize: "14px", lineHeight: "2.2" }}>
+              <div style={{ fontSize: "14px", lineHeight: "2.2" }}>
                 {[
                   "Courriers illimités",
                   "Tout le plan à l'unité",
                   "Historique sauvegardé",
                   "Support prioritaire",
                 ].map((f) => (
-                  <li key={f} style={{ color: "#ccc" }}>
+                  <div key={f} style={{ color: "var(--white-warm)" }}>
                     <span style={{ color: "var(--gold)", marginRight: 8 }}>✓</span>
                     {f}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
               <CheckoutButton
                 priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_SUB!}
                 label="Passer en Pro →"
