@@ -20,7 +20,7 @@ function QuotaBadge({ quota }: { quota: Quota | null }) {
   if (quota.isPro) {
     return (
       <span
-        className="hidden md:flex items-center gap-1 px-2.5 py-1 text-[9px] uppercase tracking-[1.5px]"
+        className="flex items-center gap-1 px-2.5 py-1 text-[9px] uppercase tracking-[1.5px]"
         style={{
           fontFamily: "var(--font-dm-mono)",
           color: "var(--accent)",
@@ -39,7 +39,7 @@ function QuotaBadge({ quota }: { quota: Quota | null }) {
   return (
     <Link
       href={isEmpty ? "/tarifs" : "#"}
-      className="hidden md:flex items-center gap-1.5 px-2.5 py-1 no-underline transition-opacity duration-200 hover:opacity-100"
+      className="flex items-center gap-1.5 px-2.5 py-1 no-underline transition-opacity duration-200 hover:opacity-100"
       style={{
         fontFamily: "var(--font-dm-mono)",
         fontSize: "9px",
@@ -62,6 +62,21 @@ function QuotaBadge({ quota }: { quota: Quota | null }) {
       />
       {remaining} lettre{remaining !== 1 ? "s" : ""}
     </Link>
+  );
+}
+
+function Hamburger({ open, onClick }: { open: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex flex-col justify-center gap-[5px] w-8 h-8 items-center"
+      style={{ background: "none", border: "none", cursor: "pointer" }}
+      aria-label="Menu"
+    >
+      <span style={{ display: "block", width: 20, height: 1.5, background: open ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: open ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
+      <span style={{ display: "block", width: 20, height: 1.5, background: open ? "transparent" : "var(--rule)", transition: "all 0.2s" }} />
+      <span style={{ display: "block", width: 20, height: 1.5, background: open ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: open ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
+    </button>
   );
 }
 
@@ -103,7 +118,6 @@ export default function NavAuth() {
     };
   }, []);
 
-  // Close menu on route change
   useEffect(() => {
     setMenuOpen(false);
   }, [router]);
@@ -120,42 +134,17 @@ export default function NavAuth() {
   return (
     <>
       {user ? (
-        <div className="flex items-center gap-4 md:gap-5">
+        /* ── Connecté ── */
+        <div className="flex items-center gap-4">
+          {/* Visible */}
           <Link
-            href="/compte"
+            href="/mes-courriers"
             className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
             style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
           >
-            Mon compte
+            Mes courriers
           </Link>
           <QuotaBadge quota={quota} />
-          {quota && !quota.isPro && (
-            <Link
-              href="/tarifs"
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[1px] no-underline transition-opacity duration-200 hover:opacity-90"
-              style={{
-                fontFamily: "var(--font-syne)",
-                background: "var(--accent)",
-                color: "#fff",
-              }}
-            >
-              Passer Pro
-            </Link>
-          )}
-          {quota?.isAdmin && (
-            <Link
-              href="/admin"
-              className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200 px-2.5 py-1"
-              style={{
-                fontFamily: "var(--font-dm-mono)",
-                color: "var(--accent)",
-                border: "1px solid var(--accent)",
-                opacity: 0.85,
-              }}
-            >
-              Admin
-            </Link>
-          )}
           <Link
             href="/generateur"
             className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
@@ -163,28 +152,11 @@ export default function NavAuth() {
           >
             Générer
           </Link>
-          <button
-            onClick={handleSignOut}
-            className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] transition-colors duration-200"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", background: "none", border: "none", cursor: "pointer" }}
-          >
-            Déconnecter
-          </button>
-
-          {/* Hamburger — mobile only */}
-          <button
-            onClick={() => setMenuOpen((o) => !o)}
-            className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 items-center"
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-            aria-label="Menu"
-          >
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "transparent" : "var(--rule)", transition: "all 0.2s" }} />
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
-          </button>
+          <Hamburger open={menuOpen} onClick={() => setMenuOpen((o) => !o)} />
         </div>
       ) : (
-        <div className="flex items-center gap-5">
+        /* ── Non connecté ── */
+        <div className="flex items-center gap-4">
           <Link
             href="/login"
             className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
@@ -199,54 +171,50 @@ export default function NavAuth() {
           >
             Générer →
           </Link>
-
-          {/* Hamburger — mobile only */}
-          <button
-            onClick={() => setMenuOpen((o) => !o)}
-            className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 items-center"
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-            aria-label="Menu"
-          >
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "transparent" : "var(--rule)", transition: "all 0.2s" }} />
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
-          </button>
+          <Hamburger open={menuOpen} onClick={() => setMenuOpen((o) => !o)} />
         </div>
       )}
 
-      {/* Mobile dropdown menu */}
+      {/* Dropdown menu */}
       {menuOpen && (
         <div
-          className="md:hidden fixed top-14 left-0 right-0 z-40 flex flex-col overflow-y-auto"
+          className="fixed top-14 left-0 right-0 z-40 flex flex-col overflow-y-auto"
           style={{ background: "var(--ink)", borderBottom: "2px solid var(--accent)", maxHeight: "calc(100dvh - 56px)" }}
         >
-          <Link
-            href="/#comment"
-            onClick={() => setMenuOpen(false)}
-            className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
-          >
-            Comment ça marche
-          </Link>
-          <Link
-            href="/tarifs"
-            onClick={() => setMenuOpen(false)}
-            className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
-          >
-            Tarifs
-          </Link>
-
           {user ? (
             <>
+              <Link
+                href="/mes-courriers"
+                onClick={() => setMenuOpen(false)}
+                className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
+              >
+                Mes courriers
+              </Link>
               {quota && (
                 <div
-                  className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] border-b"
+                  className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] border-b"
                   style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)", borderColor: "#222" }}
                 >
                   {quota.isPro ? "Pro · Illimité" : `${quota.remaining ?? 0} lettre${(quota.remaining ?? 0) !== 1 ? "s" : ""} restante${(quota.remaining ?? 0) !== 1 ? "s" : ""}`}
                 </div>
               )}
+              <Link
+                href="/compte"
+                onClick={() => setMenuOpen(false)}
+                className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
+              >
+                Mon compte
+              </Link>
+              <Link
+                href="/tarifs"
+                onClick={() => setMenuOpen(false)}
+                className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
+              >
+                Tarifs
+              </Link>
               {quota && !quota.isPro && (
                 <Link
                   href="/tarifs"
@@ -257,14 +225,6 @@ export default function NavAuth() {
                   Passer Pro →
                 </Link>
               )}
-              <Link
-                href="/compte"
-                onClick={() => setMenuOpen(false)}
-                className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
-                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
-              >
-                Mon compte
-              </Link>
               {quota?.isAdmin && (
                 <Link
                   href="/admin"
@@ -284,14 +244,32 @@ export default function NavAuth() {
               </button>
             </>
           ) : (
-            <Link
-              href="/login"
-              onClick={() => setMenuOpen(false)}
-              className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline"
-              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
-            >
-              Se connecter
-            </Link>
+            <>
+              <Link
+                href="/#comment"
+                onClick={() => setMenuOpen(false)}
+                className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
+              >
+                Comment ça marche
+              </Link>
+              <Link
+                href="/tarifs"
+                onClick={() => setMenuOpen(false)}
+                className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
+              >
+                Tarifs
+              </Link>
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
+              >
+                Se connecter
+              </Link>
+            </>
           )}
         </div>
       )}
