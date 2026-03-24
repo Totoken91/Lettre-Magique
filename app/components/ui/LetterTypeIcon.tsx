@@ -1,6 +1,6 @@
 import {
-  MailX, AlertCircle, Scale, ShieldAlert, DoorOpen,
-  BadgeDollarSign, Undo2, CalendarClock, FileCheck, PenLine,
+  MailX, AlertCircle, Scale, ShieldAlert, Home,
+  Shield, Briefcase, Undo2, CalendarClock, PenLine,
   type LucideProps,
 } from "lucide-react";
 import type { ComponentType } from "react";
@@ -8,13 +8,13 @@ import type { ComponentType } from "react";
 const ICONS: Record<string, ComponentType<LucideProps>> = {
   "resiliation":      MailX,
   "reclamation":      AlertCircle,
+  "logement":         Home,
+  "assurance":        Shield,
   "mise-en-demeure":  Scale,
   "contestation":     ShieldAlert,
-  "conge-locataire":  DoorOpen,
-  "remboursement":    BadgeDollarSign,
+  "travail":          Briefcase,
   "retractation":     Undo2,
   "delai-paiement":   CalendarClock,
-  "attestation":      FileCheck,
   "courrier-libre":   PenLine,
 };
 

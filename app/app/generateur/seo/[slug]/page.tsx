@@ -53,7 +53,7 @@ const SEO_PAGES: SeoPage[] = [
   },
   {
     slug: "conge-locataire-zone-tendue",
-    typeId: "conge-locataire",
+    typeId: "logement",
     title: "Préavis 1 mois zone tendue — Modèle de lettre 2026",
     h1: "Congé locataire en zone tendue (préavis 1 mois)",
     description: "Générez votre lettre de congé locataire avec préavis réduit d'1 mois en zone tendue. Conforme à la loi ALUR, export PDF gratuit.",
