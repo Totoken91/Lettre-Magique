@@ -97,24 +97,16 @@ export default async function GenerateurPage() {
       </section>
 
       {showFreeInfo && (
-        <div className="px-4 md:px-16 py-5 border-b" style={{ borderColor: "var(--rule)", background: "var(--white-warm)" }}>
-          <div className="max-w-[980px] mx-auto md:flex items-center gap-8">
-            <div className="flex items-center gap-3 mb-4 md:mb-0 shrink-0">
-              <div
-                className="promo-badge px-3 py-1.5 text-white text-[10px] font-bold uppercase tracking-[1.5px]"
-                style={{ fontFamily: "var(--font-dm-mono)" }}
-              >
-                🎁 Code PROMO!
-              </div>
-              <span
-                className="text-sm"
-                style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}
-              >
-                5 courriers gratuits offerts
-              </span>
-            </div>
-            <div className="flex-1">
-              <PromoInput />
+        <div className="px-4 md:px-16 py-2.5 border-b" style={{ borderColor: "var(--rule)", background: "var(--white-warm)" }}>
+          <div className="max-w-[980px] mx-auto flex flex-wrap items-center gap-4">
+            <span
+              className="text-[11px] uppercase tracking-[2px] shrink-0"
+              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+            >
+              Tu as un code promo ?
+            </span>
+            <div className="flex-1 min-w-[260px]">
+              <PromoInput hideLabel />
             </div>
           </div>
         </div>

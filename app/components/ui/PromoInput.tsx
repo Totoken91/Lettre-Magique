@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function PromoInput() {
+export default function PromoInput({ hideLabel }: { hideLabel?: boolean } = {}) {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
@@ -52,12 +52,14 @@ export default function PromoInput() {
 
   return (
     <div>
-      <div
-        className="text-[10px] uppercase tracking-[2px] mb-3"
-        style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
-      >
-        Vous avez un code promo ?
-      </div>
+      {!hideLabel && (
+        <div
+          className="text-[10px] uppercase tracking-[2px] mb-3"
+          style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+        >
+          Vous avez un code promo ?
+        </div>
+      )}
       <div className="flex gap-2">
         <input
           type="text"
