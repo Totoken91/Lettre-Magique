@@ -2,7 +2,6 @@ import Link from "next/link";
 import { LETTER_TYPES } from "@/data/letter-types";
 import type { Metadata } from "next";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import StepBar from "@/components/generateur/StepBar";
 import LetterTypeIcon from "@/components/ui/LetterTypeIcon";
 import PromoInput from "@/components/ui/PromoInput";
@@ -20,14 +19,8 @@ export default async function GenerateurPage() {
     const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      const { data: profile } = await getSupabaseAdmin()
-        .from("profiles")
-        .select("is_pro, credits")
-        .eq("id", user.id)
-        .single() as { data: { is_pro: boolean; credits: number } | null };
-      if (profile?.is_pro || (profile?.credits ?? 0) > 0) {
-        showFreeInfo = false;
-      }
+      // Utilisateur connecté → masquer les badges "sans inscription / gratuit"
+      showFreeInfo = false;
     }
   } catch {
     // En cas d'erreur, on affiche la box par défaut
@@ -72,27 +65,29 @@ export default async function GenerateurPage() {
           >
             Sélectionnez une catégorie ci-dessous.
           </p>
-          <div className="flex flex-wrap gap-3">
-            {[
-              "✓ 1er courrier gratuit",
-              "✓ Sans inscription",
-              "✓ Sans carte bancaire",
-              "✓ PDF prêt à envoyer",
-            ].map((item) => (
-              <span
-                key={item}
-                className="text-[10px] uppercase tracking-[1px] px-3 py-1.5"
-                style={{
-                  fontFamily: "var(--font-dm-mono)",
-                  color: "#d4f1e4",
-                  border: "1px solid #4ade8055",
-                  background: "#4ade8012",
-                }}
-              >
-                {item}
-              </span>
-            ))}
-          </div>
+          {showFreeInfo && (
+            <div className="flex flex-wrap gap-3">
+              {[
+                "✓ 1er courrier gratuit",
+                "✓ Sans inscription",
+                "✓ Sans carte bancaire",
+                "✓ PDF prêt à envoyer",
+              ].map((item) => (
+                <span
+                  key={item}
+                  className="text-[10px] uppercase tracking-[1px] px-3 py-1.5"
+                  style={{
+                    fontFamily: "var(--font-dm-mono)",
+                    color: "#d4f1e4",
+                    border: "1px solid #4ade8055",
+                    background: "#4ade8012",
+                  }}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
