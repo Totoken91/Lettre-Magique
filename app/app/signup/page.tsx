@@ -118,27 +118,14 @@ export default function SignupPage() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 pt-14 pb-16"
+      className="min-h-screen flex items-center justify-center px-4 pb-16"
       style={{ background: "var(--paper)" }}
     >
       <div className="w-full max-w-[420px]">
         {/* Header */}
         <div className="mb-10 text-center">
-          <Link href="/" className="no-underline inline-flex items-center justify-center">
-            <span
-              className="inline-flex items-center justify-center w-10 h-10 font-extrabold tracking-[-1px]"
-              style={{
-                fontFamily: "var(--font-syne)",
-                fontSize: "15px",
-                background: "var(--ink)",
-                color: "var(--white-warm)",
-              }}
-            >
-              L<span style={{ color: "var(--accent)" }}>M</span>
-            </span>
-          </Link>
           <h1
-            className="text-[28px] font-extrabold tracking-[-1px] mt-6 mb-2"
+            className="text-[32px] font-extrabold tracking-[-1.5px] mb-2"
             style={{ fontFamily: "var(--font-syne)" }}
           >
             Créer un compte
