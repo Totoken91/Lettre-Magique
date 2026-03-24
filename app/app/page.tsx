@@ -549,20 +549,19 @@ export default async function Home() {
               >
                 Payez uniquement quand vous en avez besoin. Pas d&apos;abonnement.
               </p>
-              <ul style={{ listStyle: "none", fontSize: "14px", lineHeight: "2.2" }}>
+              <div style={{ fontSize: "14px", lineHeight: "2.2" }}>
                 {[
-                  "1er courrier gratuit",
                   "Courrier personnalisé par IA",
                   "Export PDF immédiat",
                   "Mentions légales à jour",
                   "Tous types de courriers",
                 ].map((f) => (
-                  <li key={f} className="before:content-['✓_'] before:font-bold" style={{ color: "var(--ink)" }}>
+                  <div key={f} style={{ color: "var(--ink)" }}>
                     <span style={{ color: "var(--green)", marginRight: 8 }}>✓</span>
                     {f}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
 
             {/* Plan illimité */}
@@ -594,7 +593,7 @@ export default async function Home() {
               <p className="text-sm mb-6 leading-[1.5]" style={{ color: "#555" }}>
                 Courriers illimités. Idéal si vous gérez des démarches régulières.
               </p>
-              <ul style={{ listStyle: "none", fontSize: "14px", lineHeight: "2.2" }}>
+              <div style={{ fontSize: "14px", lineHeight: "2.2" }}>
                 {[
                   "Courriers illimités",
                   "Tout le plan à l'unité",
@@ -602,12 +601,12 @@ export default async function Home() {
                   "Modèles favoris",
                   "Support prioritaire",
                 ].map((f) => (
-                  <li key={f} style={{ color: "#ccc" }}>
+                  <div key={f} style={{ color: "#ccc" }}>
                     <span style={{ color: "var(--gold)", marginRight: 8 }}>✓</span>
                     {f}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
         </div>
