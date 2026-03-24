@@ -193,11 +193,11 @@ export default function NavAuth() {
             Se connecter
           </Link>
           <Link
-            href="/signup"
+            href="/generateur"
             className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
-            Créer un compte
+            Générer →
           </Link>
 
           {/* Hamburger — mobile only */}
