@@ -14,7 +14,7 @@ Règles OBLIGATOIRES :
 - Ton : formel, professionnel, direct, sans agressivité
 - Longueur : 150–250 mots maximum
 - Aucun crochet, aucun placeholder dans le résultat final
-- Les mentions légales doivent être intégrées naturellement dans le texte quand applicables
+- RÉFÉRENCES LÉGALES OBLIGATOIRES : Tu DOIS citer au moins 2 articles de loi pertinents avec leur numéro exact (ex : art. L217-4 du Code de la consommation, art. 1231-1 du Code civil, art. L113-5 du Code des assurances). Ces références doivent être intégrées naturellement dans le texte, jamais en note de bas de page.
 `.trim();
 
 function header(senderName: string, senderAddress: string, recipient: string) {

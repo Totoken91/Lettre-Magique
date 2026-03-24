@@ -11,6 +11,9 @@ interface LetterViewerProps {
   senderAddress: string;
   senderPhone?: string;
   senderEmail?: string;
+  refNumber?: string;
+  signatureMode?: "typed" | "print";
+  signatureImageBase64?: string;
   /** Called when user edits the text */
   onTextChange?: (text: string) => void;
   /** Hide the auth gate (user is already logged in) */
@@ -38,6 +41,9 @@ export default function LetterViewer({
   senderAddress,
   senderPhone,
   senderEmail,
+  refNumber,
+  signatureMode,
+  signatureImageBase64,
   onTextChange,
   isLoggedIn = true,
   onAuthRequired,
@@ -70,6 +76,9 @@ export default function LetterViewer({
     senderAddress,
     senderPhone,
     senderEmail,
+    refNumber,
+    signatureMode,
+    signatureImageBase64,
   };
 
   /** Generate PDF preview blob URL */
@@ -93,7 +102,7 @@ export default function LetterViewer({
       setLoadingPreview(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentText, type, typeName, senderName, senderAddress, senderPhone, senderEmail]);
+  }, [currentText, type, typeName, senderName, senderAddress, senderPhone, senderEmail, refNumber, signatureMode, signatureImageBase64]);
 
   // Auto-generate PDF preview on mount
   useEffect(() => {

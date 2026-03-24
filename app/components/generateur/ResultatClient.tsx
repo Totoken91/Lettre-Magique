@@ -16,6 +16,9 @@ interface ResultData {
   senderPhone?: string;
   senderEmail?: string;
   formData: Record<string, string>;
+  refNumber?: string;
+  signatureMode?: "typed" | "print";
+  signatureImageBase64?: string;
 }
 
 export default function ResultatClient() {
@@ -127,6 +130,9 @@ export default function ResultatClient() {
             senderAddress={result.senderAddress}
             senderPhone={result.senderPhone}
             senderEmail={result.senderEmail}
+            refNumber={result.refNumber}
+            signatureMode={result.signatureMode}
+            signatureImageBase64={result.signatureImageBase64}
             isLoggedIn={isLoggedIn ?? false}
             onAuthRequired={() => setShowAuthModal(true)}
           />
