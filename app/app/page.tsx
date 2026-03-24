@@ -13,6 +13,34 @@ export default async function Home() {
   return (
     <div className="pt-14">
 
+      {/* ═══ PROMO TOP BANNER ═══ */}
+      <a
+        href="/signup"
+        className="promo-bounce block w-full no-underline"
+        style={{ textDecoration: "none" }}
+      >
+        <div
+          className="promo-badge w-full flex items-center justify-center gap-3 py-3 px-4"
+          style={{ boxShadow: "0 2px 12px rgba(200,75,47,0.35)" }}
+        >
+          <span style={{ fontSize: "16px" }}>🎁</span>
+          <span
+            className="text-white font-bold uppercase tracking-[1.5px] text-center"
+            style={{ fontFamily: "var(--font-dm-mono)", fontSize: "11px" }}
+          >
+            Code{" "}
+            <span
+              className="px-1.5 py-0.5 mx-0.5"
+              style={{ background: "rgba(255,255,255,0.2)", letterSpacing: "2px" }}
+            >
+              PROMO!
+            </span>
+            {" "}→ 5 courriers gratuits{" "}
+            <span style={{ opacity: 0.8, fontWeight: 400 }}>(valeur 10€) — S&apos;inscrire →</span>
+          </span>
+        </div>
+      </a>
+
       {/* ═══ HERO ═══ */}
       <section
         className="relative overflow-hidden px-4 md:px-16 pt-[80px] md:pt-[140px] pb-12 md:pb-[88px]"
@@ -516,29 +544,6 @@ export default async function Home() {
             </h2>
           </div>
 
-          {/* Promo banner */}
-          <div className="promo-bounce mb-10 inline-flex">
-            <div
-              className="promo-badge flex items-center gap-3 px-5 py-3"
-              style={{ boxShadow: "0 0 24px rgba(200,75,47,0.45), 0 2px 8px rgba(0,0,0,0.3)" }}
-            >
-              <span style={{ fontSize: "18px" }}>🎁</span>
-              <span
-                className="text-white font-bold uppercase tracking-[1.5px]"
-                style={{ fontFamily: "var(--font-dm-mono)", fontSize: "12px" }}
-              >
-                Code{" "}
-                <span
-                  className="px-1.5 py-0.5 mx-0.5"
-                  style={{ background: "rgba(255,255,255,0.2)", letterSpacing: "2px" }}
-                >
-                  PROMO!
-                </span>
-                {" "}→ 5 courriers gratuits{" "}
-                <span style={{ opacity: 0.8, fontWeight: 400 }}>(valeur 10€)</span>
-              </span>
-            </div>
-          </div>
 
           <div
             className="grid grid-cols-1 md:grid-cols-2 border-[2px] max-w-[700px]"
