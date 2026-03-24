@@ -138,17 +138,17 @@ export default function NavAuth() {
         <div className="flex items-center gap-4">
           <Link
             href="/mes-courriers"
-            className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
+            className="hidden lg:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
             style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
           >
             Mes courriers
           </Link>
-          <div className="hidden md:flex">
+          <div className="hidden lg:flex">
             <QuotaBadge quota={quota} />
           </div>
           <Link
             href="/generateur"
-            className="hidden md:inline-flex nav-cta px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            className="hidden lg:inline-flex nav-cta px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
             Générer
@@ -157,17 +157,17 @@ export default function NavAuth() {
         </div>
       ) : (
         /* ── Non connecté ── */
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-4">
           <Link
             href="/login"
-            className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
+            className="hidden lg:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
             style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
           >
             Se connecter
           </Link>
           <Link
             href="/generateur"
-            className="hidden md:inline-flex nav-cta px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            className="hidden lg:inline-flex nav-cta px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
             Générer →
@@ -187,7 +187,7 @@ export default function NavAuth() {
               <Link
                 href="/generateur"
                 onClick={() => setMenuOpen(false)}
-                className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b font-bold"
+                className="lg:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b font-bold"
                 style={{ fontFamily: "var(--font-syne)", color: "var(--accent)", borderColor: "#333" }}
               >
                 Générer un courrier →
@@ -195,14 +195,14 @@ export default function NavAuth() {
               <Link
                 href="/mes-courriers"
                 onClick={() => setMenuOpen(false)}
-                className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                className="lg:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
                 style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
               >
                 Mes courriers
               </Link>
               {quota && (
                 <div
-                  className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] border-b"
+                  className="lg:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] border-b"
                   style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)", borderColor: "#222" }}
                 >
                   {quota.isPro ? "Pro · Illimité" : `${quota.remaining ?? 0} lettre${(quota.remaining ?? 0) !== 1 ? "s" : ""} restante${(quota.remaining ?? 0) !== 1 ? "s" : ""}`}
@@ -257,7 +257,7 @@ export default function NavAuth() {
               <Link
                 href="/generateur"
                 onClick={() => setMenuOpen(false)}
-                className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b font-bold"
+                className="lg:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b font-bold"
                 style={{ fontFamily: "var(--font-syne)", color: "var(--accent)", borderColor: "#333" }}
               >
                 Générer un courrier →
@@ -281,7 +281,7 @@ export default function NavAuth() {
               <Link
                 href="/login"
                 onClick={() => setMenuOpen(false)}
-                className="md:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline"
+                className="lg:hidden px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline"
                 style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
               >
                 Se connecter
