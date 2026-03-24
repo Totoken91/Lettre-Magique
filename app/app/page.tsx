@@ -28,15 +28,15 @@ export default async function Home() {
             className="text-white font-bold uppercase tracking-[1.5px] text-center"
             style={{ fontFamily: "var(--font-dm-mono)", fontSize: "11px" }}
           >
-            Code{" "}
+            Entrez le code{" "}
             <span
               className="px-1.5 py-0.5 mx-0.5"
               style={{ background: "rgba(255,255,255,0.2)", letterSpacing: "2px" }}
             >
               PROMO!
             </span>
-            {" "}→ 5 courriers gratuits{" "}
-            <span style={{ opacity: 0.8, fontWeight: 400 }}>(valeur 10€) — S&apos;inscrire →</span>
+            {" "}et obtenez 5 courriers gratuits{" "}
+            <span style={{ opacity: 0.8, fontWeight: 400 }}>(valeur 10€) — Créer un compte →</span>
           </span>
         </div>
       </a>
