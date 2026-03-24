@@ -22,6 +22,7 @@ export default function SignupPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
 
   const handleGoogle = async () => {
     setGoogleLoading(true);
@@ -65,6 +66,10 @@ export default function SignupPage() {
       setError("Un compte existe déjà avec cet email. Connectez-vous plutôt.");
       setLoading(false);
       return;
+    }
+
+    if (promoCode.trim()) {
+      localStorage.setItem("pending_promo", promoCode.trim());
     }
 
     setSuccess(true);
@@ -246,6 +251,32 @@ export default function SignupPage() {
                 }}
               />
             </div>
+          </div>
+
+          {/* Code promo optionnel */}
+          <div className="mt-5 pt-5" style={{ borderTop: "1px solid var(--rule)" }}>
+            <label
+              htmlFor="promo"
+              className="block text-[11px] uppercase tracking-[1.5px] mb-2"
+              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+            >
+              Code promo <span style={{ color: "var(--muted-lm)", fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>(optionnel)</span>
+            </label>
+            <input
+              id="promo"
+              type="text"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              placeholder="Ex: PROMO!"
+              className="w-full px-4 py-3 text-sm outline-none"
+              style={{
+                fontFamily: "var(--font-dm-mono)",
+                background: "var(--paper2)",
+                border: "1.5px solid var(--rule)",
+                color: "var(--ink)",
+                letterSpacing: "1px",
+              }}
+            />
           </div>
 
           {error && (

@@ -30,6 +30,34 @@ export default function ComptePage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoSuccess, setPromoSuccess] = useState<string | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+
+  const redeemPromo = async (code: string) => {
+    setPromoLoading(true);
+    setPromoError(null);
+    setPromoSuccess(null);
+    try {
+      const res = await fetch("/api/promo/redeem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setPromoError(json.error ?? "Erreur lors de l'activation.");
+      } else {
+        setPromoSuccess(`✓ ${json.credits_added} courrier${json.credits_added > 1 ? "s" : ""} gratuit${json.credits_added > 1 ? "s" : ""} ajouté${json.credits_added > 1 ? "s" : ""} à votre compte !`);
+        setPromoCode("");
+        window.dispatchEvent(new Event("quotaUpdated"));
+      }
+    } catch {
+      setPromoError("Erreur réseau.");
+    }
+    setPromoLoading(false);
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -52,6 +80,13 @@ export default function ComptePage() {
         });
       }
       setLoading(false);
+
+      // Auto-apply promo code stored during signup
+      const pendingPromo = localStorage.getItem("pending_promo");
+      if (pendingPromo) {
+        localStorage.removeItem("pending_promo");
+        await redeemPromo(pendingPromo);
+      }
     });
   }, [router]);
 
@@ -234,6 +269,62 @@ export default function ComptePage() {
               {saving ? "Sauvegarde…" : "Sauvegarder mes coordonnées →"}
             </button>
           </form>
+
+          {/* Code promo */}
+          <div
+            className="mt-8 p-6 border-[2px]"
+            style={{ borderColor: "var(--rule)" }}
+          >
+            <div
+              className="text-[10px] uppercase tracking-[2px] mb-4"
+              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
+            >
+              Code promotionnel
+            </div>
+            <div className="flex gap-3">
+              <input
+                type="text"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+                placeholder='Ex: PROMO!'
+                className="flex-1 px-4 py-3 text-sm outline-none"
+                style={{
+                  fontFamily: "var(--font-dm-mono)",
+                  background: "var(--paper2)",
+                  border: "1.5px solid var(--rule)",
+                  color: "var(--ink)",
+                  letterSpacing: "1px",
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && promoCode.trim()) redeemPromo(promoCode.trim());
+                }}
+              />
+              <button
+                onClick={() => promoCode.trim() && redeemPromo(promoCode.trim())}
+                disabled={promoLoading || !promoCode.trim()}
+                className="px-5 py-3 text-sm font-bold uppercase tracking-[0.5px] text-white transition-all duration-200 disabled:opacity-50"
+                style={{ fontFamily: "var(--font-syne)", background: "var(--ink)", whiteSpace: "nowrap" }}
+              >
+                {promoLoading ? "…" : "Activer →"}
+              </button>
+            </div>
+            {promoSuccess && (
+              <div
+                className="mt-3 p-3 text-sm"
+                style={{ fontFamily: "var(--font-dm-mono)", background: "#e8f5e9", color: "var(--green)", border: "1px solid var(--green)" }}
+              >
+                {promoSuccess}
+              </div>
+            )}
+            {promoError && (
+              <div
+                className="mt-3 p-3 text-sm"
+                style={{ fontFamily: "var(--font-dm-mono)", background: "#fde8e4", color: "var(--accent)", border: "1px solid var(--accent)" }}
+              >
+                {promoError}
+              </div>
+            )}
+          </div>
 
           {/* Lien vers mes courriers */}
           <div className="mt-8 text-center">

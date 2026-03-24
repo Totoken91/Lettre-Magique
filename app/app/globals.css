@@ -100,6 +100,31 @@ body::before {
 }
 
 /* Animations */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.promo-shimmer {
+  background: linear-gradient(90deg, #c84b2f 0%, #f07a55 40%, #ffe0b2 55%, #f07a55 70%, #c84b2f 100%);
+  background-size: 200% auto;
+  animation: shimmer 2.5s linear infinite, bounce 1.2s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.promo-badge {
+  background: linear-gradient(90deg, #c84b2f 0%, #e8633a 40%, #ff9a70 55%, #e8633a 70%, #c84b2f 100%);
+  background-size: 200% auto;
+  animation: shimmer 2.5s linear infinite;
+}
+@keyframes promoBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.promo-bounce {
+  animation: promoBounce 1.4s ease-in-out infinite;
+}
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }

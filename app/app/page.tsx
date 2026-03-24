@@ -500,7 +500,7 @@ export default async function Home() {
         }}
       >
         <div className="max-w-[980px] mx-auto reveal">
-          <div className="flex items-baseline gap-5 mb-12">
+          <div className="flex items-baseline gap-5 mb-8">
             <span
               className="text-[11px] font-medium"
               style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}
@@ -514,6 +514,30 @@ export default async function Home() {
               Un courrier coûte moins cher{" "}
               <span style={{ color: "var(--accent)" }}>qu&apos;un timbre</span>
             </h2>
+          </div>
+
+          {/* Promo banner */}
+          <div className="promo-bounce mb-10 inline-flex">
+            <div
+              className="promo-badge flex items-center gap-3 px-5 py-3"
+              style={{ boxShadow: "0 0 24px rgba(200,75,47,0.45), 0 2px 8px rgba(0,0,0,0.3)" }}
+            >
+              <span style={{ fontSize: "18px" }}>🎁</span>
+              <span
+                className="text-white font-bold uppercase tracking-[1.5px]"
+                style={{ fontFamily: "var(--font-dm-mono)", fontSize: "12px" }}
+              >
+                Code{" "}
+                <span
+                  className="px-1.5 py-0.5 mx-0.5"
+                  style={{ background: "rgba(255,255,255,0.2)", letterSpacing: "2px" }}
+                >
+                  PROMO!
+                </span>
+                {" "}→ 5 courriers gratuits{" "}
+                <span style={{ opacity: 0.8, fontWeight: 400 }}>(valeur 10€)</span>
+              </span>
+            </div>
           </div>
 
           <div
