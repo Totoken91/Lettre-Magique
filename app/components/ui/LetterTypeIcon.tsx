@@ -1,21 +1,33 @@
+"use client";
+
 import {
-  MailX, AlertCircle, Scale, ShieldAlert, Home,
-  Shield, Briefcase, Undo2, CalendarClock, PenLine,
-  type LucideProps,
-} from "lucide-react";
+  Scissors,
+  Warning,
+  Gavel,
+  House,
+  ShieldCheck,
+  Prohibit,
+  Briefcase,
+  ArrowUUpLeft,
+  HourglassMedium,
+  Stamp,
+  PenNib,
+  type IconProps,
+} from "@phosphor-icons/react";
 import type { ComponentType } from "react";
 
-const ICONS: Record<string, ComponentType<LucideProps>> = {
-  "resiliation":      MailX,
-  "reclamation":      AlertCircle,
-  "logement":         Home,
-  "assurance":        Shield,
-  "mise-en-demeure":  Scale,
-  "contestation":     ShieldAlert,
+const ICONS: Record<string, ComponentType<IconProps>> = {
+  "resiliation":      Scissors,
+  "reclamation":      Warning,
+  "logement":         House,
+  "assurance":        ShieldCheck,
+  "mise-en-demeure":  Gavel,
+  "contestation":     Prohibit,
   "travail":          Briefcase,
-  "retractation":     Undo2,
-  "delai-paiement":   CalendarClock,
-  "courrier-libre":   PenLine,
+  "retractation":     ArrowUUpLeft,
+  "delai-paiement":   HourglassMedium,
+  "attestation":      Stamp,
+  "courrier-libre":   PenNib,
 };
 
 interface Props {
@@ -26,7 +38,7 @@ interface Props {
   box?: boolean;
 }
 
-export default function LetterTypeIcon({ typeId, size = 18, color = "var(--accent)", box = false }: Props) {
+export default function LetterTypeIcon({ typeId, size = 32, color = "#c84b2f", box = false }: Props) {
   const Icon = ICONS[typeId];
   if (!Icon) return null;
 
@@ -36,10 +48,10 @@ export default function LetterTypeIcon({ typeId, size = 18, color = "var(--accen
         className="shrink-0 flex items-center justify-center w-10 h-10"
         style={{ background: "var(--paper2)", border: "1px solid var(--rule)" }}
       >
-        <Icon size={size} strokeWidth={1.5} color={color} />
+        <Icon size={size} weight="duotone" color={color} />
       </div>
     );
   }
 
-  return <Icon size={size} strokeWidth={1.5} color={color} />;
+  return <Icon size={size} weight="duotone" color={color} />;
 }
