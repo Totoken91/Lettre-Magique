@@ -159,7 +159,7 @@ export default function ComptePage() {
           </h1>
           <p
             className="mt-4 text-base leading-[1.7]"
-            style={{ fontFamily: "var(--font-lora)", color: "#888" }}
+            style={{ fontFamily: "var(--font-lora)", color: "var(--rule)" }}
           >
             Sauvegardées et pré-remplies automatiquement à chaque courrier.
           </p>

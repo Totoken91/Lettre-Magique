@@ -26,21 +26,21 @@ export default function Navbar() {
         <Link
           href="/comment-ca-marche"
           className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
-          style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
+          style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
         >
           Comment ça marche
         </Link>
         <Link
           href="/tarifs"
           className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
-          style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
+          style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
         >
           Tarifs
         </Link>
         <Link
           href="/mes-courriers"
           className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
-          style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
+          style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
         >
           Mes courriers
         </Link>

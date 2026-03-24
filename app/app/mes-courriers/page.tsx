@@ -112,7 +112,7 @@ export default function MesCourriersPage() {
           <h1 className="font-extrabold leading-[0.92] tracking-[-2px]" style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(28px, 3.5vw, 44px)" }}>
             Mes{" "}<em style={{ color: "var(--accent)", fontStyle: "italic", fontFamily: "var(--font-lora)", fontWeight: 500 }}>courriers</em>
           </h1>
-          <p className="mt-4 text-base leading-[1.7]" style={{ fontFamily: "var(--font-lora)", color: "#888" }}>
+          <p className="mt-4 text-base leading-[1.7]" style={{ fontFamily: "var(--font-lora)", color: "var(--rule)" }}>
             Retrouvez, modifiez et retéléchargez tous vos courriers générés.
           </p>
         </div>
@@ -185,14 +185,14 @@ export default function MesCourriersPage() {
                           <div className="text-sm font-bold leading-tight truncate" style={{ fontFamily: "var(--font-syne)", color: selectedId === letter.id ? "var(--white-warm)" : "var(--ink)" }}>
                             {extractTitle(letter)}
                           </div>
-                          <div className="text-[10px] mt-1" style={{ fontFamily: "var(--font-dm-mono)", color: selectedId === letter.id ? "#999" : "var(--muted-lm)" }}>
+                          <div className="text-[10px] mt-1" style={{ fontFamily: "var(--font-dm-mono)", color: selectedId === letter.id ? "var(--rule)" : "var(--muted-lm)" }}>
                             {new Date(letter.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
                           </div>
                         </div>
                         <button
                           onClick={(e) => { e.stopPropagation(); toggleFavorite(letter.id); }}
                           className="text-[14px] shrink-0 mt-0.5 cursor-pointer opacity-60 hover:opacity-100 transition-opacity"
-                          style={{ background: "none", border: "none", color: letter.is_favorite ? "var(--accent)" : (selectedId === letter.id ? "#666" : "var(--rule)") }}
+                          style={{ background: "none", border: "none", color: letter.is_favorite ? "var(--accent)" : (selectedId === letter.id ? "var(--rule)" : "var(--muted-lm)") }}
                           title={letter.is_favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
                         >
                           {letter.is_favorite ? "★" : "☆"}

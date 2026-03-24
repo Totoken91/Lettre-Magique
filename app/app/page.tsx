@@ -76,7 +76,7 @@ export default async function Home() {
 
           <p
             className="text-lg max-w-[500px] leading-[1.7] mb-11 animate-fade-up-3"
-            style={{ fontFamily: "var(--font-lora)", color: "#888" }}
+            style={{ fontFamily: "var(--font-lora)", color: "var(--rule)" }}
           >
             Résiliation refusée ? Remboursement bloqué ? Facture erronée ?
             Générez un courrier solide et personnalisé en 30 secondes —
@@ -91,8 +91,8 @@ export default async function Home() {
               style={{
                 fontFamily: "var(--font-syne)",
                 background: "transparent",
-                color: "#666",
-                border: "1.5px solid #333",
+                color: "var(--rule)",
+                border: "1.5px solid #444",
               }}
             >
               Voir comment ça marche
@@ -710,8 +710,8 @@ export default async function Home() {
               className="inline-flex items-center justify-center px-8 py-4 text-sm font-semibold no-underline transition-colors duration-200"
               style={{
                 fontFamily: "var(--font-syne)",
-                color: "#666",
-                border: "1.5px solid #333",
+                color: "var(--rule)",
+                border: "1.5px solid #444",
               }}
             >
               J&apos;ai déjà un compte
@@ -720,7 +720,7 @@ export default async function Home() {
 
           <div
             className="mt-6 text-[10px] uppercase tracking-[1px]"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "#444" }}
+            style={{ fontFamily: "var(--font-dm-mono)", color: "#888" }}
           >
             Gratuit · Sans inscription · Aucun engagement
           </div>

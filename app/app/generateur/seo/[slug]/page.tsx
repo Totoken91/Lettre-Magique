@@ -213,7 +213,7 @@ export default async function SeoPage({ params }: { params: Promise<{ slug: stri
           <h2 className="text-2xl font-bold mb-4 tracking-tight" style={{ fontFamily: "var(--font-syne)", color: "var(--white-warm)" }}>
             Prêt à générer votre courrier ?
           </h2>
-          <p className="text-sm mb-6" style={{ fontFamily: "var(--font-lora)", color: "#888" }}>
+          <p className="text-sm mb-6" style={{ fontFamily: "var(--font-lora)", color: "var(--rule)" }}>
             Gratuit, sans inscription, sans carte bancaire. Votre lettre en 2 minutes.
           </p>
           <Link

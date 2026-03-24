@@ -75,7 +75,7 @@ export default async function GenerateurTypePage({ params }: Props) {
           </h1>
           <p
             className="text-base leading-[1.7] mb-5"
-            style={{ fontFamily: "var(--font-lora)", color: "#888" }}
+            style={{ fontFamily: "var(--font-lora)", color: "var(--rule)" }}
           >
             Répondez aux questions ci-dessous. L&apos;IA générera un courrier
             personnalisé et professionnel en quelques secondes.

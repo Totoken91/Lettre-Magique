@@ -109,7 +109,7 @@ export default function ResultatClient() {
           </h1>
           <p
             className="text-base leading-[1.7]"
-            style={{ fontFamily: "var(--font-lora)", color: "#888" }}
+            style={{ fontFamily: "var(--font-lora)", color: "var(--rule)" }}
           >
             Vérifiez le contenu ci-dessous, modifiez-le si besoin, puis
             téléchargez votre PDF.

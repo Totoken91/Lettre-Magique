@@ -67,7 +67,7 @@ export default async function GenerateurPage() {
           </h1>
           <p
             className="text-base max-w-[500px] leading-[1.7] mb-5"
-            style={{ fontFamily: "var(--font-lora)", color: "#888" }}
+            style={{ fontFamily: "var(--font-lora)", color: "var(--rule)" }}
           >
             Sélectionnez une catégorie ci-dessous.
           </p>

@@ -124,7 +124,7 @@ export default function NavAuth() {
           <Link
             href="/compte"
             className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
           >
             Mon compte
           </Link>
@@ -166,7 +166,7 @@ export default function NavAuth() {
           <button
             onClick={handleSignOut}
             className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] transition-colors duration-200"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "#666", background: "none", border: "none", cursor: "pointer" }}
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", background: "none", border: "none", cursor: "pointer" }}
           >
             Déconnecter
           </button>
@@ -178,9 +178,9 @@ export default function NavAuth() {
             style={{ background: "none", border: "none", cursor: "pointer" }}
             aria-label="Menu"
           >
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "#999", transition: "all 0.2s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "transparent" : "#999", transition: "all 0.2s" }} />
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "#999", transition: "all 0.2s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "transparent" : "var(--rule)", transition: "all 0.2s" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
           </button>
         </div>
       ) : (
@@ -188,7 +188,7 @@ export default function NavAuth() {
           <Link
             href="/login"
             className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "#666" }}
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
           >
             Se connecter
           </Link>
@@ -207,9 +207,9 @@ export default function NavAuth() {
             style={{ background: "none", border: "none", cursor: "pointer" }}
             aria-label="Menu"
           >
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "#999", transition: "all 0.2s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "transparent" : "#999", transition: "all 0.2s" }} />
-            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "#999", transition: "all 0.2s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "transparent" : "var(--rule)", transition: "all 0.2s" }} />
+            <span style={{ display: "block", width: 20, height: 1.5, background: menuOpen ? "var(--accent)" : "var(--rule)", transition: "all 0.2s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
           </button>
         </div>
       )}
@@ -224,7 +224,7 @@ export default function NavAuth() {
             href="/#comment"
             onClick={() => setMenuOpen(false)}
             className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "#888", borderColor: "#222" }}
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
           >
             Comment ça marche
           </Link>
@@ -232,7 +232,7 @@ export default function NavAuth() {
             href="/tarifs"
             onClick={() => setMenuOpen(false)}
             className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
-            style={{ fontFamily: "var(--font-dm-mono)", color: "#888", borderColor: "#222" }}
+            style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
           >
             Tarifs
           </Link>
@@ -261,7 +261,7 @@ export default function NavAuth() {
                 href="/compte"
                 onClick={() => setMenuOpen(false)}
                 className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
-                style={{ fontFamily: "var(--font-dm-mono)", color: "#888", borderColor: "#222" }}
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
               >
                 Mon compte
               </Link>
@@ -278,7 +278,7 @@ export default function NavAuth() {
               <button
                 onClick={handleSignOut}
                 className="px-6 py-4 text-left text-[11px] uppercase tracking-[1.5px]"
-                style={{ fontFamily: "var(--font-dm-mono)", color: "#666", background: "none", border: "none", cursor: "pointer" }}
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", background: "none", border: "none", cursor: "pointer" }}
               >
                 Déconnecter
               </button>
@@ -288,7 +288,7 @@ export default function NavAuth() {
               href="/login"
               onClick={() => setMenuOpen(false)}
               className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline"
-              style={{ fontFamily: "var(--font-dm-mono)", color: "#888" }}
+              style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)" }}
             >
               Se connecter
             </Link>
