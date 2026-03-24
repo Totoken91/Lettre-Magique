@@ -58,7 +58,7 @@ function LoginForm() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 pt-14 pb-16"
+      className="min-h-screen flex items-start justify-center px-4 pt-24 pb-16"
       style={{ background: "var(--paper)" }}
     >
       <div className="w-full max-w-[420px]">
