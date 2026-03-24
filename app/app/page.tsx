@@ -19,10 +19,7 @@ export default async function Home() {
         className="block w-full no-underline"
         style={{ textDecoration: "none" }}
       >
-        <div
-          className="promo-badge w-full flex items-center justify-center gap-3 py-3 px-4"
-          style={{ boxShadow: "0 2px 12px rgba(200,75,47,0.35)" }}
-        >
+        <div className="promo-banner-sunset w-full flex items-center justify-center gap-3 py-3 px-4">
           <span style={{ fontSize: "16px" }}>🎁</span>
           <span
             className="text-white font-bold uppercase tracking-[1.5px] text-center"
