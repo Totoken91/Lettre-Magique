@@ -64,12 +64,17 @@ function LoginForm() {
       <div className="w-full max-w-[420px]">
         {/* Header */}
         <div className="mb-10 text-center">
-          <Link href="/" className="no-underline">
+          <Link href="/" className="no-underline inline-flex items-center justify-center">
             <span
-              className="text-xl font-bold tracking-tight"
-              style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}
+              className="inline-flex items-center justify-center w-10 h-10 font-extrabold tracking-[-1px]"
+              style={{
+                fontFamily: "var(--font-syne)",
+                fontSize: "15px",
+                background: "var(--ink)",
+                color: "var(--white-warm)",
+              }}
             >
-              Lettre<span style={{ color: "var(--accent)" }}>Magique</span>
+              L<span style={{ color: "var(--accent)" }}>M</span>
             </span>
           </Link>
           <h1
