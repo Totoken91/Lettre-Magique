@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   robots: "noindex",
 };
 
+interface PromoCode {
+  code: string;
+  credits: number;
+  used_count: number;
+  max_uses: number | null;
+  active: boolean;
+}
+
 interface Stats {
   usersCount: number;
   lettersCount: number;
@@ -17,6 +25,8 @@ interface Stats {
   uniqueVisits30d: number;
   uniqueVisits7d: number;
   proCount: number;
+  promoTotalRedemptions: number;
+  promoCodes: PromoCode[];
   recentLetters: {
     id: string;
     created_at: string;
@@ -59,6 +69,7 @@ async function getStats(): Promise<Stats | null> {
     { data: visits7d },
     { data: recentLetters },
     { count: proCount },
+    { data: promoCodesData },
   ] = await Promise.all([
     (admin.from("profiles") as any).select("*", { count: "exact", head: true }),
     (admin.from("letters") as any).select("*", { count: "exact", head: true }),
@@ -85,6 +96,9 @@ async function getStats(): Promise<Stats | null> {
     (admin.from("profiles") as any)
       .select("*", { count: "exact", head: true })
       .eq("is_pro", true),
+    (admin.from("promo_codes") as any)
+      .select("code, credits, used_count, max_uses, active")
+      .order("used_count", { ascending: false }),
   ]);
 
   const uniqueVisits30d = new Set((visits30d ?? []).map((r: { session_id: string }) => r.session_id)).size;
@@ -111,6 +125,9 @@ async function getStats(): Promise<Stats | null> {
     is_pro: proMap[u.id] ?? false,
   }));
 
+  const promoCodes: PromoCode[] = (promoCodesData ?? []) as PromoCode[];
+  const promoTotalRedemptions = promoCodes.reduce((sum, c) => sum + (c.used_count ?? 0), 0);
+
   return {
     usersCount: usersCount ?? 0,
     lettersCount: lettersCount ?? 0,
@@ -120,6 +137,8 @@ async function getStats(): Promise<Stats | null> {
     uniqueVisits30d,
     uniqueVisits7d,
     proCount: proCount ?? 0,
+    promoTotalRedemptions,
+    promoCodes,
     recentLetters: recentLetters ?? [],
     recentUsers,
   };
@@ -208,11 +227,67 @@ export default async function AdminPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
               <Stat label="Inscrits" value={stats.usersCount} />
               <Stat label="Abonnés Pro" value={stats.proCount} sub={`${stats.usersCount > 0 ? Math.round((stats.proCount / stats.usersCount) * 100) : 0}% des inscrits`} />
+              <Stat label="Codes promo utilisés" value={stats.promoTotalRedemptions} sub={`sur ${stats.promoCodes.reduce((s, c) => s + (c.max_uses ?? 0), 0) || "∞"} utilisations max`} />
               <Stat label="Courriers générés" value={stats.lettersCount} />
               <Stat label="Courriers (7j)" value={stats.lettersThisWeek} />
               <Stat label="Visiteurs uniques (30j)" value={stats.uniqueVisits30d} sub="hors bots" />
               <Stat label="Visiteurs uniques (7j)" value={stats.uniqueVisits7d} sub="hors bots" />
             </div>
+
+            {/* Détail par code */}
+            {stats.promoCodes.length > 0 && (
+              <div
+                className="mt-3 border-[2px]"
+                style={{ borderColor: "var(--rule)" }}
+              >
+                {stats.promoCodes.map((pc, i) => (
+                  <div
+                    key={pc.code}
+                    className="flex items-center justify-between px-5 py-3"
+                    style={{
+                      borderTop: i > 0 ? "1px solid var(--rule)" : undefined,
+                      background: i % 2 === 0 ? "var(--white-warm)" : "var(--paper2)",
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="text-sm font-bold tracking-[1px]"
+                        style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}
+                      >
+                        {pc.code}
+                      </span>
+                      <span
+                        className="text-[9px] uppercase tracking-[1px] px-1.5 py-0.5"
+                        style={{
+                          fontFamily: "var(--font-dm-mono)",
+                          background: pc.active ? "#2d6a4f18" : "#88888818",
+                          color: pc.active ? "var(--green)" : "var(--muted-lm)",
+                          border: `1px solid ${pc.active ? "#2d6a4f33" : "#88888833"}`,
+                        }}
+                      >
+                        {pc.active ? "actif" : "inactif"}
+                      </span>
+                      <span
+                        className="text-[10px]"
+                        style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
+                      >
+                        +{pc.credits} crédit{pc.credits !== 1 ? "s" : ""}
+                      </span>
+                    </div>
+                    <div
+                      className="text-[11px] text-right"
+                      style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}
+                    >
+                      <span className="font-bold">{pc.used_count}</span>
+                      <span style={{ color: "var(--muted-lm)" }}>
+                        {pc.max_uses != null ? ` / ${pc.max_uses}` : " / ∞"}
+                      </span>
+                      <span style={{ color: "var(--muted-lm)" }}> utilisations</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Essais anonymes */}
