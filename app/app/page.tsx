@@ -16,7 +16,7 @@ export default async function Home() {
       {/* ═══ PROMO TOP BANNER ═══ */}
       <a
         href="/signup"
-        className="promo-bounce block w-full no-underline"
+        className="block w-full no-underline"
         style={{ textDecoration: "none" }}
       >
         <div
