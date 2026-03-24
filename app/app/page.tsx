@@ -24,11 +24,12 @@ export default async function Home() {
       <a href="/generateur" className="block w-full no-underline" style={{ textDecoration: "none" }}>
         <div className="promo-banner-sunset w-full flex items-center justify-center gap-3 py-3 px-4">
           <span style={{ fontSize: "16px" }}>🎁</span>
-          <span className="text-white font-bold uppercase tracking-[1.5px] text-center" style={{ fontFamily: "var(--font-dm-mono)", fontSize: "11px" }}>
+          <span className="text-white font-bold uppercase tracking-[1px] sm:tracking-[1.5px] text-center leading-[1.6]" style={{ fontFamily: "var(--font-dm-mono)", fontSize: "10px" }}>
             Code{" "}
             <span className="px-1.5 py-0.5 mx-0.5" style={{ background: "rgba(255,255,255,0.2)", letterSpacing: "2px" }}>PROMO!</span>
-            {" "}= 5 courriers offerts lors de l&apos;inscription{" "}
-            <span style={{ opacity: 0.8, fontWeight: 400 }}>— Essayer maintenant →</span>
+            {" "}= 5 courriers offerts{" "}
+            <span className="hidden sm:inline">lors de l&apos;inscription</span>{" "}
+            <span style={{ opacity: 0.8, fontWeight: 400 }}>— Essayer →</span>
           </span>
         </div>
       </a>
@@ -72,8 +73,8 @@ export default async function Home() {
 
           <div className="flex gap-4 items-center flex-wrap animate-fade-up-4">
             <HeroCTA />
-            <Link href="#comment" className="px-7 py-4 text-sm font-semibold transition-colors duration-200 no-underline" style={{ fontFamily: "var(--font-syne)", background: "transparent", color: "var(--rule)", border: "1.5px solid #444" }}>
-              Voir comment ça marche
+            <Link href="#comment" className="px-5 sm:px-7 py-4 text-sm font-semibold transition-colors duration-200 no-underline text-center" style={{ fontFamily: "var(--font-syne)", background: "transparent", color: "var(--rule)", border: "1.5px solid #444" }}>
+              Comment ça marche
             </Link>
           </div>
 
@@ -107,7 +108,7 @@ export default async function Home() {
           >
             Quel courrier avez-vous besoin ?
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-[2px] border-[2px]" style={{ borderColor: "var(--ink)" }}>
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-[2px] border-[2px]" style={{ borderColor: "var(--ink)" }}>
             {LETTER_TYPES.slice(0, 5).map((type, i) => (
               <Link
                 key={type.id}
@@ -148,7 +149,7 @@ export default async function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 border-[2px] overflow-hidden" style={{ borderColor: "var(--ink)" }}>
             {/* Gauche — avant */}
-            <div className="p-6 md:p-9 border-b-[2px] md:border-b-0 md:border-r-[2px]" style={{ background: "var(--paper2)", borderColor: "var(--ink)" }}>
+            <div className="p-5 sm:p-6 md:p-9 border-b-[2px] md:border-b-0 md:border-r-[2px]" style={{ background: "var(--paper2)", borderColor: "var(--ink)" }}>
               <div className="text-[9px] uppercase tracking-[2px] mb-5 opacity-50" style={{ fontFamily: "var(--font-dm-mono)" }}>
                 Aujourd&apos;hui — 30 minutes de galère
               </div>
@@ -165,7 +166,7 @@ export default async function Home() {
               ))}
             </div>
             {/* Droite — après */}
-            <div className="p-9" style={{ background: "var(--ink)", color: "var(--white-warm)" }}>
+            <div className="p-5 sm:p-6 md:p-9" style={{ background: "var(--ink)", color: "var(--white-warm)" }}>
               <div className="text-[9px] uppercase tracking-[2px] mb-5" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--gold)" }}>
                 Avec LettreMagique — 2 minutes
               </div>
@@ -311,11 +312,11 @@ export default async function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 border-[2px]" style={{ borderColor: "var(--ink)", maxWidth: 800 }}>
             {/* Plan à l'unité */}
-            <div className="p-8 md:p-10 relative border-b-[2px] md:border-b-0 md:border-r-[2px] flex flex-col" style={{ borderColor: "var(--ink)" }}>
+            <div className="p-5 sm:p-8 md:p-10 relative border-b-[2px] md:border-b-0 md:border-r-[2px] flex flex-col" style={{ borderColor: "var(--ink)" }}>
               <div className="text-[10px] uppercase tracking-[2px] mb-2.5" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
                 À l&apos;unité
               </div>
-              <div className="font-extrabold tracking-[-2px] leading-none mb-1" style={{ fontFamily: "var(--font-syne)", fontSize: "56px" }}>
+              <div className="font-extrabold tracking-[-2px] leading-none mb-1" style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(40px, 8vw, 56px)" }}>
                 1,99€{" "}
                 <small className="text-base font-normal" style={{ color: "var(--muted-lm)" }}>/ courrier</small>
               </div>
@@ -335,14 +336,14 @@ export default async function Home() {
             </div>
 
             {/* Plan illimité */}
-            <div className="p-8 md:p-10 relative flex flex-col" style={{ background: "var(--ink)", color: "var(--white-warm)" }}>
-              <div className="absolute top-[-14px] left-1/2 -translate-x-1/2 text-white uppercase whitespace-nowrap" style={{ fontFamily: "var(--font-dm-mono)", fontSize: "12px", letterSpacing: "1.5px", background: "var(--accent)", padding: "8px 20px" }}>
+            <div className="p-5 sm:p-8 md:p-10 relative flex flex-col" style={{ background: "var(--ink)", color: "var(--white-warm)" }}>
+              <div className="absolute top-[-14px] left-1/2 -translate-x-1/2 text-white uppercase whitespace-nowrap z-10" style={{ fontFamily: "var(--font-dm-mono)", fontSize: "11px", letterSpacing: "1.5px", background: "var(--accent)", padding: "8px 16px" }}>
                 Illimité
               </div>
               <div className="text-[10px] uppercase tracking-[2px] mb-2.5" style={{ fontFamily: "var(--font-dm-mono)", color: "#555" }}>
                 Abonnement
               </div>
-              <div className="font-extrabold tracking-[-2px] leading-none mb-1" style={{ fontFamily: "var(--font-syne)", fontSize: "56px" }}>
+              <div className="font-extrabold tracking-[-2px] leading-none mb-1" style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(40px, 8vw, 56px)" }}>
                 4,99€{" "}
                 <small className="text-base font-normal" style={{ color: "#555" }}>/ mois</small>
               </div>
@@ -368,7 +369,7 @@ export default async function Home() {
       <section className="px-4 md:px-16 reveal" style={{ background: "var(--ink)" }}>
         <div className="max-w-[980px] mx-auto">
           <blockquote
-            className="relative px-10 md:px-16 overflow-hidden"
+            className="relative px-6 sm:px-10 md:px-16 overflow-hidden"
             style={{ borderLeft: "4px solid var(--accent)", paddingTop: 48, paddingBottom: 48 }}
           >
             {/* Guillemets décoratifs */}

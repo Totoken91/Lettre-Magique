@@ -1,9 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import FooterWrapper from "@/components/layout/FooterWrapper";
 import ScrollReveal from "@/components/landing/ScrollReveal";
 import PageTracker from "@/components/layout/PageTracker";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#0d0d0d",
+};
 
 export const metadata: Metadata = {
   title: "LettreMagique — Votre courrier administratif rédigé en 2 minutes",

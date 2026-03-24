@@ -69,7 +69,7 @@ function Hamburger({ open, onClick }: { open: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="flex flex-col justify-center gap-[5px] w-8 h-8 items-center"
+      className="flex flex-col justify-center gap-[5px] w-11 h-11 items-center"
       style={{ background: "none", border: "none", cursor: "pointer" }}
       aria-label="Menu"
     >
@@ -147,7 +147,7 @@ export default function NavAuth() {
           <QuotaBadge quota={quota} />
           <Link
             href="/generateur"
-            className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            className="nav-cta px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
             Générer
@@ -156,7 +156,7 @@ export default function NavAuth() {
         </div>
       ) : (
         /* ── Non connecté ── */
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <Link
             href="/login"
             className="hidden md:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
@@ -166,7 +166,7 @@ export default function NavAuth() {
           </Link>
           <Link
             href="/generateur"
-            className="nav-cta px-5 py-2 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            className="nav-cta px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
             Générer →

@@ -63,7 +63,7 @@
   --radius: 0;
 }
 
-/* Texture noise globale */
+/* Texture noise globale — hidden on mobile for performance */
 body::before {
   content: '';
   position: fixed;
@@ -72,6 +72,9 @@ body::before {
   pointer-events: none;
   z-index: 9999;
   opacity: 0.4;
+}
+@media (max-width: 768px) {
+  body::before { display: none; }
 }
 
 @layer base {
@@ -92,6 +95,14 @@ body::before {
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
     max-width: 100%;
+    /* Safe area for notch devices */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    /* Prevent iOS text size adjust on rotation */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-syne), sans-serif;
@@ -242,4 +253,59 @@ body::before {
 .js-ready .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ── Mobile touch & UX ── */
+
+/* Remove tap highlight on iOS */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Minimum touch target size */
+@media (pointer: coarse) {
+  button, a, [role="button"], input[type="submit"] {
+    min-height: 44px;
+  }
+  /* Ensure nav links have enough padding */
+  .nav-link, .nav-cta {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* Prefers reduced motion — disable all animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .js-ready .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* Hover states only for non-touch devices */
+@media (hover: none) {
+  .cat-card:hover, .seo-card:hover { background: inherit !important; }
+  .btn-primary:hover { transform: none !important; box-shadow: none !important; }
+  .nav-link:hover { color: inherit !important; }
+}
+
+/* Hide scrollbars on mobile but keep scrollable */
+@media (max-width: 768px) {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+/* Fix iOS input zoom — ensure inputs are at least 16px */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
 }

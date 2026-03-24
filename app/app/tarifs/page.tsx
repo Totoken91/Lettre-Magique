@@ -55,8 +55,8 @@ export default function TarifsPage() {
                 À l&apos;unité
               </div>
               <div
-                className="text-5xl font-extrabold tracking-[-2px] leading-none mb-1"
-                style={{ fontFamily: "var(--font-syne)" }}
+                className="font-extrabold tracking-[-2px] leading-none mb-1"
+                style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(36px, 8vw, 48px)" }}
               >
                 1,99€{" "}
                 <small className="text-base font-normal" style={{ color: "var(--muted-lm)" }}>
@@ -93,7 +93,7 @@ export default function TarifsPage() {
               style={{ background: "var(--ink)", color: "var(--white-warm)" }}
             >
               <div
-                className="absolute top-[-12px] left-1/2 -translate-x-1/2 text-white text-[9px] uppercase tracking-[1.5px] px-3.5 py-1 whitespace-nowrap"
+                className="absolute top-[-12px] left-1/2 -translate-x-1/2 text-white text-[9px] uppercase tracking-[1.5px] px-3.5 py-1.5 whitespace-nowrap z-10"
                 style={{ fontFamily: "var(--font-dm-mono)", background: "var(--accent)" }}
               >
                 Illimité
@@ -105,8 +105,8 @@ export default function TarifsPage() {
                 Abonnement
               </div>
               <div
-                className="text-5xl font-extrabold tracking-[-2px] leading-none mb-1"
-                style={{ fontFamily: "var(--font-syne)" }}
+                className="font-extrabold tracking-[-2px] leading-none mb-1"
+                style={{ fontFamily: "var(--font-syne)", fontSize: "clamp(36px, 8vw, 48px)" }}
               >
                 4,99€{" "}
                 <small className="text-base font-normal" style={{ color: "var(--rule)" }}>

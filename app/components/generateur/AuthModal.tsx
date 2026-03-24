@@ -95,13 +95,13 @@ export default function AuthModal({ onSuccess, onClose, context = "generate" }: 
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="w-full max-w-[420px] relative"
-        style={{ background: "var(--white-warm)", border: "2px solid var(--ink)" }}
+        className="w-full max-w-[420px] relative overflow-y-auto"
+        style={{ background: "var(--white-warm)", border: "2px solid var(--ink)", maxHeight: "calc(100dvh - 32px)" }}
       >
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-xl leading-none"
+          className="absolute top-2 right-2 w-11 h-11 flex items-center justify-center text-xl leading-none"
           style={{ color: "var(--muted-lm)", background: "none", border: "none", cursor: "pointer" }}
           aria-label="Fermer"
         >

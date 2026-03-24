@@ -368,7 +368,7 @@ export default function DynamicForm({ letterType }: Props) {
                           key={opt}
                           type="button"
                           onClick={() => handleChange(q.id, selected ? "" : opt)}
-                          className="px-3 py-2 text-sm transition-all duration-150"
+                          className="px-4 py-3 text-sm transition-all duration-150"
                           style={{
                             fontFamily: "var(--font-lora)",
                             background: selected ? "var(--ink)" : "var(--paper2)",
