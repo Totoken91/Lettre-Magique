@@ -143,8 +143,8 @@ export default async function Home() {
                   {s.val}
                 </div>
                 <div
-                  className="text-[10px] uppercase tracking-[1.5px] mt-1.5"
-                  style={{ fontFamily: "var(--font-dm-mono)", color: "#555" }}
+                  className="text-[10px] font-bold uppercase tracking-[1.5px] mt-1.5"
+                  style={{ fontFamily: "var(--font-dm-mono)", color: "#aaa" }}
                 >
                   {s.label}
                 </div>
