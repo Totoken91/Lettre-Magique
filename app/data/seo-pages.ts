@@ -223,4 +223,190 @@ export const SEO_PAGES: SEOPage[] = [
     ],
     relatedSlugs: ["resiliation-netflix", "resiliation-disney-plus", "resiliation-free-mobile"],
   },
+
+  // ═══════════════════════════════════════════════
+  // RÉSILIATION STREAMING / MUSIQUE
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "resiliation-netflix",
+    title: "Résilier Netflix — Lettre type gratuite",
+    metaTitle: "Résilier Netflix — Guide & lettre 2026",
+    metaDescription: "Résiliez votre abonnement Netflix facilement. Procédure en ligne, lettre de confirmation PDF gratuite.",
+    letterType: "resiliation",
+    company: "Netflix",
+    heroText: "Vous souhaitez mettre fin à votre abonnement Netflix ? Bien que la résiliation se fasse principalement en ligne, notre générateur crée un courrier de confirmation utile en cas de prélèvements persistants ou de litige avec le service client.",
+    legalInfo: "Netflix fonctionne sans engagement : l'abonnement est résiliable à tout moment depuis les paramètres de votre compte sur netflix.com. La résiliation prend effet à la fin de la période de facturation en cours — vous conservez l'accès jusqu'à cette date sans remboursement prorata. Conformément à l'article L221-18 du Code de la consommation, vous disposez d'un droit de rétractation de 14 jours après toute souscription en ligne. En cas de prélèvements abusifs après résiliation, l'article L133-25 du Code monétaire et financier vous autorise à contester auprès de votre banque dans un délai de 13 mois.",
+    faqItems: [
+      { q: "Comment résilier Netflix concrètement ?", a: "Connectez-vous sur netflix.com, allez dans « Compte » puis « Annuler l'abonnement ». La résiliation est immédiate et vous gardez l'accès jusqu'à la fin de votre période payée." },
+      { q: "Netflix me prélève encore après résiliation, que faire ?", a: "Envoyez un courrier recommandé à Netflix International B.V. en citant l'article L133-25 du Code monétaire et financier. Contactez également votre banque pour contester le prélèvement dans les 13 mois." },
+      { q: "Vais-je perdre mes profils et mon historique ?", a: "Netflix conserve vos données pendant 10 mois après la résiliation. Si vous vous réabonnez dans ce délai, vous retrouvez vos profils et recommandations." },
+      { q: "Puis-je obtenir un remboursement partiel ?", a: "Netflix ne rembourse pas au prorata. Vous profitez du service jusqu'à la fin de la période facturée. En revanche, le droit de rétractation de 14 jours s'applique si vous venez de souscrire." },
+    ],
+    relatedSlugs: ["resiliation-disney-plus", "resiliation-amazon-prime", "resiliation-spotify"],
+  },
+
+  {
+    slug: "resiliation-amazon-prime",
+    title: "Résilier Amazon Prime Video — Lettre type gratuite",
+    metaTitle: "Résilier Amazon Prime — Lettre 2026",
+    metaDescription: "Résiliez Amazon Prime Video avec un courrier conforme. Remboursement prorata, PDF gratuit en 2 min.",
+    letterType: "resiliation",
+    company: "Amazon Prime",
+    heroText: "Vous ne profitez plus d'Amazon Prime Video ou des avantages Prime ? Générez un courrier de résiliation formel à adresser à Amazon, utile en cas de difficulté à résilier en ligne ou de prélèvements non souhaités.",
+    legalInfo: "Amazon Prime (incluant Prime Video) est résiliable à tout moment depuis votre compte Amazon, rubrique « Gérer mon abonnement Prime ». Conformément à l'article L221-18 du Code de la consommation, vous bénéficiez d'un droit de rétractation de 14 jours. Si vous n'avez pas utilisé les avantages Prime depuis le dernier renouvellement, Amazon rembourse intégralement. Si vous avez utilisé les services, un remboursement au prorata est appliqué. L'abonnement annuel (69,90 €) ou mensuel (6,99 €) se renouvelle automatiquement — pensez à désactiver le renouvellement automatique pour éviter tout prélèvement imprévu.",
+    faqItems: [
+      { q: "Comment résilier Amazon Prime en ligne ?", a: "Allez sur amazon.fr, « Compte » > « Abonnement Prime » > « Mettre fin à l'abonnement ». Amazon propose de passer en mode mensuel ou de rappeler plus tard — lisez bien chaque écran." },
+      { q: "Puis-je être remboursé si je résilie Amazon Prime ?", a: "Oui, si vous n'avez pas utilisé les avantages Prime depuis le dernier renouvellement, le remboursement est intégral. Sinon, un remboursement prorata est appliqué selon la politique Amazon." },
+      { q: "La résiliation Prime annule-t-elle aussi Prime Video ?", a: "Oui, Prime Video est inclus dans l'abonnement Prime. En résiliant Prime, vous perdez l'accès à Prime Video, la livraison gratuite, Prime Music et Prime Reading." },
+    ],
+    relatedSlugs: ["resiliation-netflix", "resiliation-disney-plus", "resiliation-spotify"],
+  },
+
+  {
+    slug: "resiliation-disney-plus",
+    title: "Résilier Disney+ — Lettre type gratuite",
+    metaTitle: "Résilier Disney+ — Modèle lettre 2026",
+    metaDescription: "Résiliez votre abonnement Disney+ simplement. Procédure détaillée, courrier PDF conforme et gratuit.",
+    letterType: "resiliation",
+    company: "Disney+",
+    heroText: "Vous souhaitez quitter Disney+ ? Notre outil génère un courrier de résiliation à utiliser en complément de la procédure en ligne, notamment en cas de prélèvements persistants ou de souscription via un tiers (Canal+, Free, etc.).",
+    legalInfo: "Disney+ est un service sans engagement résiliable à tout moment. Si vous êtes abonné directement via disneyplus.com, la résiliation se fait depuis votre profil > « Compte » > « Abonnement ». Si votre abonnement Disney+ est inclus dans une offre Canal+ ou opérateur (Free, Orange), vous devez résilier auprès de ce partenaire. Conformément à l'article L221-18 du Code de la consommation, le droit de rétractation de 14 jours s'applique. L'accès reste actif jusqu'à la fin de la période facturée. The Walt Disney Company (Benelux) B.V. est l'entité juridique responsable pour la France.",
+    faqItems: [
+      { q: "Comment résilier Disney+ souscrit via Canal+ ?", a: "Si votre Disney+ est inclus dans votre offre Canal+, vous devez contacter Canal+ directement. La résiliation de Disney+ seul peut nécessiter un changement de formule chez Canal+." },
+      { q: "Disney+ est-il sans engagement ?", a: "Oui, que vous soyez en formule mensuelle ou annuelle. La résiliation prend effet à la fin de la période payée, sans remboursement prorata pour l'offre annuelle." },
+      { q: "Où envoyer un courrier à Disney+ ?", a: "The Walt Disney Company (Benelux) B.V., 31 Rue Cambon, 75001 Paris. Un courrier recommandé est utile en cas de prélèvements persistants après annulation en ligne." },
+    ],
+    relatedSlugs: ["resiliation-netflix", "resiliation-amazon-prime", "resiliation-canal-plus"],
+  },
+
+  {
+    slug: "resiliation-spotify",
+    title: "Résilier Spotify Premium — Lettre type gratuite",
+    metaTitle: "Résilier Spotify Premium — Lettre 2026",
+    metaDescription: "Résiliez Spotify Premium avec notre modèle de lettre. Sans engagement, procédure en ligne, PDF gratuit.",
+    letterType: "resiliation",
+    company: "Spotify",
+    heroText: "Vous ne souhaitez plus payer pour Spotify Premium ? Notre outil génère un courrier formel de résiliation, utile en cas de problème avec la procédure en ligne ou de prélèvements non autorisés après annulation.",
+    legalInfo: "Spotify Premium est un service sans engagement, résiliable à tout moment depuis votre compte sur spotify.com (« Compte » > « Votre abonnement » > « Modifier l'abonnement »). Après résiliation, votre compte repasse en mode gratuit (avec publicités) — vous conservez vos playlists et bibliothèque. Le droit de rétractation de 14 jours s'applique (article L221-18 du Code de la consommation). Si votre abonnement a été souscrit via Apple (App Store) ou Google (Play Store), la résiliation doit se faire depuis les paramètres d'abonnement de votre téléphone, pas depuis Spotify directement.",
+    faqItems: [
+      { q: "Comment résilier Spotify Premium en ligne ?", a: "Sur spotify.com, allez dans « Compte » > « Votre abonnement » > « Modifier l'abonnement » > « Annuler Premium ». Votre accès Premium continue jusqu'à la fin de la période facturée." },
+      { q: "Vais-je perdre mes playlists en résiliant ?", a: "Non, vos playlists, morceaux sauvegardés et historique d'écoute sont conservés. Votre compte passe simplement en version gratuite avec publicités et écoute aléatoire sur mobile." },
+      { q: "J'ai souscrit Spotify via l'App Store, comment résilier ?", a: "Allez dans Réglages iPhone > votre nom > Abonnements > Spotify > Résilier. La résiliation via l'app Spotify ne fonctionnera pas pour les abonnements souscrits via Apple." },
+    ],
+    relatedSlugs: ["resiliation-netflix", "resiliation-amazon-prime", "resiliation-disney-plus"],
+  },
+
+  {
+    slug: "resiliation-dazn",
+    title: "Résilier DAZN — Lettre type gratuite",
+    metaTitle: "Résilier DAZN — Modèle lettre 2026",
+    metaDescription: "Résiliez votre abonnement DAZN sport avec un courrier conforme. Engagement, conditions, PDF gratuit.",
+    letterType: "resiliation",
+    company: "DAZN",
+    heroText: "Le prix de DAZN a explosé et vous voulez résilier ? Notre générateur crée un courrier de résiliation solide juridiquement, indispensable face aux conditions d'engagement strictes de la plateforme de streaming sportif.",
+    legalInfo: "DAZN propose des abonnements mensuels et annuels pour le streaming sportif (Ligue 1, boxe, MMA). L'abonnement annuel engage pour 12 mois — la résiliation anticipée entraîne le paiement des mensualités restantes. L'abonnement mensuel est résiliable à tout moment avec effet à la fin de la période en cours. Suite aux hausses tarifaires controversées, l'article L224-33 du Code de la consommation permet de résilier sans frais dans les 4 mois suivant la notification d'une augmentation de prix. Le droit de rétractation de 14 jours (article L221-18) s'applique à toute nouvelle souscription en ligne. DAZN est opéré par DAZN Limited, basée au Royaume-Uni.",
+    faqItems: [
+      { q: "DAZN a augmenté ses tarifs, puis-je résilier sans frais ?", a: "Oui, l'article L224-33 du Code de la consommation vous autorise à résilier sans pénalité dans les 4 mois suivant la notification de la hausse tarifaire, même en cours d'engagement annuel." },
+      { q: "Comment résilier DAZN en ligne ?", a: "Connectez-vous sur dazn.com, allez dans « Mon compte » > « Abonnement » > « Annuler ». Conservez une capture d'écran de la confirmation comme preuve." },
+      { q: "Où envoyer un courrier de résiliation DAZN ?", a: "DAZN Limited n'a pas de siège en France. Adressez votre courrier recommandé à DAZN Group Limited, 12 Hammersmith Grove, London W6 7AP, Royaume-Uni. Un email à help@dazn.com en complément est recommandé." },
+      { q: "Puis-je résilier l'abonnement annuel DAZN avant terme ?", a: "En principe non, sauf en cas de hausse tarifaire (article L224-33) ou en invoquant le droit de rétractation de 14 jours après souscription. Dans les autres cas, vous devrez régler les mensualités restantes." },
+    ],
+    relatedSlugs: ["resiliation-canal-plus", "resiliation-netflix", "resiliation-basic-fit"],
+  },
+
+  // ═══════════════════════════════════════════════
+  // RÉSILIATION SALLE DE SPORT
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "resiliation-basic-fit",
+    title: "Résilier Basic-Fit — Lettre type gratuite",
+    metaTitle: "Résilier Basic-Fit — Modèle lettre 2026",
+    metaDescription: "Résiliez votre abonnement Basic-Fit avec un courrier conforme. Préavis, engagement, PDF gratuit en 2 min.",
+    letterType: "resiliation",
+    company: "Basic-Fit",
+    heroText: "Résilier Basic-Fit peut sembler compliqué avec leurs conditions d'engagement. Notre générateur crée un courrier de résiliation juridiquement solide, intégrant les bons articles de loi et respectant les délais de préavis imposés par Basic-Fit.",
+    legalInfo: "Les abonnements Basic-Fit sont soumis à un engagement initial (souvent 12 mois pour le tarif préférentiel ou 1 mois pour la formule Flex). La résiliation doit respecter un préavis d'un mois calendaire. Conformément à l'article L215-1 du Code de la consommation (loi Chatel), Basic-Fit doit vous informer de la reconduction tacite entre 3 mois et 1 mois avant l'échéance. À défaut, vous pouvez résilier à tout moment sans frais. La résiliation peut être effectuée en ligne depuis l'espace membre ou par courrier recommandé. En cas de motif légitime (déménagement à plus de 30 km, maladie longue durée, perte d'emploi), la résiliation anticipée est possible sur justificatif (article L224-39 du Code de la consommation).",
+    faqItems: [
+      { q: "Quel est le préavis de résiliation Basic-Fit ?", a: "Le préavis est d'un mois calendaire. Votre résiliation prendra effet le mois suivant la fin du préavis. Exemple : courrier reçu le 15 mars → résiliation effective le 30 avril." },
+      { q: "Puis-je résilier Basic-Fit avant la fin de l'engagement ?", a: "Oui, en cas de motif légitime : déménagement à plus de 30 km de toute salle Basic-Fit, maladie longue durée (certificat médical), ou perte d'emploi. Joignez le justificatif à votre courrier." },
+      { q: "Où envoyer ma lettre de résiliation Basic-Fit ?", a: "Basic-Fit France — Service Résiliation, 5 boulevard des Bouvets, 92000 Nanterre. Un envoi en recommandé avec accusé de réception est indispensable pour prouver la date de réception." },
+      { q: "Puis-je résilier Basic-Fit en ligne ?", a: "Oui, depuis votre espace membre sur basic-fit.com, rubrique « Mon abonnement ». Cependant, un courrier recommandé reste la preuve la plus solide en cas de litige." },
+    ],
+    relatedSlugs: ["resiliation-fitness-park", "resiliation-dazn", "resiliation-spotify"],
+  },
+
+  {
+    slug: "resiliation-fitness-park",
+    title: "Résilier Fitness Park — Lettre type gratuite",
+    metaTitle: "Résilier Fitness Park — Lettre 2026",
+    metaDescription: "Résiliez Fitness Park avec un courrier conforme. Engagement, préavis, motifs légitimes, PDF gratuit.",
+    letterType: "resiliation",
+    company: "Fitness Park",
+    heroText: "Vous souhaitez quitter Fitness Park ? Notre générateur crée un courrier de résiliation conforme aux conditions générales de la salle, incluant les articles de loi applicables et respectant le préavis contractuel.",
+    legalInfo: "Les abonnements Fitness Park sont généralement assortis d'un engagement de 12 mois avec reconduction tacite. La résiliation doit se faire par courrier recommandé avec un préavis de 2 mois avant la date anniversaire du contrat. Conformément à la loi Chatel (article L215-1 du Code de la consommation), Fitness Park doit vous informer de la reconduction entre 3 et 1 mois avant l'échéance. En l'absence de cette notification, vous pouvez résilier à tout moment sans frais. Un motif légitime (déménagement, maladie longue durée, incapacité physique attestée par certificat médical) permet la résiliation anticipée sans pénalités (article L224-39 du Code de la consommation).",
+    faqItems: [
+      { q: "Quel est le préavis pour résilier Fitness Park ?", a: "Le préavis est généralement de 2 mois avant la date anniversaire du contrat. Vérifiez vos conditions générales car le délai peut varier selon l'offre souscrite." },
+      { q: "Puis-je résilier Fitness Park pour raison médicale ?", a: "Oui, un certificat médical attestant d'une incapacité physique de longue durée constitue un motif légitime de résiliation anticipée sans pénalités (article L224-39 du Code de la consommation)." },
+      { q: "Où envoyer ma résiliation Fitness Park ?", a: "Adressez votre courrier en recommandé avec AR directement à votre salle Fitness Park (l'adresse figure sur votre contrat). Si votre salle ne dispose pas de boîte aux lettres, envoyez au siège : Fitness Park, 30 rue Madeleine Vionnet, 93300 Aubervilliers." },
+      { q: "Fitness Park ne m'a pas informé de la reconduction, que faire ?", a: "Si vous n'avez pas reçu de notification de reconduction entre 3 et 1 mois avant l'échéance, invoquez la loi Chatel (article L215-1) dans votre courrier pour résilier sans frais et sans préavis." },
+    ],
+    relatedSlugs: ["resiliation-basic-fit", "resiliation-dazn", "resiliation-canal-plus"],
+  },
+
+  // ═══════════════════════════════════════════════
+  // RÉSILIATION ASSURANCE
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "resiliation-assurance-auto",
+    title: "Résilier une assurance auto — Lettre type gratuite",
+    metaTitle: "Résilier assurance auto — Lettre 2026",
+    metaDescription: "Résiliez votre assurance auto avec une lettre conforme. Loi Hamon, échéance, vente de véhicule — PDF gratuit.",
+    letterType: "resiliation",
+    heroText: "Vous changez d'assureur auto ou vendez votre véhicule ? Générez en 2 minutes un courrier de résiliation d'assurance automobile conforme, incluant les articles du Code des assurances applicables à votre situation.",
+    legalInfo: "La résiliation d'une assurance auto est encadrée par plusieurs textes. Après un an de contrat, la loi Hamon (article L113-15-2 du Code des assurances) permet de résilier à tout moment, sans frais ni justification — votre nouvel assureur peut s'en charger. À l'échéance annuelle, la résiliation doit être envoyée au moins 2 mois avant la date anniversaire (article L113-12 du Code des assurances). La loi Chatel (article L113-15-1) impose à l'assureur de vous rappeler cette échéance ; à défaut, vous pouvez résilier dans les 20 jours suivant la date d'envoi de l'avis. En cas de vente du véhicule (article L121-11), le contrat est suspendu automatiquement à minuit le jour de la vente et résilié 6 mois après si non transféré. Un changement de situation (déménagement, mariage, retraite) constitue aussi un motif de résiliation dans les 3 mois (article L113-16).",
+    faqItems: [
+      { q: "Puis-je résilier mon assurance auto à tout moment ?", a: "Oui, après un an de contrat, la loi Hamon vous permet de résilier à tout moment sans frais. Votre nouvel assureur peut effectuer la démarche à votre place, sans interruption de couverture." },
+      { q: "Je vends ma voiture, comment résilier l'assurance ?", a: "Le contrat est automatiquement suspendu à minuit le jour de la vente (article L121-11 du Code des assurances). Envoyez un courrier avec le certificat de cession pour confirmer la résiliation définitive." },
+      { q: "Mon assureur ne m'a pas prévenu de l'échéance, que faire ?", a: "Si l'avis d'échéance arrive moins de 15 jours avant la date limite de résiliation, ou après cette date, vous disposez de 20 jours supplémentaires pour résilier (loi Chatel, article L113-15-1)." },
+      { q: "Dois-je avoir un nouvel assureur avant de résilier ?", a: "Oui, l'assurance auto est obligatoire (article L211-1 du Code des assurances). Souscrivez un nouveau contrat avant de résilier l'ancien pour éviter tout défaut d'assurance." },
+    ],
+    relatedSlugs: ["resiliation-assurance-habitation", "resiliation-mutuelle-sante"],
+  },
+
+  {
+    slug: "resiliation-assurance-habitation",
+    title: "Résilier une assurance habitation — Lettre type gratuite",
+    metaTitle: "Résilier assurance habitation — Lettre 2026",
+    metaDescription: "Résiliez votre assurance habitation avec un courrier conforme. Loi Hamon, déménagement, PDF gratuit.",
+    letterType: "resiliation",
+    heroText: "Vous déménagez, changez d'assureur ou devenez propriétaire ? Générez un courrier de résiliation d'assurance habitation complet, adapté à votre motif de résiliation, avec les articles du Code des assurances pré-remplis.",
+    legalInfo: "La résiliation d'une assurance habitation est possible dans plusieurs cas. Après un an de contrat, la loi Hamon (article L113-15-2 du Code des assurances) autorise la résiliation à tout moment, sans frais — votre nouvel assureur peut s'en charger. À l'échéance annuelle, le préavis est de 2 mois (article L113-12). La loi Chatel (article L113-15-1) oblige l'assureur à vous rappeler la date limite de résiliation entre 3 mois et 15 jours avant. En cas de déménagement, la résiliation est possible dans les 3 mois suivant l'événement (article L113-16 du Code des assurances). Attention : l'assurance habitation est obligatoire pour les locataires (loi du 6 juillet 1989, article 7) — souscrivez un nouveau contrat avant de résilier.",
+    faqItems: [
+      { q: "Puis-je résilier mon assurance habitation à tout moment ?", a: "Oui, après la première année, la loi Hamon permet de résilier sans frais ni justification. La résiliation prend effet 30 jours après la réception de votre demande par l'assureur." },
+      { q: "Je déménage, comment résilier mon assurance habitation ?", a: "Le déménagement est un motif légitime de résiliation (article L113-16 du Code des assurances). Envoyez votre courrier dans les 3 mois suivant le déménagement. La résiliation prend effet un mois après réception." },
+      { q: "L'assurance habitation est-elle obligatoire ?", a: "Pour les locataires, oui (loi du 6 juillet 1989). Les propriétaires occupants n'y sont pas légalement tenus, mais c'est fortement recommandé. Les copropriétaires doivent au minimum souscrire une responsabilité civile." },
+      { q: "Mon assureur augmente la prime, puis-je résilier ?", a: "Oui. Si l'augmentation dépasse l'indice prévu au contrat, vous pouvez résilier dans les 15 jours suivant la notification de la nouvelle prime (conditions générales habituelles)." },
+    ],
+    relatedSlugs: ["resiliation-assurance-auto", "resiliation-mutuelle-sante"],
+  },
+
+  {
+    slug: "resiliation-mutuelle-sante",
+    title: "Résilier une mutuelle santé — Lettre type gratuite",
+    metaTitle: "Résilier mutuelle santé — Lettre 2026",
+    metaDescription: "Résiliez votre mutuelle santé avec un courrier conforme. Loi Hamon/résiliation infra-annuelle, PDF gratuit.",
+    letterType: "resiliation",
+    heroText: "Vous changez de mutuelle ou bénéficiez désormais de la complémentaire de votre employeur ? Générez un courrier de résiliation de mutuelle santé complet, adapté à votre motif et conforme au Code de la mutualité.",
+    legalInfo: "Depuis le 1er décembre 2020, la résiliation infra-annuelle des complémentaires santé est possible à tout moment après un an de contrat, sans frais ni pénalités (article L113-15-2 du Code des assurances, étendu aux mutuelles). La résiliation prend effet un mois après réception du courrier. Pour les contrats collectifs obligatoires (mutuelle d'entreprise), la résiliation n'est possible qu'en cas de dispense légale (CDD, couverture par le conjoint, CSS, etc.) prévue par le décret n°2012-25 du 9 janvier 2012. À l'échéance annuelle, le préavis est de 2 mois (article L221-10 du Code de la mutualité). La loi Chatel (article L221-10-1 du Code de la mutualité) oblige la mutuelle à vous informer de la reconduction tacite.",
+    faqItems: [
+      { q: "Puis-je résilier ma mutuelle à tout moment ?", a: "Oui, après un an de contrat, la résiliation infra-annuelle vous permet de quitter votre mutuelle à tout moment, sans frais. La résiliation prend effet un mois après la réception de votre courrier." },
+      { q: "Mon employeur me fournit une mutuelle, puis-je résilier la mienne ?", a: "Oui, l'adhésion à une mutuelle d'entreprise obligatoire constitue un motif de résiliation de votre contrat individuel. Joignez l'attestation de votre nouvel employeur à votre courrier." },
+      { q: "Comment résilier une mutuelle d'entreprise obligatoire ?", a: "La résiliation n'est possible que dans des cas limitatifs : CDD de moins de 12 mois, couverture existante par le conjoint, bénéficiaire de la CSS, ou temps partiel avec cotisation supérieure à 10 % du salaire." },
+      { q: "Dois-je souscrire une autre mutuelle avant de résilier ?", a: "La complémentaire santé n'est pas légalement obligatoire (sauf mutuelle d'entreprise). Cependant, il est fortement recommandé de souscrire un nouveau contrat pour éviter tout défaut de couverture, notamment pour les dépassements d'honoraires et les soins dentaires/optiques." },
+    ],
+    relatedSlugs: ["resiliation-assurance-auto", "resiliation-assurance-habitation"],
+  },
 ];
