@@ -267,12 +267,6 @@ body::before {
   button, a, [role="button"], input[type="submit"] {
     min-height: 44px;
   }
-  /* Ensure nav links have enough padding */
-  .nav-link, .nav-cta {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-  }
 }
 
 /* Prefers reduced motion — disable all animations */
