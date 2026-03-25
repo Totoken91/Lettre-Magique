@@ -10,7 +10,7 @@ export default function Navbar() {
         borderBottom: "3px solid var(--accent)",
       }}
     >
-      <Link href="/" className="no-underline">
+      <Link href="/" className="no-underline shrink-0">
         <span
           className="text-lg font-bold tracking-tight"
           style={{
@@ -22,7 +22,7 @@ export default function Navbar() {
         </span>
       </Link>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 lg:gap-4 shrink-0">
         <NavAuth />
       </div>
     </nav>
