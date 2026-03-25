@@ -409,4 +409,216 @@ export const SEO_PAGES: SEOPage[] = [
     ],
     relatedSlugs: ["resiliation-assurance-auto", "resiliation-assurance-habitation"],
   },
+
+  // ═══════════════════════════════════════════════
+  // RÉCLAMATIONS
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "reclamation-colis-amazon",
+    title: "Réclamation colis Amazon — Lettre type gratuite",
+    metaTitle: "Réclamation colis Amazon — Lettre 2026",
+    metaDescription: "Colis Amazon perdu, endommagé ou non conforme ? Lettre de réclamation conforme, PDF gratuit en 2 min.",
+    letterType: "reclamation",
+    company: "Amazon",
+    heroText: "Votre colis Amazon n'est jamais arrivé, est arrivé endommagé ou ne correspond pas à la commande ? Notre générateur crée un courrier de réclamation formel citant les bons articles de loi, à envoyer lorsque le service client en ligne ne suffit pas.",
+    legalInfo: "Amazon est tenu à une obligation de délivrance conforme (article L216-1 du Code de la consommation). En cas de colis non livré, vous pouvez mettre en demeure de livrer dans un délai raisonnable, puis annuler et obtenir un remboursement intégral sous 14 jours (article L216-2). Pour un produit non conforme, la garantie légale de conformité de 2 ans s'applique (articles L217-3 à L217-20). Amazon EU SARL, basée au Luxembourg, est l'entité juridique responsable. Pour les vendeurs tiers Marketplace, Amazon reste solidaire de la livraison (article L221-15).",
+    faqItems: [
+      { q: "Mon colis Amazon est marqué livré mais je ne l'ai pas reçu ?", a: "Contactez d'abord Amazon via « Mes commandes ». Sans solution, envoyez un recommandé citant l'article L216-1. Le vendeur doit prouver la livraison effective." },
+      { q: "Amazon refuse de rembourser un colis endommagé ?", a: "Invoquez la garantie légale de conformité (article L217-3). Le vendeur est responsable des dommages pendant le transport. Joignez des photos du colis et du produit." },
+      { q: "Puis-je réclamer à Amazon pour un vendeur tiers ?", a: "Oui, Amazon est solidairement responsable de la livraison Marketplace (article L221-15). Adressez votre réclamation à Amazon EU SARL." },
+      { q: "Quel délai pour réclamer ?", a: "Pour un défaut de livraison, agissez vite. Pour un produit non conforme, la garantie légale est de 2 ans à compter de la délivrance." },
+    ],
+    relatedSlugs: ["reclamation-la-poste", "reclamation-produit-defectueux", "reclamation-garantie-legale"],
+  },
+
+  {
+    slug: "reclamation-la-poste",
+    title: "Réclamation La Poste — Lettre type gratuite",
+    metaTitle: "Réclamation La Poste colis/courrier — Lettre 2026",
+    metaDescription: "Colis ou courrier perdu par La Poste ? Lettre de réclamation avec indemnisation, PDF conforme et gratuit.",
+    letterType: "reclamation",
+    company: "La Poste",
+    heroText: "Courrier recommandé égaré, Colissimo perdu ou endommagé ? Générez une lettre de réclamation formelle adressée au service client La Poste, avec les références de vos envois et les montants d'indemnisation auxquels vous avez droit.",
+    legalInfo: "La Poste est responsable des envois confiés (article L7 du Code des postes). Pour un Colissimo perdu, l'indemnisation est de 23 €/kg (plafonnée à 1 000 €). Pour un recommandé perdu : 16 € (R1), 153 € (R2), 458 € (R3). La réclamation doit être déposée dans l'année pour colis et recommandés (article L134-1 du Code de la consommation). En cas de refus, le Médiateur du Groupe La Poste peut être saisi gratuitement.",
+    faqItems: [
+      { q: "Comment réclamer pour un Colissimo perdu ?", a: "Déposez d'abord une réclamation en ligne sur laposte.fr/reclamation. Sans réponse sous 30 jours, envoyez un recommandé au Service Clients La Poste, 99999 La Poste." },
+      { q: "Quelle indemnisation pour un recommandé perdu ?", a: "R1 = 16 €, R2 = 153 €, R3 = 458 €. Montants forfaitaires, sans preuve de valeur du contenu nécessaire." },
+      { q: "La Poste a endommagé mon colis ?", a: "Faites constater les dégâts à la réception (réserves sur le bon) ou dans les 3 jours. Prenez des photos et réclamez avec preuves de valeur." },
+      { q: "Quel délai pour réclamer ?", a: "2 jours pour Chronopost, 21 jours pour colis internationaux, 1 an pour Colissimo et recommandés nationaux." },
+    ],
+    relatedSlugs: ["reclamation-colis-amazon", "reclamation-sncf", "reclamation-facture-abusive"],
+  },
+
+  {
+    slug: "reclamation-sncf",
+    title: "Réclamation SNCF retard/annulation — Lettre type gratuite",
+    metaTitle: "Réclamation SNCF retard — Lettre 2026",
+    metaDescription: "Train SNCF en retard ou annulé ? Lettre de réclamation pour remboursement, règlement européen, PDF gratuit.",
+    letterType: "reclamation",
+    company: "SNCF",
+    heroText: "Votre TGV ou Intercités a subi un retard important ou a été annulé ? Générez une lettre de réclamation SNCF pour obtenir une indemnisation en invoquant le règlement européen sur les droits des voyageurs ferroviaires.",
+    legalInfo: "Le règlement (UE) 2021/782 prévoit : 25 % du billet pour 60-119 min de retard, 50 % dès 120 min. La SNCF applique la garantie « G30 » sur TGV INOUI et Intercités : bon de 25 % dès 30 min, 50 % dès 2h, 75 % dès 3h. Demande dans les 3 mois suivant le voyage. En cas de refus, le Médiateur SNCF peut être saisi gratuitement. Pour les trains annulés, remboursement intégral de droit.",
+    faqItems: [
+      { q: "À partir de quel retard la SNCF indemnise ?", a: "Garantie G30 : dès 30 min sur TGV/Intercités (bon de 25 %). Règlement européen : 25 % dès 60 min." },
+      { q: "Comment demander un remboursement SNCF ?", a: "Sur sncf-connect.com > « Gérer mes commandes » > « Compensation ». Sinon, recommandé au Service Relations Clients SNCF Voyageurs." },
+      { q: "Train annulé, ai-je droit au remboursement ?", a: "Oui, remboursement intégral garanti. Vous pouvez aussi choisir d'être réacheminé." },
+      { q: "Puis-je saisir le Médiateur SNCF ?", a: "Oui, si réclamation sans réponse 30 jours ou réponse insatisfaisante. Saisine gratuite via mediateur.sncf." },
+    ],
+    relatedSlugs: ["reclamation-la-poste", "reclamation-facture-abusive", "reclamation-colis-amazon"],
+  },
+
+  {
+    slug: "reclamation-facture-abusive",
+    title: "Contester une facture abusive — Lettre type gratuite",
+    metaTitle: "Contestation facture abusive — Lettre 2026",
+    metaDescription: "Contestez une facture abusive avec un courrier conforme. Mise en demeure, articles de loi, PDF gratuit.",
+    letterType: "reclamation",
+    heroText: "Facture anormalement élevée, injustifiée ou pour un service non rendu ? Notre générateur crée un courrier de contestation formel avec mise en demeure et références juridiques pour faire valoir vos droits.",
+    legalInfo: "L'article L112-1 du Code de la consommation impose la transparence des prix. L'article L221-5 oblige le professionnel à informer préalablement. Si un service n'a pas été rendu, le paiement ne peut être exigé (article 1163 du Code civil). La contestation en recommandé AR interrompt le délai de paiement. En cas de refus, saisissez le Médiateur de la consommation (article L612-1) ou la DGCCRF.",
+    faqItems: [
+      { q: "Comment contester une facture abusive ?", a: "Recommandé avec AR au service client, détaillant les montants contestés. Citez les articles L112-1 et L221-5 du Code de la consommation." },
+      { q: "Dois-je payer en attendant ?", a: "Payez la partie non contestée et suspendez le montant litigieux en le signalant par écrit. Ne cessez jamais tout paiement sans courrier formel." },
+      { q: "Menace de recouvrement, que faire ?", a: "Répondez par recommandé. Un créancier ne peut engager de recouvrement sur une facture formellement contestée sans décision de justice." },
+    ],
+    relatedSlugs: ["reclamation-produit-defectueux", "reclamation-garantie-legale", "reclamation-colis-amazon"],
+  },
+
+  {
+    slug: "reclamation-produit-defectueux",
+    title: "Réclamation produit défectueux — Lettre type gratuite",
+    metaTitle: "Produit défectueux — Lettre réclamation 2026",
+    metaDescription: "Produit en panne ou défectueux ? Lettre avec garantie légale de conformité, PDF gratuit.",
+    letterType: "reclamation",
+    heroText: "Votre produit est en panne ou présente un défaut ? Générez une lettre invoquant la garantie légale de conformité pour obtenir réparation, remplacement ou remboursement.",
+    legalInfo: "La garantie légale de conformité (articles L217-3 à L217-20) protège l'acheteur 2 ans. Tout défaut est présumé exister au moment de la livraison. Vous choisissez entre réparation et remplacement (article L217-9). Si impossible sous 30 jours, remboursement de droit (article L217-10). Indépendante de toute garantie commerciale. La garantie des vices cachés (articles 1641-1649 du Code civil) offre 2 ans supplémentaires après découverte du vice.",
+    faqItems: [
+      { q: "Durée de la garantie légale ?", a: "2 ans à compter de la livraison. Pour les biens d'occasion, réductible à 1 an par accord." },
+      { q: "Le vendeur m'oriente vers le constructeur ?", a: "Illégal. La garantie légale engage le vendeur, pas le fabricant (article L217-9). Insistez par recommandé." },
+      { q: "Puis-je exiger un remboursement immédiat ?", a: "Demandez d'abord réparation ou remplacement. Si le vendeur ne s'exécute pas sous 30 jours, vous pouvez exiger le remboursement." },
+      { q: "Produit de plus de 2 ans ?", a: "Garantie des vices cachés (article 1641) : 2 ans après découverte du défaut, même si l'achat est plus ancien." },
+    ],
+    relatedSlugs: ["reclamation-garantie-legale", "reclamation-facture-abusive", "reclamation-colis-amazon"],
+  },
+
+  {
+    slug: "reclamation-garantie-legale",
+    title: "Faire jouer la garantie légale — Lettre type gratuite",
+    metaTitle: "Garantie légale de conformité — Lettre 2026",
+    metaDescription: "Mise en demeure pour garantie légale. Réparation, remplacement ou remboursement. PDF gratuit.",
+    letterType: "reclamation",
+    heroText: "Le vendeur refuse la garantie légale ? Notre générateur crée une mise en demeure citant les articles L217-3 à L217-20 du Code de la consommation pour le contraindre à respecter ses obligations.",
+    legalInfo: "La garantie légale est d'ordre public : aucune clause ne peut la réduire (article L217-21). Le consommateur choisit entre réparation et remplacement (article L217-9). Exécution sans frais sous 30 jours (article L217-10). À défaut : réduction de prix ou résolution du contrat. Aucun frais pendant la réparation (transport, main-d'œuvre, pièces). Se cumule avec la garantie des vices cachés (articles 1641-1649 du Code civil).",
+    faqItems: [
+      { q: "Garantie constructeur expirée, que faire ?", a: "Garantie commerciale et légale sont indépendantes. Même si la première a expiré, la légale court 2 ans. Citez l'article L217-3." },
+      { q: "Réparation facturée sous garantie légale ?", a: "Illégal. La réparation est gratuite : pièces, main-d'œuvre et transport (article L217-11)." },
+      { q: "Réparation trop longue ?", a: "Au-delà de 30 jours, exigez remplacement ou remboursement (article L217-10). Recommandé avec délai ferme." },
+      { q: "Comment prouver le défaut d'origine ?", a: "Inutile : pendant 2 ans, le défaut est présumé d'origine. C'est au vendeur de prouver le contraire." },
+    ],
+    relatedSlugs: ["reclamation-produit-defectueux", "reclamation-facture-abusive", "reclamation-colis-amazon"],
+  },
+
+  // ═══════════════════════════════════════════════
+  // LOGEMENT
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "preavis-logement-1-mois",
+    title: "Préavis de départ 1 mois — Lettre type gratuite",
+    metaTitle: "Préavis logement 1 mois — Lettre 2026",
+    metaDescription: "Lettre de préavis 1 mois pour quitter votre logement. Zone tendue, motifs légitimes, PDF conforme gratuit.",
+    letterType: "logement",
+    heroText: "Vous bénéficiez du préavis réduit d'un mois ? Générez un courrier conforme mentionnant le motif légal qui vous y autorise, avec les références juridiques nécessaires pour que votre propriétaire ne puisse pas contester.",
+    legalInfo: "Le préavis réduit à 1 mois est prévu par l'article 15-I de la loi du 6 juillet 1989. Il s'applique dans les cas suivants : logement situé en zone tendue (décret n°2013-392), obtention d'un premier emploi, mutation professionnelle, perte d'emploi, nouvel emploi consécutif à une perte d'emploi, locataire bénéficiaire du RSA ou de l'AAH, locataire de plus de 60 ans dont l'état de santé justifie un changement, locataire dont le logement est situé en quartier prioritaire de la politique de la ville. Le préavis court à compter de la réception du courrier recommandé par le propriétaire.",
+    faqItems: [
+      { q: "Comment savoir si je suis en zone tendue ?", a: "Consultez le décret n°2013-392 ou le simulateur sur service-public.fr. Les grandes agglomérations (Paris, Lyon, Marseille, Bordeaux, Lille, etc.) sont toutes en zone tendue." },
+      { q: "Quel justificatif fournir pour le préavis d'1 mois ?", a: "En zone tendue : aucun justificatif nécessaire. Pour les autres motifs : attestation employeur (mutation), lettre de licenciement (perte d'emploi), certificat médical (santé), notification RSA/AAH." },
+      { q: "Mon propriétaire refuse le préavis d'1 mois, que faire ?", a: "Le préavis réduit est de droit si vous remplissez les conditions. Rappelez l'article 15-I de la loi du 6 juillet 1989 par recommandé. En cas de litige persistant, saisissez la Commission départementale de conciliation." },
+    ],
+    relatedSlugs: ["preavis-logement-3-mois", "demande-restitution-caution", "demande-reparations-proprietaire"],
+  },
+
+  {
+    slug: "preavis-logement-3-mois",
+    title: "Préavis de départ 3 mois — Lettre type gratuite",
+    metaTitle: "Préavis logement 3 mois — Lettre 2026",
+    metaDescription: "Lettre de préavis 3 mois standard pour quitter votre logement. Modèle conforme loi 1989, PDF gratuit.",
+    letterType: "logement",
+    heroText: "Vous quittez votre logement avec le préavis standard de 3 mois ? Générez un courrier de congé conforme à la loi du 6 juillet 1989, avec la date de fin de bail calculée et toutes les mentions obligatoires.",
+    legalInfo: "Le préavis standard pour un logement non meublé est de 3 mois (article 15-I de la loi n°89-462 du 6 juillet 1989). Pour un logement meublé, le préavis est d'1 mois (article 25-8). Le congé doit être notifié par lettre recommandée avec AR, acte d'huissier, ou remise en main propre contre signature. Le préavis court à compter du jour de la réception effective par le propriétaire (et non de l'envoi). Pendant le préavis, le loyer reste dû proportionnellement au temps d'occupation. Si un nouveau locataire entre dans les lieux avant la fin du préavis, vous ne devez le loyer que jusqu'à cette date.",
+    faqItems: [
+      { q: "Quand commence le préavis de 3 mois ?", a: "À la date de réception du courrier recommandé par le propriétaire (accusé de réception), et non à la date d'envoi. Si le propriétaire ne retire pas le recommandé, la date de première présentation fait foi." },
+      { q: "Puis-je quitter avant la fin du préavis ?", a: "Oui, mais vous restez redevable du loyer jusqu'à la fin du préavis, sauf si un nouveau locataire entre dans les lieux avant, auquel cas le loyer cesse à cette date." },
+      { q: "Je suis en meublé, le préavis est-il de 3 mois ?", a: "Non, pour un logement meublé le préavis est d'1 mois seulement (article 25-8 de la loi de 1989)." },
+      { q: "Dois-je justifier mon départ ?", a: "Non. Le locataire peut donner congé à tout moment sans motif (article 12 de la loi de 1989). Seul le propriétaire doit justifier un congé." },
+    ],
+    relatedSlugs: ["preavis-logement-1-mois", "demande-restitution-caution", "contestation-etat-des-lieux"],
+  },
+
+  {
+    slug: "demande-restitution-caution",
+    title: "Demande de restitution de caution — Lettre type gratuite",
+    metaTitle: "Restitution caution/dépôt de garantie — Lettre 2026",
+    metaDescription: "Votre propriétaire ne rend pas la caution ? Lettre de mise en demeure conforme, loi 1989, PDF gratuit.",
+    letterType: "logement",
+    heroText: "Votre propriétaire tarde à restituer votre dépôt de garantie ? Notre générateur crée une mise en demeure citant l'article 22 de la loi de 1989 et le délai légal de restitution, avec majoration automatique en cas de retard.",
+    legalInfo: "Le dépôt de garantie doit être restitué dans un délai de 1 mois si l'état des lieux de sortie est conforme à l'entrée, ou 2 mois en cas de différences (article 22 de la loi du 6 juillet 1989). Passé ce délai, le dépôt est majoré de 10 % du loyer mensuel pour chaque mois de retard commencé. Le propriétaire ne peut retenir que les sommes justifiées par des factures ou devis (et non des estimations). En copropriété, il peut conserver jusqu'à 20 % du dépôt jusqu'à l'arrêté des comptes annuel. En cas de non-restitution, saisissez le juge des contentieux de la protection (ex-tribunal d'instance) sans avocat pour les litiges inférieurs à 10 000 €.",
+    faqItems: [
+      { q: "Quel délai pour récupérer ma caution ?", a: "1 mois si l'état des lieux de sortie est conforme à l'entrée, 2 mois sinon. Le délai court à compter de la remise des clés." },
+      { q: "Le propriétaire retient des sommes injustifiées ?", a: "Toute retenue doit être justifiée par des factures ou devis. Contestez par recommandé en demandant les justificatifs. Les retenues pour « usure normale » sont illégales." },
+      { q: "Puis-je obtenir une majoration pour retard ?", a: "Oui, 10 % du loyer mensuel par mois de retard commencé (article 22 de la loi de 1989). Mentionnez-le dans votre mise en demeure." },
+      { q: "Quel tribunal saisir si le propriétaire ne rend rien ?", a: "Le juge des contentieux de la protection (tribunal judiciaire). Pas besoin d'avocat pour les litiges inférieurs à 10 000 €. La saisine est possible en ligne via service-public.fr." },
+    ],
+    relatedSlugs: ["preavis-logement-1-mois", "contestation-etat-des-lieux", "demande-reparations-proprietaire"],
+  },
+
+  {
+    slug: "signalement-troubles-voisinage",
+    title: "Signalement troubles de voisinage — Lettre type gratuite",
+    metaTitle: "Lettre troubles de voisinage — Modèle 2026",
+    metaDescription: "Nuisances sonores, odeurs, dégradations ? Lettre de mise en demeure pour troubles de voisinage, PDF gratuit.",
+    letterType: "logement",
+    heroText: "Vos voisins causent des nuisances sonores, olfactives ou autres troubles anormaux ? Générez une lettre de mise en demeure formelle, première étape indispensable avant toute action en justice pour troubles anormaux de voisinage.",
+    legalInfo: "Les troubles anormaux de voisinage sont sanctionnés par la jurisprudence civile (responsabilité sans faute, Cass. civ. 3e, 4 février 1971). Le Code de la santé publique (article R1336-5) interdit les bruits portant atteinte à la tranquillité du voisinage de jour comme de nuit. Le tapage nocturne (entre 22h et 7h) est une infraction pénale (article R623-2 du Code pénal, amende de 68 €). Le règlement de copropriété peut imposer des restrictions supplémentaires. En cas de locataire fautif, le propriétaire peut être mis en cause pour ne pas avoir fait respecter la jouissance paisible (article 1719 du Code civil). Avant toute action, une mise en demeure amiable est recommandée, puis la saisine du conciliateur de justice (gratuit), et enfin le tribunal judiciaire.",
+    faqItems: [
+      { q: "Quels sont les recours contre un voisin bruyant ?", a: "1) Courrier amiable, 2) Mise en demeure recommandée, 3) Conciliateur de justice (gratuit), 4) Main courante ou plainte, 5) Tribunal judiciaire. Chaque étape renforce votre dossier." },
+      { q: "Le tapage nocturne est-il une infraction ?", a: "Oui, le tapage nocturne (22h-7h) est sanctionné par l'article R623-2 du Code pénal (68 € d'amende). Appelez la police ou gendarmerie pour faire constater." },
+      { q: "Mon propriétaire peut-il agir contre un voisin ?", a: "Oui, et il en a l'obligation : l'article 1719 du Code civil impose au bailleur de garantir la jouissance paisible du logement. Mettez-le en demeure d'agir." },
+    ],
+    relatedSlugs: ["demande-reparations-proprietaire", "preavis-logement-1-mois", "demande-restitution-caution"],
+  },
+
+  {
+    slug: "demande-reparations-proprietaire",
+    title: "Demande de réparations au propriétaire — Lettre type gratuite",
+    metaTitle: "Demande réparations propriétaire — Lettre 2026",
+    metaDescription: "Logement insalubre ou réparations urgentes ? Lettre de mise en demeure au propriétaire, loi 1989, PDF gratuit.",
+    letterType: "logement",
+    heroText: "Fuite d'eau, chauffage en panne, moisissures, volets cassés ? Votre propriétaire doit assurer la décence et l'entretien du logement. Générez une mise en demeure formelle pour exiger les réparations qui lui incombent légalement.",
+    legalInfo: "Le propriétaire est tenu de délivrer un logement décent (article 6 de la loi du 6 juillet 1989 et décret n°2002-120 du 30 janvier 2002). Les réparations autres que locatives (gros œuvre, plomberie, électricité, chauffage, toiture) sont à sa charge (article 1720 du Code civil). Le locataire ne supporte que les menues réparations et l'entretien courant (décret n°87-712 du 26 août 1987). En cas d'inaction du propriétaire après mise en demeure, le locataire peut saisir le juge des contentieux de la protection pour obtenir l'exécution des travaux, une réduction de loyer, ou des dommages-intérêts. La CAF peut aussi suspendre les APL et les verser en consignation. En cas de danger pour la santé, signalez à l'ARS ou au service hygiène de la mairie.",
+    faqItems: [
+      { q: "Quelles réparations incombent au propriétaire ?", a: "Tout ce qui relève du gros œuvre et de l'entretien structurel : plomberie, électricité, chauffage, toiture, fenêtres, ravalement. Le décret n°87-712 liste les réparations locatives (à charge du locataire)." },
+      { q: "Mon propriétaire ne répond pas, que faire ?", a: "Envoyez une mise en demeure par recommandé AR avec un délai de 8 jours. Sans réaction, saisissez le juge des contentieux de la protection ou contactez l'ADIL de votre département pour un conseil gratuit." },
+      { q: "Puis-je arrêter de payer le loyer si rien n'est fait ?", a: "Non, ne cessez jamais de payer le loyer de votre propre initiative. Seul un juge peut autoriser une réduction ou une consignation du loyer. Un impayé peut entraîner votre expulsion." },
+      { q: "Le logement est dangereux pour ma santé ?", a: "Signalez à l'ARS ou au service hygiène de votre mairie. Un arrêté d'insalubrité peut être pris, obligeant le propriétaire à effectuer les travaux sous peine de sanctions pénales." },
+    ],
+    relatedSlugs: ["contestation-etat-des-lieux", "demande-restitution-caution", "signalement-troubles-voisinage"],
+  },
+
+  {
+    slug: "contestation-etat-des-lieux",
+    title: "Contestation état des lieux — Lettre type gratuite",
+    metaTitle: "Contester un état des lieux — Lettre 2026",
+    metaDescription: "État des lieux de sortie abusif ? Lettre de contestation conforme, loi 1989, vétusté, PDF gratuit.",
+    letterType: "logement",
+    heroText: "L'état des lieux de sortie mentionne des dégradations que vous contestez ? Notre générateur crée un courrier de contestation détaillé, invoquant la grille de vétusté et les articles de loi pour protéger votre dépôt de garantie.",
+    legalInfo: "L'état des lieux est encadré par l'article 3-2 de la loi du 6 juillet 1989 et le décret n°2016-382. Il doit être établi contradictoirement et de manière amiable. En cas de désaccord, chaque partie peut faire appel à un huissier (frais partagés). La vétusté (usure normale liée au temps) ne peut pas être imputée au locataire (article 1730 du Code civil et loi ALUR). Une grille de vétusté peut être annexée au bail pour objectiver l'appréciation. Si l'état des lieux d'entrée était incomplet ou absent, toute retenue sur le dépôt de garantie est contestable car le logement est présumé avoir été remis en bon état (article 3-2). Vous disposez de 10 jours après la signature pour demander la modification de l'état des lieux d'entrée, et du premier mois de chauffe pour signaler les défauts de chauffage.",
+    faqItems: [
+      { q: "L'état des lieux d'entrée était incomplet, que faire ?", a: "Si l'état des lieux d'entrée ne mentionne pas un défaut que le propriétaire vous reproche à la sortie, le logement est présumé en bon état à l'entrée. Contestez la retenue en invoquant l'article 3-2." },
+      { q: "Qu'est-ce que la vétusté et comment la calculer ?", a: "La vétusté est l'usure normale liée au temps et à l'usage. Une peinture a une durée de vie de 7-10 ans, une moquette 7 ans, un parquet 15 ans. Au-delà, le remplacement ne peut pas être facturé au locataire." },
+      { q: "Le propriétaire retient ma caution pour des dégradations contestées ?", a: "Contestez par recommandé AR en joignant photos, état des lieux d'entrée et grille de vétusté. Si le propriétaire ne justifie pas les retenues par des factures, saisissez le juge des contentieux de la protection." },
+      { q: "Puis-je refuser de signer l'état des lieux de sortie ?", a: "Oui, si vous êtes en désaccord. Notez vos réserves sur le document ou refusez de signer. Chaque partie peut alors faire appel à un huissier dont les frais sont partagés par moitié." },
+    ],
+    relatedSlugs: ["demande-restitution-caution", "demande-reparations-proprietaire", "preavis-logement-3-mois"],
+  },
 ];
