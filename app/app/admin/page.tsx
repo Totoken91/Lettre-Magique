@@ -294,7 +294,12 @@ async function getStats(): Promise<Stats | null> {
 
   // ── Funnel ──
   const funnelVisitors = uniqueVisits30d;
-  const funnelLettersGenerated = lettersArr.filter((l) => l.created_at >= thirtyDaysAgo).length;
+  const funnelLettersGenerated = new Set(
+    lettersArr
+      .filter((l) => l.created_at >= thirtyDaysAgo)
+      .map((l: { user_id: string | null; fingerprint: string | null }) => l.user_id ?? l.fingerprint)
+      .filter(Boolean)
+  ).size;
   const funnelAccountsCreated = allProfilesList.filter((p) => p.created_at >= thirtyDaysAgo).length;
 
   return {
@@ -421,7 +426,7 @@ export default async function AdminPage() {
               steps={[
                 { label: "Visiteurs", value: stats.funnelVisitors },
                 { label: "Page générateur", value: stats.funnelGeneratorVisits },
-                { label: "Courriers générés", value: stats.funnelLettersGenerated },
+                { label: "Ont généré un courrier", value: stats.funnelLettersGenerated },
                 { label: "Comptes créés", value: stats.funnelAccountsCreated },
                 { label: "Abonnés Pro", value: stats.proCount },
               ]}
