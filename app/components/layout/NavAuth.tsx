@@ -135,7 +135,7 @@ export default function NavAuth() {
     <>
       {user ? (
         /* ── Connecté ── */
-        <div className="flex items-center gap-2 lg:gap-4">
+        <div className="flex items-center gap-4">
           <Link
             href="/mes-courriers"
             className="hidden lg:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
@@ -148,7 +148,7 @@ export default function NavAuth() {
           </div>
           <Link
             href="/generateur"
-            className="nav-cta px-3 py-2 lg:px-5 lg:py-2.5 text-[10px] lg:text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            className="hidden lg:inline-flex nav-cta px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
             Générer
@@ -157,7 +157,7 @@ export default function NavAuth() {
         </div>
       ) : (
         /* ── Non connecté ── */
-        <div className="flex items-center gap-2 lg:gap-4">
+        <div className="flex items-center gap-4">
           <Link
             href="/login"
             className="hidden lg:block nav-link text-[11px] uppercase tracking-[1.5px] no-underline transition-colors duration-200"
@@ -167,7 +167,7 @@ export default function NavAuth() {
           </Link>
           <Link
             href="/generateur"
-            className="nav-cta px-3 py-2 lg:px-5 lg:py-2.5 text-[10px] lg:text-xs font-bold uppercase tracking-[1px] text-white no-underline"
+            className="hidden lg:inline-flex nav-cta px-5 py-2.5 text-xs font-bold uppercase tracking-[1px] text-white no-underline"
             style={{ fontFamily: "var(--font-syne)", background: "var(--accent)" }}
           >
             Générer
