@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function PaiementAnnulePage() {
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 pt-14"
+      className="min-h-screen flex items-center justify-center px-4 pt-16"
       style={{ background: "var(--paper)" }}
     >
       <div className="w-full max-w-[480px] text-center">

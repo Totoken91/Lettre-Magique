@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function ResultatPage() {
   return (
-    <div className="pt-14">
+    <div className="pt-16">
       <ResultatClient />
     </div>
   );

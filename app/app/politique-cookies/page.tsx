@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function PolitiqueCookiesPage() {
   return (
-    <div className="pt-14">
+    <div className="pt-16">
       {/* Hero */}
       <section
         className="relative overflow-hidden px-4 md:px-16 py-10 md:py-16"

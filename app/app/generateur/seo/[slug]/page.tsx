@@ -108,7 +108,7 @@ export default async function SeoPage({
   };
 
   return (
-    <div className="pt-14">
+    <div className="pt-16">
       {/* JSON-LD */}
       <script
         type="application/ld+json"

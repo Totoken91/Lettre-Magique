@@ -26,7 +26,7 @@ export default async function GenerateurPage() {
     // En cas d'erreur, on affiche la box par défaut
   }
   return (
-    <div className="pt-14">
+    <div className="pt-16">
       <section
         className="relative overflow-hidden px-4 md:px-16 py-12 md:py-20"
         style={{ background: "var(--ink)", color: "var(--white-warm)" }}

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function TarifsPage() {
   return (
-    <div className="pt-14">
+    <div className="pt-16">
       <section
         className="relative overflow-hidden px-4 md:px-16 py-10 md:py-16"
         style={{ background: "var(--ink)", color: "var(--white-warm)" }}

@@ -4,7 +4,7 @@ import NavAuth from "./NavAuth";
 export default function Navbar() {
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 h-14 flex justify-between items-center px-4 lg:px-12"
+      className="fixed top-0 left-0 right-0 z-50 h-16 flex justify-between items-center px-6 lg:px-12"
       style={{
         background: "var(--ink)",
         borderBottom: "3px solid var(--accent)",

@@ -18,7 +18,7 @@ export default async function Home() {
   const { data: { session } } = await supabase.auth.getSession();
   if (session) redirect("/generateur");
   return (
-    <div className="pt-14">
+    <div className="pt-16">
 
       {/* ═══ PROMO TOP BANNER ═══ */}
       <a href="/generateur" className="block w-full no-underline" style={{ textDecoration: "none" }}>
