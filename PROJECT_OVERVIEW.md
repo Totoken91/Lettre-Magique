@@ -1,0 +1,410 @@
+# LettreMagique — Vue d'ensemble du projet
+
+## Qu'est-ce que LettreMagique ?
+
+**LettreMagique** est une plateforme SaaS de génération de courriers administratifs français propulsée par l'IA. Elle permet à n'importe quel utilisateur de créer un courrier formel, juridiquement solide, en 2 minutes — sans aucune expertise légale ni rédactionnelle.
+
+**URL :** https://lettre-magique.vercel.app
+
+---
+
+## Stack technique
+
+| Couche | Technologie |
+|--------|-------------|
+| Frontend | Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4 |
+| Composants UI | shadcn/ui (Button, Input, Card, Select, Badge, etc.) |
+| Backend | Next.js API Routes (serverless sur Vercel) |
+| Base de données | Supabase (PostgreSQL + Auth + RLS) |
+| IA | Anthropic Claude Haiku (`claude-haiku-4-5-20251001`) |
+| Paiement | Stripe (checkout, webhooks, abonnements) |
+| Email | Resend (envoi de courriers en pièce jointe PDF) |
+| PDF | pdf-lib (génération), pdfjs-dist (aperçu) |
+| Analytics | Google Ads (gtag.js), système d'events custom |
+| Graphiques admin | Recharts |
+| Hébergement | Vercel |
+
+---
+
+## Fonctionnalités opérationnelles
+
+### 1. Génération de courriers par IA
+
+**10 types de courriers disponibles :**
+
+| Type | Description |
+|------|-------------|
+| Résiliation | Annulation de contrats, abonnements, assurances |
+| Réclamation | Litiges produits, services, facturation |
+| Logement | Préavis locataire, dépôt de garantie, réparations, voisinage |
+| Mise en demeure | Exiger un paiement/action avec menace juridique |
+| Contestation | Contester amendes, pénalités, infractions |
+| Demande | Demander un délai, une information, une extension |
+| Droit du travail | Litiges employeur/employé |
+| Surendettement | Problèmes de dettes |
+| Propriété | Litiges immobiliers |
+| Autre | Courrier libre personnalisé |
+
+Chaque type possède **3 à 5 questions dynamiques** adaptées (champs texte, textarea, date, select).
+
+**Chaque courrier généré inclut :**
+- Nom et adresse de l'expéditeur
+- Date du jour
+- Destinataire (auto-complété si entreprise connue)
+- Objet
+- Corps du courrier (français formel, juridiquement solide)
+- 2+ références légales (articles de loi : Code de la consommation, Loi Chatel, Loi Hamon, etc.)
+- Numéro de référence auto-généré (ex: LM-2026-03-12345)
+- Signature (manuscrite via canvas ou ligne vide pour impression)
+
+### 2. Génération et export PDF
+
+- Format A4 professionnel (595×841 points)
+- Typographie Helvetica, marges 56pt
+- Support multi-pages pour les courriers longs
+- Signature embarquée (image canvas) ou ligne de signature vierge
+- En-tête et pied de page LettreMagique
+- Conversion Unicode → ASCII pour compatibilité PDF
+- Téléchargement direct ou envoi par email
+
+### 3. Auto-complétion des destinataires
+
+Base de données de **50+ entreprises françaises** (EDF, Orange, SFR, Free, Amazon, La Poste, Bouygues, etc.) avec adresses postales complètes. Quand l'utilisateur mentionne une entreprise connue, l'adresse est automatiquement insérée dans le PDF.
+
+### 4. Système de paiement (Stripe)
+
+| Offre | Prix | Détail |
+|-------|------|--------|
+| Essai gratuit | 0 € | 1er courrier offert (tracké par cookie) |
+| À l'unité | 1,99 € | Paiement ponctuel, +1 crédit |
+| Abonnement Pro | 4,99 €/mois | Courriers illimités |
+
+- Création de session Stripe via `/api/stripe/checkout`
+- Webhook Stripe pour mise à jour automatique des crédits/statut pro
+- Pages dédiées : `/paiement-succes` et `/paiement-annule`
+
+### 5. Authentification utilisateur
+
+**Méthodes :**
+- Email + mot de passe (Supabase Auth)
+- Google OAuth
+
+**Gestion de session :**
+- Client Supabase SSR avec synchronisation cookies
+- Middleware de rafraîchissement de session
+- Callback OAuth via `/auth/callback`
+
+### 6. Espace utilisateur (`/compte`)
+
+- Modification du profil (nom, adresse, code postal, ville, téléphone)
+- Affichage des crédits restants
+- Application de codes promo
+- Gestion de l'abonnement Stripe
+
+### 7. Historique des courriers (`/mes-courriers`)
+
+- Liste de tous les courriers générés par l'utilisateur
+- Accès aux textes générés
+- Re-téléchargement PDF
+
+### 8. Système de codes promo
+
+- Table `promo_codes` administrable (code, crédits offerts, nombre max d'utilisations)
+- Rédemption via `/api/promo/redeem`
+- Tracking dans `promo_redemptions` (1 utilisation par utilisateur)
+- Saisie du code promo lors de l'inscription ou dans `/compte`
+- Bannière promo sur le site
+
+### 9. Envoi de courrier par email (Resend)
+
+- Envoi du courrier en pièce jointe PDF par email
+- Templates HTML professionnels
+- Reply-to configurable
+- Via `POST /api/send-letter`
+
+### 10. Panneau d'administration (`/admin`)
+
+- **Métriques clés :** nombre d'utilisateurs, nombre de courriers, activité journalière
+- **Timeline :** graphique Recharts sur 7 ou 30 jours
+- **Funnel de conversion :** Visiteurs → Générateur → Génération → Inscription → Paiement
+- **Rétention :** utilisateurs ayant généré 1+, 2+, 5+ courriers
+- **Répartition par type** de courrier + comparaison hebdomadaire
+- **Derniers utilisateurs et courriers** en temps réel
+- **Suivi des codes promo :** rédemptions, comparaison usage promo vs non-promo
+- **Actions utilisateur :** panel détaillé par utilisateur
+
+### 11. Analytics & tracking
+
+- Google Ads Conversion (ID: AW-18033703584)
+- Événements custom enregistrés dans la table `events` : `page_view`, `generate_letter`, `signup`, `purchase`
+- Composant `PageTracker` pour le suivi des pages vues
+- API `/api/track` pour l'enregistrement d'événements
+
+### 12. Pages légales
+
+- `/cgu` — Conditions générales d'utilisation
+- `/confidentialite` — Politique de confidentialité
+- `/mentions-legales` — Mentions légales
+- `/politique-cookies` — Politique des cookies
+
+### 13. Pages marketing
+
+- `/` — Landing page (hero, catégories, fonctionnement, témoignages, tarifs, CTA)
+- `/tarifs` — Page de tarification détaillée
+- `/comment-ca-marche` — Explication pas à pas
+- `/generateur/seo/[slug]` — Pages SEO longue traîne (ex: "resiliation-free-mobile")
+
+### 14. Essai gratuit anonyme
+
+- 1 courrier gratuit par appareil (cookie `lm_anon_used=1`, expiration 1 an)
+- Aucun mur d'inscription pour le premier courrier
+- PDF téléchargeable immédiatement après génération
+
+---
+
+## Parcours utilisateurs
+
+### Parcours 1 : Essai gratuit (anonyme)
+1. Atterrissage sur `/` (landing page)
+2. Clic sur "Générer un courrier"
+3. `/generateur` → choix du type de courrier
+4. `/generateur/[type]` → réponse aux questions
+5. Génération IA (`POST /api/generer`) + cookie posé
+6. `/resultat` → aperçu + téléchargement PDF
+
+### Parcours 2 : Achat à l'unité
+1. Création de compte (`/signup`)
+2. Parcours de génération (étapes 1 à 6)
+3. Limite atteinte (1 gratuit + 0 crédits)
+4. Redirection vers Stripe (1,99 €)
+5. Webhook met à jour les crédits
+6. Génération possible (crédits décrémentés par courrier)
+
+### Parcours 3 : Abonné Pro
+1. Création de compte
+2. Souscription au Plan Pro (4,99 €/mois)
+3. `is_pro = true` dans Supabase
+4. Courriers illimités, pas de vérification de crédits
+
+### Parcours 4 : Administrateur
+1. Accès à `/admin`
+2. Consultation analytics, utilisateurs, courriers, funnel
+3. Création/gestion des codes promo
+4. Suivi comportement et rétention utilisateurs
+
+---
+
+## Architecture de la base de données
+
+### Table `profiles`
+| Colonne | Type | Description |
+|---------|------|-------------|
+| id | UUID | ID utilisateur (clé primaire) |
+| is_pro | boolean | Abonné Pro actif |
+| credits | integer | Crédits courriers restants |
+| stripe_customer_id | text | ID client Stripe |
+| stripe_subscription_id | text | ID abonnement Stripe |
+| full_name | text | Nom complet |
+| address | text | Adresse postale |
+| postal_code | text | Code postal |
+| city | text | Ville |
+| phone | text | Téléphone |
+| email_contact | text | Email de contact |
+| created_at | timestamp | Date de création |
+
+### Table `letters`
+| Colonne | Type | Description |
+|---------|------|-------------|
+| id | UUID | Identifiant unique |
+| user_id | UUID | Auteur (nullable pour anonymes) |
+| type | text | Type de courrier |
+| type_name | text | Nom affiché du type |
+| form_data | JSONB | Réponses du formulaire |
+| generated_text | text | Courrier généré |
+| sender_name | text | Nom de l'expéditeur |
+| email | text | Email (ou "free try") |
+| fingerprint | text | Empreinte appareil (anonymes) |
+| created_at | timestamp | Date de création |
+
+### Table `promo_codes`
+| Colonne | Type | Description |
+|---------|------|-------------|
+| code | text | Code promo (unique) |
+| credits | integer | Crédits offerts |
+| used_count | integer | Nombre d'utilisations |
+| max_uses | integer | Limite d'utilisations |
+| active | boolean | Actif ou non |
+
+### Table `promo_redemptions`
+| Colonne | Type | Description |
+|---------|------|-------------|
+| user_id | UUID | Utilisateur |
+| code | text | Code utilisé |
+| created_at | timestamp | Date de rédemption |
+
+### Table `events`
+| Colonne | Type | Description |
+|---------|------|-------------|
+| user_id | UUID | Utilisateur (nullable) |
+| event_name | text | Nom de l'événement |
+| metadata | JSONB | Données supplémentaires |
+| created_at | timestamp | Date |
+
+**Sécurité :** Row-Level Security (RLS) activée — chaque utilisateur ne voit que ses propres données.
+
+---
+
+## Routes API
+
+| Endpoint | Méthode | Description | Auth requise |
+|----------|---------|-------------|--------------|
+| `/api/generer` | POST | Génération de courrier via Claude | User OU Cookie |
+| `/api/pdf` | POST | Conversion texte → PDF | Non |
+| `/api/send-letter` | POST | Envoi du courrier par email (Resend) | User |
+| `/api/stripe/checkout` | POST | Création session de paiement Stripe | User |
+| `/api/stripe/webhook` | POST | Réception événements Stripe | Signature Stripe |
+| `/api/stripe/apply-session` | POST | Application manuelle d'une session | User |
+| `/api/promo/redeem` | POST | Application d'un code promo | User |
+| `/api/user/quota` | GET | Vérification des crédits restants | User |
+| `/api/lead` | POST | Capture email (waitlist) | Non |
+| `/api/track` | POST | Enregistrement d'événements analytics | Non |
+| `/api/admin/stats` | GET | Données du dashboard admin | Admin |
+| `/api/admin/user-action` | POST | Actions de modération | Admin |
+| `/auth/callback` | GET | Callback OAuth (Google) | Provider OAuth |
+
+---
+
+## Design system
+
+### Typographies
+- **Syne** (400-800) — Titres, headlines — Moderne, géométrique
+- **DM Mono** — Labels, métadonnées, uppercase — Technique, monospace
+- **Lora** — Corps de texte, italiques — Serif lisible
+
+### Palette de couleurs
+| Variable | Valeur | Usage |
+|----------|--------|-------|
+| `--ink` | #1d1d1b | Texte principal |
+| `--accent` | #c84b2f | Orange brûlé — CTA principal |
+| `--green` | #4ade80 | Succès |
+| `--gold` | #f59e0b | Highlights |
+| `--white-warm` | #fdfaf4 | Fond off-white |
+| `--paper` | #f9f6f1 | Fond clair |
+| `--rule` | #e8e0d4 | Bordures |
+
+### Responsive
+- Mobile-first
+- Breakpoints : `sm` (~640px), `md` (~768px), `lg` (~1024px)
+
+---
+
+## Variables d'environnement requises
+
+```bash
+# Anthropic (IA)
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Supabase (BDD + Auth)
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+
+# Stripe (Paiement)
+STRIPE_SECRET_KEY=sk_live_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_ONETIME=price_...     # 1,99 € à l'unité
+STRIPE_PRICE_SUB=price_...          # 4,99 €/mois
+
+# Resend (Email)
+RESEND_API_KEY=...
+RESEND_FROM_EMAIL=...
+
+# Application
+NEXT_PUBLIC_BASE_URL=https://lettre-magique.vercel.app
+```
+
+---
+
+## Structure du projet
+
+```
+Lettre-Magique/
+├── app/
+│   ├── app/
+│   │   ├── page.tsx                    # Landing page
+│   │   ├── layout.tsx                  # Layout racine (Navbar, Footer, fonts, GA)
+│   │   ├── globals.css                 # Styles globaux + variables CSS
+│   │   ├── generateur/
+│   │   │   ├── page.tsx                # Sélection du type de courrier
+│   │   │   ├── [type]/page.tsx         # Formulaire dynamique
+│   │   │   └── seo/[slug]/page.tsx     # Pages SEO longue traîne
+│   │   ├── resultat/page.tsx           # Aperçu + téléchargement
+│   │   ├── api/
+│   │   │   ├── generer/route.ts        # Génération IA
+│   │   │   ├── pdf/route.ts            # Génération PDF
+│   │   │   ├── send-letter/route.ts    # Envoi email
+│   │   │   ├── stripe/                 # Checkout + webhook
+│   │   │   ├── promo/redeem/route.ts   # Codes promo
+│   │   │   ├── user/quota/route.ts     # Crédits utilisateur
+│   │   │   ├── admin/                  # Stats + actions admin
+│   │   │   ├── lead/route.ts           # Capture email
+│   │   │   └── track/route.ts          # Analytics
+│   │   ├── auth/callback/route.ts      # OAuth callback
+│   │   ├── login/                      # Page de connexion
+│   │   ├── signup/                     # Page d'inscription
+│   │   ├── compte/                     # Espace utilisateur
+│   │   ├── mes-courriers/              # Historique courriers
+│   │   ├── admin/                      # Dashboard admin
+│   │   ├── tarifs/                     # Page tarifs
+│   │   ├── comment-ca-marche/          # Comment ça marche
+│   │   ├── cgu/                        # CGU
+│   │   ├── confidentialite/            # Politique de confidentialité
+│   │   ├── mentions-legales/           # Mentions légales
+│   │   ├── politique-cookies/          # Politique cookies
+│   │   ├── paiement-succes/            # Succès paiement
+│   │   ├── paiement-annule/            # Paiement annulé
+│   │   └── compte-active/              # Activation compte
+│   ├── components/
+│   │   ├── generateur/                 # DynamicForm, ResultatClient, LetterViewer, etc.
+│   │   ├── landing/                    # HeroCTA, WaitlistForm, ScrollReveal
+│   │   ├── layout/                     # Navbar, Footer, CheckoutButton, PageTracker
+│   │   ├── ui/                         # Composants shadcn/ui
+│   │   └── admin/                      # TimelineChart, FunnelBar, UserDetailPanel
+│   ├── lib/
+│   │   ├── supabase/                   # Clients Supabase (browser, server, admin)
+│   │   ├── prompts/index.ts            # Prompts Claude par type de courrier
+│   │   ├── pdf/generator.ts            # Génération PDF (pdf-lib)
+│   │   └── utils.ts                    # Utilitaires
+│   └── data/
+│       ├── letter-types.ts             # 10 types + questions dynamiques
+│       └── company-addresses.ts        # 50+ adresses entreprises françaises
+├── supabase/
+│   └── migrations/                     # Migrations schema BDD
+├── PLAN_ATTAQUE.md                     # Roadmap du projet
+└── PROJECT_OVERVIEW.md                 # Ce fichier
+```
+
+---
+
+## Ce qui reste à faire (roadmap)
+
+### SEO
+- [ ] 20 pages longue traîne SEO (routes dynamiques)
+- [ ] Schema.org (FAQPage, HowTo)
+- [ ] Sitemap.xml
+- [ ] robots.txt
+
+### Fonctionnalités utilisateur
+- [ ] Upgrade abonnement (4,99 €/mois) dans l'espace compte
+- [ ] Favoris / templates de courriers
+
+### Croissance
+- [ ] Watermark PDF ("Créé avec LettreMagique.fr") pour viralité
+- [ ] Optimisation Lighthouse
+- [ ] Polish responsive mobile
+
+### Futur — LM Mail (avantage concurrentiel)
+- [ ] Intégration envoi postal (Maileva, Merci Facteur)
+- [ ] Prix : +0,50 € par courrier envoyé
+- [ ] Justification supplémentaire pour l'abonnement
