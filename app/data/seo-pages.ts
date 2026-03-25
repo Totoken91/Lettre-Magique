@@ -621,4 +621,177 @@ export const SEO_PAGES: SEOPage[] = [
     ],
     relatedSlugs: ["demande-restitution-caution", "demande-reparations-proprietaire", "preavis-logement-3-mois"],
   },
+
+  // ═══════════════════════════════════════════════
+  // MISE EN DEMEURE
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "mise-en-demeure-loyer-impaye",
+    title: "Mise en demeure loyer impayé — Lettre type gratuite",
+    metaTitle: "Mise en demeure loyer impayé — Lettre 2026",
+    metaDescription: "Locataire qui ne paie pas ? Mise en demeure conforme avant commandement de payer. PDF gratuit.",
+    letterType: "mise-en-demeure",
+    heroText: "Votre locataire accumule des retards de loyer ? Générez une mise en demeure formelle, étape préalable indispensable avant toute procédure judiciaire ou activation de la clause résolutoire du bail.",
+    legalInfo: "La mise en demeure de payer le loyer est la première étape légale face à un impayé. Elle doit être envoyée en recommandé AR (article 1344 du Code civil). Si le bail contient une clause résolutoire, le propriétaire doit ensuite faire délivrer un commandement de payer par huissier, laissant 2 mois au locataire pour régulariser (article 24 de la loi du 6 juillet 1989). Depuis la loi ALUR, le bailleur doit signaler l'impayé à la CAF/MSA dès le 2e mois d'impayé si le locataire perçoit des APL. La trêve hivernale (1er novembre — 31 mars) suspend les expulsions mais pas les procédures. Le Fonds de Solidarité Logement (FSL) peut aider le locataire en difficulté.",
+    faqItems: [
+      { q: "Après combien de mois d'impayé puis-je agir ?", a: "Dès le premier mois de retard. Envoyez une mise en demeure immédiatement. Plus vous agissez tôt, plus les chances de régularisation amiable sont élevées." },
+      { q: "La mise en demeure suffit-elle pour expulser ?", a: "Non. C'est une étape préalable. Il faut ensuite un commandement de payer par huissier (2 mois de délai), puis une assignation au tribunal, puis un jugement, puis un commandement de quitter les lieux." },
+      { q: "Mon locataire perçoit les APL, que dois-je faire ?", a: "Signalez l'impayé à la CAF/MSA dès le 2e mois (obligation légale depuis la loi ALUR). La CAF peut maintenir le versement direct au bailleur et orienter le locataire vers une aide." },
+    ],
+    relatedSlugs: ["mise-en-demeure-remboursement", "mise-en-demeure-artisan", "demande-restitution-caution"],
+  },
+
+  {
+    slug: "mise-en-demeure-remboursement",
+    title: "Mise en demeure de remboursement — Lettre type gratuite",
+    metaTitle: "Mise en demeure remboursement — Lettre 2026",
+    metaDescription: "On vous doit de l'argent ? Mise en demeure de rembourser conforme au Code civil. PDF gratuit en 2 min.",
+    letterType: "mise-en-demeure",
+    heroText: "Un professionnel, un particulier ou un organisme vous doit une somme et ne rembourse pas malgré vos relances ? Générez une mise en demeure formelle, dernière étape amiable avant l'action en justice.",
+    legalInfo: "La mise en demeure est régie par les articles 1344 à 1344-2 du Code civil. Elle fait courir les intérêts de retard au taux légal (article 1231-6). Pour un professionnel, le taux d'intérêt légal majoré s'applique automatiquement. La mise en demeure doit identifier la créance (montant, origine, date d'exigibilité) et fixer un délai raisonnable de paiement (généralement 8 à 15 jours). Passé ce délai, vous pouvez saisir le tribunal. Pour les créances inférieures à 5 000 €, la procédure simplifiée de recouvrement par commissaire de justice est possible (article L125-1 du Code des procédures civiles d'exécution). Pour les injonctions de payer, le formulaire Cerfa n°12948*06 permet de saisir le tribunal sans avocat.",
+    faqItems: [
+      { q: "Quel délai accorder dans la mise en demeure ?", a: "Généralement 8 à 15 jours. Un délai trop court (2 jours) pourrait être jugé déraisonnable. Adaptez au montant et à la situation." },
+      { q: "La mise en demeure fait-elle courir des intérêts ?", a: "Oui, les intérêts de retard au taux légal courent à compter de la réception de la mise en demeure (article 1231-6 du Code civil)." },
+      { q: "Que faire si la personne ne paie toujours pas ?", a: "Pour les sommes < 5 000 € : procédure simplifiée par commissaire de justice. Au-delà : injonction de payer au tribunal (sans avocat) ou assignation en paiement." },
+    ],
+    relatedSlugs: ["mise-en-demeure-loyer-impaye", "mise-en-demeure-artisan", "reclamation-facture-abusive"],
+  },
+
+  {
+    slug: "mise-en-demeure-artisan",
+    title: "Mise en demeure artisan/entrepreneur — Lettre type gratuite",
+    metaTitle: "Mise en demeure artisan travaux — Lettre 2026",
+    metaDescription: "Artisan qui ne finit pas les travaux ou fait du mauvais travail ? Mise en demeure conforme, PDF gratuit.",
+    letterType: "mise-en-demeure",
+    heroText: "Votre artisan a abandonné le chantier, accumule les retards ou a réalisé des travaux non conformes ? Générez une mise en demeure formelle pour exiger l'achèvement des travaux, la reprise des malfaçons ou le remboursement.",
+    legalInfo: "L'artisan est tenu à une obligation de résultat sur les travaux commandés (article 1792 du Code civil pour le gros œuvre, article 1231-1 pour les autres prestations). En cas d'abandon de chantier, la mise en demeure d'achever les travaux dans un délai raisonnable est un préalable obligatoire avant résolution du contrat (article 1226 du Code civil). Pour les malfaçons, la garantie de parfait achèvement court pendant 1 an (article 1792-6), la garantie biennale 2 ans (article 1792-3) et la garantie décennale 10 ans (article 1792). L'assurance décennale est obligatoire (article L241-1 du Code des assurances). En cas de devis non respecté, la surfacturation est sanctionnable (article L441-1 du Code de commerce).",
+    faqItems: [
+      { q: "L'artisan a abandonné le chantier, que faire ?", a: "Mise en demeure recommandée AR fixant un délai de 15 jours. Sans reprise, vous pouvez résoudre le contrat et faire terminer par un autre artisan, aux frais du premier." },
+      { q: "Les travaux sont mal faits, quels recours ?", a: "Garantie de parfait achèvement (1 an), garantie biennale (2 ans) ou décennale (10 ans) selon la nature du défaut. Mettez en demeure l'artisan de reprendre les malfaçons." },
+      { q: "L'artisan n'a pas d'assurance décennale ?", a: "L'absence d'assurance décennale est un délit (article L243-3 du Code des assurances). Signalez à la DGCCRF. L'artisan reste personnellement responsable sur ses biens propres." },
+    ],
+    relatedSlugs: ["mise-en-demeure-travaux-non-conformes", "mise-en-demeure-remboursement", "reclamation-garantie-legale"],
+  },
+
+  {
+    slug: "mise-en-demeure-travaux-non-conformes",
+    title: "Contestation travaux non conformes — Lettre type gratuite",
+    metaTitle: "Travaux non conformes — Lettre 2026",
+    metaDescription: "Travaux non conformes au devis ou aux normes ? Mise en demeure de reprise, garanties légales, PDF gratuit.",
+    letterType: "mise-en-demeure",
+    heroText: "Les travaux réalisés ne correspondent pas au devis, aux plans ou aux normes en vigueur ? Générez une mise en demeure exigeant la reprise des travaux aux frais de l'entrepreneur, en invoquant les garanties légales applicables.",
+    legalInfo: "Le professionnel doit livrer un ouvrage conforme au contrat (article 1103 du Code civil) et aux règles de l'art. La non-conformité au devis engage sa responsabilité contractuelle (article 1231-1). Trois garanties légales protègent le maître d'ouvrage : la garantie de parfait achèvement (1 an, article 1792-6) couvre tous les désordres signalés à la réception ou dans l'année ; la garantie biennale (article 1792-3) couvre les éléments d'équipement dissociables pendant 2 ans ; la garantie décennale (article 1792) couvre les atteintes à la solidité ou à la destination de l'ouvrage pendant 10 ans. Un expert judiciaire peut être désigné en référé (article 145 du Code de procédure civile) pour constater les non-conformités avant que les preuves ne disparaissent.",
+    faqItems: [
+      { q: "Les travaux ne correspondent pas au devis signé ?", a: "Le devis signé a valeur de contrat. Toute non-conformité engage la responsabilité de l'artisan (article 1231-1). Mettez en demeure de reprendre les travaux conformément au devis." },
+      { q: "Puis-je refuser de payer le solde ?", a: "Vous pouvez consigner le solde (ne pas payer sans courrier) et conditionner le paiement à la mise en conformité. Notifiez-le par recommandé pour éviter des poursuites en impayé." },
+      { q: "Comment faire constater les malfaçons ?", a: "Faites appel à un expert amiable ou demandez une expertise judiciaire en référé (article 145 du CPC). Les photos datées, le devis et les échanges écrits sont des preuves essentielles." },
+    ],
+    relatedSlugs: ["mise-en-demeure-artisan", "mise-en-demeure-remboursement", "reclamation-produit-defectueux"],
+  },
+
+  // ═══════════════════════════════════════════════
+  // CONTESTATION AMENDES
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "contestation-amende-stationnement",
+    title: "Contester une amende de stationnement (FPS) — Lettre type",
+    metaTitle: "Contester amende stationnement FPS — Lettre 2026",
+    metaDescription: "Contestez un forfait post-stationnement (FPS) abusif. Recours RAPO, tribunal administratif, PDF gratuit.",
+    letterType: "contestation",
+    heroText: "Vous avez reçu un forfait post-stationnement (FPS) que vous estimez injustifié ? Générez un recours administratif préalable obligatoire (RAPO) conforme, première étape indispensable avant toute saisine du tribunal.",
+    legalInfo: "Depuis le 1er janvier 2018, le stationnement payant est dépénalisé. Les anciennes « amendes » sont remplacées par le forfait post-stationnement (FPS), fixé par chaque commune. La contestation passe obligatoirement par un RAPO (recours administratif préalable obligatoire) adressé à l'autorité dont dépend l'agent (commune ou prestataire), dans un délai d'1 mois après notification (article L2333-87-5 du CGCT). Le FPS doit être payé avant contestation (ou le montant majoré consigné). Si le RAPO est rejeté ou sans réponse sous 1 mois, vous pouvez saisir la Commission du Contentieux du Stationnement Payant (CCSP) à Limoges dans les 30 jours. Motifs recevables : ticket valide, véhicule cédé, horodateur en panne, stationnement handicapé valide.",
+    faqItems: [
+      { q: "Dois-je payer le FPS avant de contester ?", a: "Oui. Le paiement ou la consignation du montant est un préalable obligatoire au RAPO. Sans paiement, votre recours est irrecevable." },
+      { q: "Quel délai pour contester un FPS ?", a: "1 mois à compter de la notification du FPS pour le RAPO. Si le RAPO est rejeté, 1 mois supplémentaire pour saisir la CCSP à Limoges." },
+      { q: "L'horodateur était en panne, quel recours ?", a: "C'est un motif valable. Prenez des photos datées de l'horodateur en panne et joignez-les à votre RAPO. L'absence de moyen de paiement fonctionnel rend le FPS contestable." },
+    ],
+    relatedSlugs: ["contestation-pv-radar", "contestation-amende-sncf", "contestation-amende-ratp"],
+  },
+
+  {
+    slug: "contestation-pv-radar",
+    title: "Contester un PV radar — Lettre type gratuite",
+    metaTitle: "Contester PV radar automatique — Lettre 2026",
+    metaDescription: "Contestez un PV radar (excès de vitesse, feu rouge) avec une requête en exonération conforme. PDF gratuit.",
+    letterType: "contestation",
+    heroText: "Flash radar pour excès de vitesse ou feu rouge alors que vous n'étiez pas au volant, ou que vous contestez l'infraction ? Générez une requête en exonération conforme au Code de procédure pénale.",
+    legalInfo: "La contestation d'un PV radar se fait par requête en exonération adressée à l'Officier du Ministère Public (OMP) dans les 45 jours suivant l'envoi de l'avis de contravention (article 529-2 du Code de procédure pénale). Vous n'êtes PAS obligé de payer l'amende pour contester (contrairement au FPS). Trois motifs principaux : vous n'étiez pas le conducteur (article L121-3 du Code de la route — désignez le conducteur ou invoquez le vol/cession du véhicule), vice de procédure (signalisation non conforme, marge d'erreur du radar), ou cas de force majeure. La consignation du montant de l'amende est obligatoire sauf si vous désignez un autre conducteur. Le formulaire de requête en exonération est joint à l'avis de contravention (formulaire Cerfa).",
+    faqItems: [
+      { q: "Je n'étais pas au volant, comment contester ?", a: "Remplissez la requête en exonération en désignant le conducteur réel (nom, adresse, permis). Vous êtes dispensé de consignation dans ce cas (article L121-3 du Code de la route)." },
+      { q: "Dois-je payer l'amende pour contester ?", a: "Non, mais vous devez consigner le montant (chèque joint à la requête). La consignation n'est pas un paiement — elle est restituée si vous gagnez. Exception : pas de consignation si vous désignez un autre conducteur." },
+      { q: "Quel délai pour contester un PV radar ?", a: "45 jours à compter de l'envoi de l'avis de contravention. Passé ce délai, l'amende est majorée et la contestation devient beaucoup plus difficile." },
+    ],
+    relatedSlugs: ["contestation-amende-stationnement", "contestation-amende-sncf", "contestation-amende-ratp"],
+  },
+
+  {
+    slug: "contestation-amende-sncf",
+    title: "Contester une amende SNCF — Lettre type gratuite",
+    metaTitle: "Contester PV SNCF — Lettre 2026",
+    metaDescription: "Contestez un PV SNCF (absence de titre, validation) avec une réclamation conforme. PDF gratuit.",
+    letterType: "contestation",
+    company: "SNCF",
+    heroText: "Vous avez reçu un PV dans le train ou en gare que vous estimez injustifié ? Générez un courrier de contestation adressé au service de recouvrement SNCF, en invoquant les motifs légitimes d'annulation.",
+    legalInfo: "Les contrôleurs SNCF sont habilités à dresser des procès-verbaux (article L2241-1 du Code des transports). L'amende forfaitaire est de 50 € si régularisée dans le train, ou de 50 € + le prix du billet en cas de PV. Vous disposez de 3 mois pour contester auprès du Centre de Recouvrement SNCF. Motifs recevables : titre de transport valide non présenté (oubli de carte de réduction, panne de l'appli), distributeur hors service en gare, cas de force majeure. Si le PV est maintenu, le recouvrement est transmis au Trésor Public avec majoration. Vous pouvez alors contester devant le tribunal de police. L'article 529-3 du Code de procédure pénale encadre la procédure.",
+    faqItems: [
+      { q: "J'avais un titre valide mais pas sur moi ?", a: "Présentez votre titre (abonnement, billet) dans les 5 jours en gare ou envoyez une copie au Centre de Recouvrement SNCF. Les frais sont réduits à un forfait de régularisation." },
+      { q: "Le distributeur en gare était en panne ?", a: "Motif recevable. Prenez une photo du distributeur et notez l'heure. Joignez ces éléments à votre contestation pour prouver l'impossibilité d'acheter un billet." },
+      { q: "Quel délai pour contester un PV SNCF ?", a: "3 mois à compter de la date du PV. Adressez votre contestation au Centre de Recouvrement SNCF dont l'adresse figure sur le PV." },
+    ],
+    relatedSlugs: ["contestation-amende-ratp", "reclamation-sncf", "contestation-pv-radar"],
+  },
+
+  {
+    slug: "contestation-amende-ratp",
+    title: "Contester une amende RATP — Lettre type gratuite",
+    metaTitle: "Contester PV RATP — Lettre 2026",
+    metaDescription: "Contestez un PV RATP (métro, bus, RER) avec un courrier conforme. Motifs, délais, PDF gratuit.",
+    letterType: "contestation",
+    company: "RATP",
+    heroText: "PV dans le métro, le bus ou le RER que vous jugez injustifié ? Générez un courrier de contestation adressé au service contentieux RATP, avec les motifs légaux et les pièces à joindre.",
+    legalInfo: "Les agents RATP sont assermentés pour dresser des PV (article L2241-1 du Code des transports). L'amende est de 50 € pour voyage sans titre valide (tarif réduit à 38,50 € si payé sous 7 jours) et de 60 € pour fraude habituelle. La contestation doit être adressée au Service Contentieux RATP dans un délai de 2 mois. Motifs recevables : pass Navigo valide non lu (dysfonctionnement du valideur), achat impossible (automates hors service), erreur de zone, cas de force majeure. Si le PV est maintenu et non payé, il est transmis au Trésor Public avec majoration à 180 €. Vous pouvez alors saisir le tribunal de police avant la date indiquée sur l'avis de majoration.",
+    faqItems: [
+      { q: "Mon Navigo n'a pas bipé, comment contester ?", a: "Joignez à votre contestation une copie de votre pass Navigo valide et le reçu de chargement. Les dysfonctionnements de valideurs sont un motif légitime d'annulation." },
+      { q: "Quel délai pour contester un PV RATP ?", a: "2 mois pour écrire au Service Contentieux RATP. Si le PV est transmis au Trésor Public, vous avez 30 jours à compter de l'avis de majoration pour saisir le tribunal de police." },
+      { q: "Puis-je régler le PV à tarif réduit et contester ensuite ?", a: "Non, le paiement vaut reconnaissance de l'infraction. Si vous souhaitez contester, ne payez pas et envoyez votre courrier dans les 2 mois." },
+    ],
+    relatedSlugs: ["contestation-amende-sncf", "contestation-amende-stationnement", "contestation-pv-radar"],
+  },
+
+  {
+    slug: "contestation-majoration-impots",
+    title: "Contester une majoration d'impôts — Lettre type gratuite",
+    metaTitle: "Contester majoration impôts — Lettre 2026",
+    metaDescription: "Majorations ou pénalités fiscales injustifiées ? Réclamation contentieuse auprès des impôts, PDF gratuit.",
+    letterType: "contestation",
+    heroText: "Vous avez reçu une majoration d'impôts, des pénalités de retard ou un redressement que vous estimez injustifié ? Générez une réclamation contentieuse formelle adressée au service des impôts, première étape obligatoire avant tout recours devant le tribunal.",
+    legalInfo: "La réclamation contentieuse est régie par les articles L190 et R*190-1 du Livre des procédures fiscales. Elle doit être adressée au service des impôts dont vous dépendez, par courrier recommandé ou via votre espace particulier sur impots.gouv.fr. Le délai est le 31 décembre de la 2e année suivant la mise en recouvrement (article R*196-1). L'administration dispose de 6 mois pour répondre. Sans réponse, le silence vaut rejet. Vous pouvez alors saisir le tribunal administratif (impôts directs) ou le tribunal judiciaire (droits d'enregistrement, TVA). L'article L247 du LPF permet aussi de demander une remise gracieuse des majorations en cas de difficultés financières. Les intérêts de retard (0,20 % par mois) peuvent être réduits ou supprimés en cas de bonne foi.",
+    faqItems: [
+      { q: "Quel délai pour contester une majoration d'impôts ?", a: "Jusqu'au 31 décembre de la 2e année suivant la mise en recouvrement. Exemple : impôt mis en recouvrement en 2025 → contestation jusqu'au 31/12/2027." },
+      { q: "Puis-je demander une remise gracieuse ?", a: "Oui, l'article L247 du Livre des procédures fiscales permet de demander une remise totale ou partielle des majorations et pénalités, indépendamment de toute contestation sur le fond." },
+      { q: "La réclamation suspend-elle le paiement ?", a: "Non, sauf si vous demandez expressément un sursis de paiement (article L277 du LPF). Vous devez alors fournir des garanties (caution bancaire, hypothèque)." },
+      { q: "L'administration ne répond pas, que faire ?", a: "Après 6 mois de silence, le rejet est implicite. Vous disposez alors de 2 mois pour saisir le tribunal administratif (ou judiciaire selon l'impôt)." },
+    ],
+    relatedSlugs: ["contestation-urssaf", "reclamation-facture-abusive", "contestation-amende-stationnement"],
+  },
+
+  {
+    slug: "contestation-urssaf",
+    title: "Contester un redressement URSSAF — Lettre type gratuite",
+    metaTitle: "Contester redressement URSSAF — Lettre 2026",
+    metaDescription: "Redressement URSSAF injustifié ? Lettre d'observations conforme au Code de la Sécurité sociale, PDF gratuit.",
+    letterType: "contestation",
+    company: "URSSAF",
+    heroText: "Vous avez reçu une lettre d'observations URSSAF suite à un contrôle et vous contestez les chefs de redressement ? Générez une réponse motivée dans les délais légaux pour faire valoir vos arguments avant la mise en recouvrement.",
+    legalInfo: "Le contrôle URSSAF est encadré par les articles L243-7 et suivants du Code de la Sécurité sociale. Après contrôle, l'URSSAF envoie une lettre d'observations détaillant les chefs de redressement. Vous disposez de 30 jours pour y répondre (article R243-59), prolongeables à 60 jours sur demande. L'URSSAF doit répondre de manière motivée à vos observations. Après mise en recouvrement, vous pouvez saisir la Commission de Recours Amiable (CRA) dans un délai de 2 mois (article R142-1). Si la CRA rejette votre recours (ou ne répond pas sous 2 mois), vous pouvez saisir le tribunal judiciaire (pôle social) dans un délai de 2 mois. Les majorations de retard (5 % + 0,2 %/mois) peuvent faire l'objet d'une remise gracieuse.",
+    faqItems: [
+      { q: "Quel délai pour répondre à la lettre d'observations ?", a: "30 jours à compter de la réception. Demandez une prolongation à 60 jours par courrier recommandé si le dossier est complexe — l'URSSAF ne peut pas refuser." },
+      { q: "Puis-je contester après la mise en recouvrement ?", a: "Oui, saisissez la Commission de Recours Amiable (CRA) dans les 2 mois suivant la mise en demeure. Si la CRA rejette, saisissez le tribunal judiciaire sous 2 mois." },
+      { q: "Les majorations peuvent-elles être supprimées ?", a: "Oui, demandez une remise gracieuse des majorations à la CRA, en justifiant votre bonne foi et l'absence d'intention frauduleuse." },
+      { q: "Le contrôle URSSAF doit-il respecter des formalités ?", a: "Oui : avis de contrôle préalable (15 jours avant), charte du cotisant contrôlé remise, durée limitée (3 mois pour les entreprises < 20 salariés). Tout manquement peut entraîner la nullité du redressement." },
+    ],
+    relatedSlugs: ["contestation-majoration-impots", "reclamation-facture-abusive", "mise-en-demeure-remboursement"],
+  },
 ];
