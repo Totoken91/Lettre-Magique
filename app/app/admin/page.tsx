@@ -131,6 +131,12 @@ async function getStats(): Promise<Stats | null> {
     (admin.from("page_views") as any).select("session_id").eq("path", "/generateur").gte("created_at", thirtyDaysAgo),
   ]);
 
+  // ── Exclure les admins de toutes les stats ──
+  const { data: adminProfiles } = await (admin.from("profiles") as any)
+    .select("id")
+    .eq("is_admin", true);
+  const adminIds = new Set((adminProfiles ?? []).map((p: { id: string }) => p.id));
+
   const uniqueVisits30d = new Set((visits30d ?? []).map((r: { session_id: string }) => r.session_id)).size;
   const uniqueVisits7d = new Set((visits7d ?? []).map((r: { session_id: string }) => r.session_id)).size;
   const funnelGeneratorVisits = new Set((generatorVisits ?? []).map((r: { session_id: string }) => r.session_id)).size;
@@ -148,8 +154,8 @@ async function getStats(): Promise<Stats | null> {
   const proMap: Record<string, { is_pro: boolean; credits: number }> = {};
   for (const p of profilesData ?? []) proMap[p.id] = { is_pro: p.is_pro, credits: p.credits ?? 0 };
 
-  // Letters per user for recent users
-  const lettersArr: LetterRow[] = allLetters ?? [];
+  // Letters per user for recent users (admin letters excluded)
+  const lettersArr: LetterRow[] = (allLetters ?? []).filter((l: LetterRow) => !l.user_id || !adminIds.has(l.user_id));
   const lettersByUser: Record<string, { count: number; types: Set<string>; lastDate: string | null }> = {};
   for (const l of lettersArr) {
     if (!l.user_id) continue;
@@ -160,7 +166,7 @@ async function getStats(): Promise<Stats | null> {
       lettersByUser[l.user_id].lastDate = l.created_at;
   }
 
-  const recentUsers = sortedUsers.map((u) => {
+  const recentUsers = sortedUsers.filter((u) => !adminIds.has(u.id)).map((u) => {
     const info = lettersByUser[u.id];
     return {
       id: u.id,
@@ -188,7 +194,7 @@ async function getStats(): Promise<Stats | null> {
   const lettersByType = Object.values(typeMap).sort((a, b) => b.total - a.total);
 
   // ── Timeline 30d ──
-  const allProfilesList: { id: string; created_at: string }[] = allProfiles ?? [];
+  const allProfilesList: { id: string; created_at: string }[] = (allProfiles ?? []).filter((p: { id: string }) => !adminIds.has(p.id));
   const dayMap: Record<string, { letters: number; signups: number }> = {};
   for (let d = 29; d >= 0; d--) {
     const dt = new Date(Date.now() - d * 86400000);
@@ -302,18 +308,23 @@ async function getStats(): Promise<Stats | null> {
   ).size;
   const funnelAccountsCreated = allProfilesList.filter((p) => p.created_at >= thirtyDaysAgo).length;
 
+  // Recalculate counts excluding admin
+  const filteredLettersThisWeek = lettersArr.filter((l) => l.created_at >= sevenDaysAgo).length;
+  const filteredAnonLetters = lettersArr.filter((l) => !l.user_id);
+  const filteredAnonThisWeek = filteredAnonLetters.filter((l) => l.created_at >= sevenDaysAgo).length;
+
   return {
-    usersCount: usersCount ?? 0,
-    lettersCount: lettersCount ?? 0,
-    lettersThisWeek: lettersThisWeek ?? 0,
-    anonLettersCount: anonLettersCount ?? 0,
-    anonLettersThisWeek: anonLettersThisWeek ?? 0,
+    usersCount: allProfilesList.length,
+    lettersCount: lettersArr.length,
+    lettersThisWeek: filteredLettersThisWeek,
+    anonLettersCount: filteredAnonLetters.length,
+    anonLettersThisWeek: filteredAnonThisWeek,
     uniqueVisits30d,
     uniqueVisits7d,
-    proCount: proCount ?? 0,
+    proCount: (allProfiles ?? []).filter((p: { id: string; is_pro: boolean }) => p.is_pro && !adminIds.has(p.id)).length,
     promoTotalRedemptions,
     promoCodes,
-    recentLetters: recentLetters ?? [],
+    recentLetters: (recentLetters ?? []).filter((l: LetterRow) => !l.user_id || !adminIds.has(l.user_id)),
     recentUsers,
     funnelVisitors,
     funnelGeneratorVisits,
