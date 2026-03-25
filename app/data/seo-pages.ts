@@ -794,4 +794,177 @@ export const SEO_PAGES: SEOPage[] = [
     ],
     relatedSlugs: ["contestation-majoration-impots", "reclamation-facture-abusive", "mise-en-demeure-remboursement"],
   },
+
+  // ═══════════════════════════════════════════════
+  // TRAVAIL
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "lettre-demission",
+    title: "Lettre de démission — Modèle gratuit",
+    metaTitle: "Lettre de démission — Modèle 2026",
+    metaDescription: "Rédigez votre lettre de démission en 2 min. Préavis, mentions obligatoires, PDF conforme au Code du travail.",
+    letterType: "travail",
+    heroText: "Vous quittez votre emploi ? Générez une lettre de démission claire et professionnelle, mentionnant la date de départ calculée selon votre préavis conventionnel et les articles du Code du travail applicables.",
+    legalInfo: "La démission est un droit unilatéral du salarié en CDI (article L1231-1 du Code du travail). Elle n'a pas besoin d'être motivée ni acceptée par l'employeur. Le préavis est fixé par la convention collective, l'accord d'entreprise ou le contrat de travail — à défaut, par les usages (généralement 1 mois pour les employés, 3 mois pour les cadres). La démission doit manifester une volonté claire et non équivoque. Un écrit n'est pas légalement obligatoire mais fortement recommandé pour fixer la date de départ. L'employeur peut dispenser le salarié de préavis (l'indemnité compensatrice est alors due). Attention : la démission ne donne pas droit aux allocations chômage, sauf cas de démission légitime (liste fixée par le règlement d'assurance chômage).",
+    faqItems: [
+      { q: "Dois-je respecter un préavis ?", a: "Oui, sauf accord de l'employeur pour vous en dispenser. La durée est fixée par votre convention collective ou contrat. En cas de non-respect, l'employeur peut réclamer des dommages-intérêts." },
+      { q: "Puis-je toucher le chômage après une démission ?", a: "En principe non. Sauf cas de démission légitime (suivi de conjoint, création d'entreprise avec projet réel, non-paiement de salaire, etc.) ou après 5 ans d'activité avec un projet de reconversion validé." },
+      { q: "Ma démission doit-elle être écrite ?", a: "La loi n'impose pas d'écrit, mais il est indispensable pour prouver la date et éviter tout litige. Remettez la lettre en main propre contre décharge ou envoyez-la en recommandé AR." },
+    ],
+    relatedSlugs: ["contestation-sanction-disciplinaire", "rappel-salaire-impaye", "contestation-licenciement"],
+  },
+
+  {
+    slug: "contestation-sanction-disciplinaire",
+    title: "Contester une sanction disciplinaire — Lettre type gratuite",
+    metaTitle: "Contester sanction disciplinaire — Lettre 2026",
+    metaDescription: "Avertissement ou mise à pied injustifié ? Lettre de contestation conforme au Code du travail, PDF gratuit.",
+    letterType: "travail",
+    heroText: "Vous avez reçu un avertissement, un blâme ou une mise à pied que vous estimez injustifié ? Générez un courrier de contestation motivé pour protéger votre dossier et préparer un éventuel recours aux prud'hommes.",
+    legalInfo: "Les sanctions disciplinaires sont encadrées par les articles L1331-1 et suivants du Code du travail. Toute sanction doit être justifiée par une faute réelle et proportionnée (article L1333-1). Les sanctions pécuniaires (amendes, retenues) sont interdites (article L1331-2). La procédure disciplinaire impose un entretien préalable pour toute sanction supérieure à l'avertissement (article L1332-2), un délai de notification de 2 jours minimum à 1 mois maximum après l'entretien (article L1332-2), et une prescription de 2 mois à compter de la connaissance des faits (article L1332-4). Le salarié peut contester toute sanction devant le conseil de prud'hommes qui vérifie la régularité de la procédure, la réalité des faits et la proportionnalité (article L1333-2).",
+    faqItems: [
+      { q: "Quel délai pour contester une sanction ?", a: "Il n'y a pas de délai légal pour contester par courrier auprès de l'employeur. Pour saisir les prud'hommes, le délai de prescription est de 2 ans (article L1471-1)." },
+      { q: "Mon employeur m'a sanctionné sans entretien préalable ?", a: "Pour un avertissement/blâme, l'entretien n'est pas obligatoire. Pour une mise à pied, rétrogradation ou mutation, l'entretien est obligatoire. Son absence rend la sanction nulle." },
+      { q: "La sanction date de faits vieux de 3 mois ?", a: "La sanction est nulle. L'employeur a 2 mois maximum à compter de la connaissance des faits pour engager la procédure disciplinaire (article L1332-4)." },
+    ],
+    relatedSlugs: ["lettre-demission", "rappel-salaire-impaye", "contestation-licenciement"],
+  },
+
+  {
+    slug: "rappel-salaire-impaye",
+    title: "Rappel de salaire impayé — Lettre type gratuite",
+    metaTitle: "Rappel salaire impayé — Lettre 2026",
+    metaDescription: "Salaire non versé ou en retard ? Mise en demeure de paiement conforme au Code du travail, PDF gratuit.",
+    letterType: "travail",
+    heroText: "Votre employeur ne vous a pas versé votre salaire, vos heures supplémentaires ou vos primes ? Générez une mise en demeure formelle pour exiger le paiement sous 8 jours, étape préalable avant les prud'hommes.",
+    legalInfo: "Le paiement du salaire est une obligation fondamentale de l'employeur (article L3242-1 du Code du travail). Le salaire doit être versé au moins une fois par mois pour les mensualisés. Tout retard constitue un manquement grave pouvant justifier une prise d'acte de la rupture du contrat aux torts de l'employeur (Cass. soc., 6 juillet 2011). Le salarié peut saisir le conseil de prud'hommes en référé pour obtenir une provision sur les salaires dus (article R1455-7). La prescription pour une action en paiement de salaire est de 3 ans (article L3245-1). En cas de non-paiement persistant, le salarié peut aussi saisir l'inspection du travail (article L8113-7) et l'URSSAF.",
+    faqItems: [
+      { q: "Mon salaire a 2 semaines de retard, que faire ?", a: "Envoyez immédiatement une mise en demeure par recommandé AR avec délai de 8 jours. Si l'employeur ne régularise pas, saisissez les prud'hommes en référé pour obtenir le paiement sous astreinte." },
+      { q: "Puis-je arrêter de travailler si je ne suis pas payé ?", a: "Pas de droit de retrait pour non-paiement. Mais vous pouvez prendre acte de la rupture aux torts de l'employeur, ce qui produit les effets d'un licenciement sans cause si les manquements sont avérés." },
+      { q: "Quel délai pour réclamer des salaires impayés ?", a: "3 ans à compter du jour où le salarié a connu ou aurait dû connaître les faits (article L3245-1). La demande peut porter sur les 3 dernières années." },
+    ],
+    relatedSlugs: ["contestation-licenciement", "lettre-demission", "contestation-sanction-disciplinaire"],
+  },
+
+  {
+    slug: "contestation-licenciement",
+    title: "Contester un licenciement — Lettre type gratuite",
+    metaTitle: "Contester licenciement — Lettre 2026",
+    metaDescription: "Licenciement abusif ou irrégulier ? Lettre de contestation conforme, prud'hommes, PDF gratuit.",
+    letterType: "travail",
+    heroText: "Vous estimez votre licenciement injustifié, discriminatoire ou irrégulier en la forme ? Générez un courrier de contestation motivé à adresser à votre employeur, première étape avant la saisine du conseil de prud'hommes.",
+    legalInfo: "Le licenciement doit reposer sur une cause réelle et sérieuse (article L1232-1 du Code du travail). La procédure impose un entretien préalable (article L1232-2), un délai de réflexion de 2 jours ouvrables minimum (article L1232-6), et la notification par recommandé AR motivé. Tout manquement ouvre droit à indemnisation. Le salarié dispose de 12 mois pour contester devant les prud'hommes (article L1471-1). Le barème Macron (article L1235-3) fixe les indemnités entre 1 et 20 mois de salaire selon l'ancienneté. En cas de licenciement nul (discrimination, harcèlement, grossesse), le barème ne s'applique pas et la réintégration peut être ordonnée. Demandez vos documents de fin de contrat (certificat, solde de tout compte, attestation Pôle Emploi) sous 8 jours.",
+    faqItems: [
+      { q: "Quel délai pour contester un licenciement ?", a: "12 mois à compter de la notification du licenciement pour saisir les prud'hommes (article L1471-1). N'attendez pas : les preuves se perdent avec le temps." },
+      { q: "Mon licenciement est discriminatoire, quel recours ?", a: "Le licenciement est nul de plein droit (article L1132-4). Pas de barème Macron. Vous pouvez demander la réintégration ou des indemnités sans plafond, plus des dommages-intérêts." },
+      { q: "L'entretien préalable n'a pas eu lieu, est-ce grave ?", a: "C'est un vice de procédure qui donne droit à une indemnité d'au moins 1 mois de salaire (article L1235-2), en plus de l'indemnisation éventuelle pour absence de cause réelle et sérieuse." },
+    ],
+    relatedSlugs: ["rappel-salaire-impaye", "lettre-demission", "contestation-sanction-disciplinaire"],
+  },
+
+  // ═══════════════════════════════════════════════
+  // RÉTRACTATION
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "retractation-achat-en-ligne",
+    title: "Rétractation achat en ligne (14 jours) — Lettre type",
+    metaTitle: "Rétractation achat en ligne 14j — Lettre 2026",
+    metaDescription: "Exercez votre droit de rétractation 14 jours pour un achat en ligne. Lettre conforme, PDF gratuit.",
+    letterType: "retractation",
+    heroText: "Vous regrettez un achat effectué sur internet ? La loi vous accorde 14 jours pour vous rétracter sans justification. Générez un courrier de rétractation conforme incluant les articles du Code de la consommation applicables.",
+    legalInfo: "Le droit de rétractation de 14 jours est garanti par l'article L221-18 du Code de la consommation pour tout achat à distance (internet, téléphone, courrier). Le délai court à compter de la réception du bien ou de la conclusion du contrat pour les services. Si le vendeur n'a pas informé du droit de rétractation, le délai est prolongé de 12 mois (article L221-20). Le remboursement doit intervenir sous 14 jours après notification de la rétractation (article L221-24). Le vendeur supporte les frais de retour uniquement s'il ne l'a pas précisé dans ses CGV. Exceptions : biens personnalisés, périssables, presse, contenus numériques commencés, voyages, billets de spectacle (article L221-28).",
+    faqItems: [
+      { q: "Quand commence le délai de 14 jours ?", a: "Pour un bien : le jour de la réception. Pour un service : le jour de la conclusion du contrat. Le délai expire le 14e jour à 23h59." },
+      { q: "Le vendeur refuse mon retour, que faire ?", a: "Le droit de rétractation est d'ordre public, le vendeur ne peut pas le refuser (sauf exceptions légales). Envoyez un recommandé citant l'article L221-18 et exigez le remboursement sous 14 jours." },
+      { q: "Qui paie les frais de retour ?", a: "Le consommateur, sauf si le vendeur accepte de les prendre en charge ou s'il n'a pas informé que les frais seraient à la charge de l'acheteur (article L221-23)." },
+      { q: "Puis-je me rétracter d'un achat de billet d'avion ?", a: "Non, les transports de voyageurs sont exclus du droit de rétractation (article L221-28). Vérifiez les conditions d'annulation de la compagnie." },
+    ],
+    relatedSlugs: ["retractation-demarchage-telephonique", "retractation-contrat-domicile", "reclamation-colis-amazon"],
+  },
+
+  {
+    slug: "retractation-demarchage-telephonique",
+    title: "Rétractation démarchage téléphonique — Lettre type",
+    metaTitle: "Rétractation démarchage téléphonique — Lettre 2026",
+    metaDescription: "Contrat souscrit par téléphone ? Exercez votre droit de rétractation 14 jours. Lettre conforme, PDF gratuit.",
+    letterType: "retractation",
+    heroText: "On vous a fait souscrire un contrat par téléphone que vous n'aviez pas sollicité ? Vous avez 14 jours pour vous rétracter. Générez un courrier annulant le contrat et citant les protections renforcées contre le démarchage abusif.",
+    legalInfo: "Le démarchage téléphonique est encadré par les articles L221-16 et suivants du Code de la consommation. Depuis la loi du 24 juillet 2020, le professionnel doit envoyer une confirmation écrite de l'offre, et le contrat n'est formé qu'après signature ou acceptation écrite du consommateur (article L221-16). Le droit de rétractation de 14 jours s'applique (article L221-18). Si le professionnel n'a pas respecté la procédure de confirmation écrite, le contrat est nul de plein droit. L'inscription sur Bloctel protège contre le démarchage non sollicité (article L223-1). Toute infraction est passible de 75 000 € d'amende pour une personne physique, 375 000 € pour une personne morale.",
+    faqItems: [
+      { q: "J'ai accepté par téléphone, le contrat est-il valable ?", a: "Depuis 2020, le contrat n'est formé qu'après confirmation écrite que vous avez signée ou acceptée par écrit. Si vous n'avez rien signé, le contrat est nul." },
+      { q: "Je suis inscrit sur Bloctel et j'ai été démarché ?", a: "Le professionnel est en infraction (75 000 € d'amende). Signalez sur bloctel.gouv.fr et exercez votre rétractation. L'inscription sur Bloctel renforce votre dossier en cas de litige." },
+      { q: "Le professionnel refuse ma rétractation ?", a: "Le droit de rétractation est d'ordre public, il ne peut être refusé. Envoyez un recommandé AR citant l'article L221-18. Signalez à la DGCCRF en cas de résistance." },
+    ],
+    relatedSlugs: ["retractation-achat-en-ligne", "retractation-contrat-domicile", "reclamation-facture-abusive"],
+  },
+
+  {
+    slug: "retractation-contrat-domicile",
+    title: "Rétractation contrat à domicile — Lettre type gratuite",
+    metaTitle: "Rétractation contrat signé à domicile — Lettre 2026",
+    metaDescription: "Contrat signé chez vous suite à un démarchage ? 14 jours pour annuler. Lettre conforme, PDF gratuit.",
+    letterType: "retractation",
+    heroText: "Un commercial s'est présenté chez vous et vous a fait signer un contrat (travaux, énergie, alarme) ? Vous disposez de 14 jours pour annuler sans frais. Générez un courrier de rétractation irréprochable.",
+    legalInfo: "Les contrats conclus hors établissement (à domicile, foire, salon) bénéficient d'un droit de rétractation de 14 jours (article L221-18 du Code de la consommation). Le bon de rétractation détachable doit figurer dans le contrat (article L221-5). Si le vendeur ne l'a pas fourni, le délai est prolongé de 12 mois. Aucun paiement ne peut être encaissé pendant les 7 premiers jours suivant la signature (article L221-10) — toute clause contraire est nulle. Si des travaux ont commencé avant l'expiration du délai à votre demande expresse, vous ne devez que le montant proportionnel aux services fournis. Le professionnel doit rembourser sous 14 jours après rétractation (article L221-24).",
+    faqItems: [
+      { q: "Le vendeur a encaissé mon chèque le jour de la signature ?", a: "C'est illégal. Aucun paiement ne peut être perçu pendant les 7 premiers jours (article L221-10). Demandez le remboursement immédiat et signalez à la DGCCRF." },
+      { q: "Les travaux ont déjà commencé, puis-je me rétracter ?", a: "Oui. Si vous avez demandé un début d'exécution avant la fin du délai, vous ne devez que le prorata des services rendus. Si vous n'avez rien demandé, les travaux anticipés sont aux frais du professionnel." },
+      { q: "Le contrat n'a pas de bordereau de rétractation ?", a: "Le délai de rétractation est prolongé de 12 mois. De plus, le professionnel encourt une amende de 15 000 € (article L242-5). Envoyez votre rétractation même sans le formulaire." },
+    ],
+    relatedSlugs: ["retractation-achat-en-ligne", "retractation-demarchage-telephonique", "reclamation-facture-abusive"],
+  },
+
+  // ═══════════════════════════════════════════════
+  // DEMANDE DE DÉLAI DE PAIEMENT
+  // ═══════════════════════════════════════════════
+
+  {
+    slug: "delai-paiement-impots",
+    title: "Demande de délai de paiement impôts — Lettre type gratuite",
+    metaTitle: "Délai de paiement impôts — Lettre 2026",
+    metaDescription: "Difficultés pour payer vos impôts ? Demande de délai ou remise gracieuse. Lettre conforme, PDF gratuit.",
+    letterType: "delai-paiement",
+    heroText: "Vous traversez une période financière difficile et ne pouvez pas régler vos impôts dans les délais ? Générez une demande de délai de paiement ou de remise gracieuse adressée au comptable public, avec les justificatifs à joindre.",
+    legalInfo: "L'article L247 du Livre des procédures fiscales autorise l'administration à accorder des remises totales ou partielles d'impôts directs, de pénalités et de majorations en cas de gêne ou d'indigence. L'article L277 permet de demander un sursis de paiement en cas de contestation. Pour un simple échelonnement, adressez-vous au Service des Impôts des Particuliers (SIP) ou au comptable du Trésor Public. La demande doit détailler votre situation financière (revenus, charges, dettes) et proposer un échéancier réaliste. L'octroi d'un délai suspend les poursuites (saisies, ATD). En cas de refus, le recours hiérarchique auprès du directeur départemental des finances publiques est possible. Le Conciliateur fiscal départemental peut aussi être saisi gratuitement.",
+    faqItems: [
+      { q: "Quel échéancier proposer ?", a: "Proposez un plan réaliste (3 à 12 mensualités). L'administration accepte plus facilement si vous montrez un effort et joignez des justificatifs de vos difficultés (baisse de revenus, charges exceptionnelles)." },
+      { q: "Les pénalités de retard s'appliquent-elles pendant le délai ?", a: "Oui, les intérêts de retard (0,20 %/mois) continuent de courir. Mais vous pouvez demander simultanément une remise gracieuse des majorations (article L247 du LPF)." },
+      { q: "L'administration peut-elle saisir pendant ma demande ?", a: "En principe, non. La demande de délai suspend les poursuites. Si des saisies sont en cours, mentionnez-le dans votre courrier et demandez leur suspension." },
+    ],
+    relatedSlugs: ["delai-paiement-loyer", "delai-paiement-credit", "contestation-majoration-impots"],
+  },
+
+  {
+    slug: "delai-paiement-loyer",
+    title: "Demande de délai de paiement loyer — Lettre type gratuite",
+    metaTitle: "Délai paiement loyer — Lettre 2026",
+    metaDescription: "Difficultés pour payer le loyer ? Demande d'échéancier amiable au propriétaire. Lettre conforme, PDF gratuit.",
+    letterType: "delai-paiement",
+    heroText: "Vous ne pouvez pas régler votre loyer ce mois-ci ? Agissez avant l'impayé en envoyant une demande d'échelonnement à votre propriétaire. Notre générateur crée un courrier professionnel qui préserve la relation locataire-bailleur.",
+    legalInfo: "Aucune disposition légale n'oblige le propriétaire à accorder un délai, mais une démarche amiable anticipée est toujours préférable à un impayé subi. En cas de refus du bailleur, le locataire peut saisir le juge des contentieux de la protection pour obtenir des délais de paiement pouvant aller jusqu'à 3 ans (article 1343-5 du Code civil, ex-article 1244-1). Le FSL (Fonds de Solidarité Logement) peut accorder une aide financière. Si vous percevez des APL, la CAF peut aussi être sollicitée. Depuis la loi ALUR, l'impayé de loyer doit être signalé à la CAF/MSA dès le 2e mois par le bailleur. Action Logement propose le dispositif Visale (garantie locative) et des aides ponctuelles pour les salariés en difficulté.",
+    faqItems: [
+      { q: "Le propriétaire est-il obligé d'accepter un échéancier ?", a: "Non, c'est une démarche amiable. Mais il a intérêt à accepter : un plan de paiement respecté est préférable à une procédure d'expulsion longue et coûteuse." },
+      { q: "Le juge peut-il m'accorder des délais ?", a: "Oui, jusqu'à 3 ans (article 1343-5 du Code civil). Saisissez le juge des contentieux de la protection. Pendant la procédure, les expulsions sont suspendues." },
+      { q: "Quelles aides existent pour payer mon loyer ?", a: "FSL (Fonds de Solidarité Logement), APL, aides d'Action Logement (salariés), CCAS de votre mairie. Contactez une assistante sociale ou l'ADIL de votre département." },
+    ],
+    relatedSlugs: ["delai-paiement-impots", "delai-paiement-credit", "preavis-logement-1-mois"],
+  },
+
+  {
+    slug: "delai-paiement-credit",
+    title: "Demande de délai de paiement crédit — Lettre type gratuite",
+    metaTitle: "Délai paiement crédit bancaire — Lettre 2026",
+    metaDescription: "Difficultés pour rembourser un crédit ? Demande de report ou modulation d'échéances. PDF conforme gratuit.",
+    letterType: "delai-paiement",
+    heroText: "Vous ne pouvez plus honorer vos mensualités de crédit ? Générez une demande de report d'échéances ou de réaménagement adressée à votre banque, avant que l'incident de paiement ne soit inscrit au FICP.",
+    legalInfo: "En cas de difficulté temporaire, l'article 1343-5 du Code civil (ex-article 1244-1) permet au juge d'accorder un délai de grâce pouvant reporter ou échelonner les paiements sur 2 ans maximum. La plupart des contrats de crédit prévoient une clause de modulation ou de report (vérifiez vos conditions). La Banque de France peut être saisie pour un dossier de surendettement (articles L711-1 et suivants du Code de la consommation) : gel des poursuites, rééchelonnement, voire effacement partiel des dettes. Deux incidents de paiement consécutifs entraînent l'inscription au FICP (fichier des incidents de crédit) pour 5 ans. Pour les crédits immobiliers, l'article L313-12 du Code monétaire et financier impose à la banque de chercher une solution amiable avant toute déchéance du terme.",
+    faqItems: [
+      { q: "Combien de mensualités puis-je reporter ?", a: "Cela dépend de votre contrat. La plupart des crédits prévoient 1 à 6 mois de report. Au-delà, négociez un réaménagement ou saisissez la commission de surendettement." },
+      { q: "Le report entraîne-t-il des frais ?", a: "Oui, les intérêts continuent de courir pendant le report. La durée totale du crédit est allongée d'autant. Demandez un chiffrage précis à votre banque avant d'accepter." },
+      { q: "Quand saisir la commission de surendettement ?", a: "Quand vos dettes sont manifestement supérieures à votre capacité de remboursement. La saisine est gratuite auprès de la Banque de France. Elle gèle immédiatement les poursuites des créanciers." },
+    ],
+    relatedSlugs: ["delai-paiement-loyer", "delai-paiement-impots", "mise-en-demeure-remboursement"],
+  },
 ];
