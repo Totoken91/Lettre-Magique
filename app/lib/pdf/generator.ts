@@ -1,6 +1,4 @@
 import { PDFDocument, StandardFonts, rgb, PDFPage, PDFFont } from "pdf-lib";
-import fs from "fs";
-import path from "path";
 
 export interface PDFParams {
   text: string;
@@ -137,14 +135,6 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   const fontReg    = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold   = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
-
-  // Embed logo
-  let logoImage: Awaited<ReturnType<typeof pdfDoc.embedPng>> | null = null;
-  try {
-    const logoPath = path.join(process.cwd(), "public", "lm-logo.png");
-    const logoBytes = fs.readFileSync(logoPath);
-    logoImage = await pdfDoc.embedPng(logoBytes);
-  } catch { /* fallback handled below */ }
 
   // Embed signature image if typed mode
   let sigImage: Awaited<ReturnType<typeof pdfDoc.embedPng>> | null = null;
@@ -400,15 +390,13 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
     const headerBarY = A4_H - MT;
 
-    // Logo
-    if (logoImage) {
-      const logoH = 20;
-      const logoW = logoImage.width * (logoH / logoImage.height);
-      page.drawImage(logoImage, { x: ML, y: headerBarY - 3, width: logoW, height: logoH });
-    } else {
-      page.drawRectangle({ x: ML, y: headerBarY - 1, width: 22, height: 22, color: C_ACCENT });
-      page.drawText("LM", { x: ML + 3, y: headerBarY + 5, size: 10, font: fontBold, color: C_WHITE });
-    }
+    // Logo: "LM Legal" — LM in black, Legal in accent orange
+    const logoLM = "LM";
+    const logoLegal = "Legal";
+    const logoSize = 13;
+    const lmWidth = fontBold.widthOfTextAtSize(logoLM, logoSize);
+    page.drawText(logoLM, { x: ML, y: headerBarY + 2, size: logoSize, font: fontBold, color: C_INK });
+    page.drawText(logoLegal, { x: ML + lmWidth + 2, y: headerBarY + 2, size: logoSize, font: fontBold, color: C_ACCENT });
 
     // Type badge (top-right)
     const typeLabel = typeName.toUpperCase();
@@ -435,7 +423,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     const footerY = MB;
     page.drawRectangle({ x: ML, y: footerY + FOOTER_H - 2, width: BODY_W, height: 0.4, color: C_RULE });
     page.drawText(
-      "Document généré par LettreMagique.com · Outil d'aide à la rédaction -- ne constitue pas un conseil juridique.",
+      "Document généré par LM Legal · Outil d'aide à la rédaction -- ne constitue pas un conseil juridique.",
       { x: ML, y: footerY + 10, size: 6, font: fontReg, color: C_LIGHT }
     );
     if (totalPages > 1) {
