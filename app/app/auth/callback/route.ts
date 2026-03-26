@@ -26,6 +26,13 @@ export async function GET(request: Request) {
       }
     );
     await supabase.auth.exchangeCodeForSession(code);
+
+    // Send welcome email (fire-and-forget)
+    const headers = new Headers();
+    for (const c of cookieStore.getAll()) {
+      headers.append("cookie", `${c.name}=${c.value}`);
+    }
+    fetch(`${origin}/api/email/welcome`, { method: "POST", headers }).catch(() => {});
   }
 
   return NextResponse.redirect(`${origin}${next}`);

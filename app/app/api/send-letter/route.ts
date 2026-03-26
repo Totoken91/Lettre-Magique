@@ -1,12 +1,6 @@
-import { Resend } from "resend";
+import { getResend, fromCourrier } from "@/lib/resend";
 import { generateLetterPDF } from "@/lib/pdf/generator";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-
-function getResend() {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) throw new Error("RESEND_API_KEY non configurée");
-  return new Resend(key);
-}
 
 function capitalize(str: string) {
   if (!str) return str;
@@ -52,9 +46,7 @@ export async function POST(req: Request) {
 
     // Send via Resend
     const sendOptions: Parameters<ReturnType<typeof getResend>["emails"]["send"]>[0] = {
-      from: process.env.RESEND_FROM_EMAIL_COURRIER
-        ? `LM Mail <${process.env.RESEND_FROM_EMAIL_COURRIER}>`
-        : "onboarding@resend.dev",
+      from: fromCourrier(),
       to: recipientEmail,
       subject: `LM Mail › ${typeLabel}`,
       ...(senderEmail ? { replyTo: senderEmail } : {}),
