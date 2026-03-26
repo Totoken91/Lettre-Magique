@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import TimelineChart from "@/components/admin/TimelineChart";
 import FunnelBar from "@/components/admin/FunnelBar";
 import UserDetailPanel from "@/components/admin/UserDetailPanel";
+import PromoManager from "@/components/admin/PromoManager";
 
 export const metadata: Metadata = {
   title: "Admin — LettreMagique",
@@ -19,6 +20,9 @@ interface PromoCode {
   used_count: number;
   max_uses: number | null;
   active: boolean;
+  show_banner: boolean;
+  expires_at: string | null;
+  description: string;
 }
 
 interface LetterRow {
@@ -125,7 +129,7 @@ async function getStats(): Promise<Stats | null> {
     (admin.from("page_views") as any).select("session_id").gte("created_at", sevenDaysAgo),
     (admin.from("letters") as any).select("id, created_at, type_name, type, email, sender_name, user_id, fingerprint").order("created_at", { ascending: false }).limit(10),
     (admin.from("profiles") as any).select("*", { count: "exact", head: true }).eq("is_pro", true),
-    (admin.from("promo_codes") as any).select("code, credits, used_count, max_uses, active").order("used_count", { ascending: false }),
+    (admin.from("promo_codes") as any).select("code, credits, used_count, max_uses, active, show_banner, expires_at, description").order("used_count", { ascending: false }),
     (admin.from("letters") as any).select("id, created_at, type, type_name, user_id, fingerprint").order("created_at", { ascending: false }),
     (admin.from("profiles") as any).select("id, is_pro, credits, created_at"),
     (admin.from("page_views") as any).select("session_id").eq("path", "/generateur").gte("created_at", thirtyDaysAgo),
@@ -643,75 +647,19 @@ export default async function AdminPage() {
             </div>
           </div>
 
-          {/* ═══ 8. CODES PROMO — monitoring ═══ */}
+          {/* ═══ 8. CODES PROMO — gestion ═══ */}
           <div>
-            <SectionLabel>Codes promo — impact</SectionLabel>
-            {stats.promoCodes.length > 0 && (
-              <>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-[2px] mb-3">
-                  <Stat label="Utilisateurs promo" value={stats.promoUsersCount} sub={`moy. ${stats.promoAvgLetters} courrier(s)/user`} />
-                  <Stat label="Utilisateurs non-promo" value={stats.nonPromoUsersCount} sub={`moy. ${stats.nonPromoAvgLetters} courrier(s)/user`} />
-                  <Stat
-                    label="Taux Pro (promo vs non)"
-                    value={`${stats.promoProRate}% vs ${stats.nonPromoProRate}%`}
-                    sub="conversion en compte Pro"
-                  />
-                </div>
-                <div className="border-[2px]" style={{ borderColor: "var(--rule)" }}>
-                  {stats.promoCodes.map((pc, i) => (
-                    <div
-                      key={pc.code}
-                      className="flex items-center justify-between px-5 py-3"
-                      style={{
-                        borderTop: i > 0 ? "1px solid var(--rule)" : undefined,
-                        background: i % 2 === 0 ? "var(--white-warm)" : "var(--paper2)",
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span
-                          className="text-sm font-bold tracking-[1px]"
-                          style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}
-                        >
-                          {pc.code}
-                        </span>
-                        <span
-                          className="text-[9px] uppercase tracking-[1px] px-1.5 py-0.5"
-                          style={{
-                            fontFamily: "var(--font-dm-mono)",
-                            background: pc.active ? "#2d6a4f18" : "#88888818",
-                            color: pc.active ? "var(--green)" : "var(--muted-lm)",
-                            border: `1px solid ${pc.active ? "#2d6a4f33" : "#88888833"}`,
-                          }}
-                        >
-                          {pc.active ? "actif" : "inactif"}
-                        </span>
-                        <span
-                          className="text-[10px]"
-                          style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
-                        >
-                          +{pc.credits} crédit{pc.credits !== 1 ? "s" : ""}
-                        </span>
-                      </div>
-                      <div
-                        className="text-[11px] text-right"
-                        style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}
-                      >
-                        <span className="font-bold">{pc.used_count}</span>
-                        <span style={{ color: "var(--muted-lm)" }}>
-                          {pc.max_uses != null ? ` / ${pc.max_uses}` : " / ∞"}
-                        </span>
-                        <span style={{ color: "var(--muted-lm)" }}> utilisations</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-            {stats.promoCodes.length === 0 && (
-              <div className="text-sm" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}>
-                Aucun code promo configuré.
-              </div>
-            )}
+            <SectionLabel>Codes promo — gestion</SectionLabel>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-[2px] mb-4">
+              <Stat label="Utilisateurs promo" value={stats.promoUsersCount} sub={`moy. ${stats.promoAvgLetters} courrier(s)/user`} />
+              <Stat label="Utilisateurs non-promo" value={stats.nonPromoUsersCount} sub={`moy. ${stats.nonPromoAvgLetters} courrier(s)/user`} />
+              <Stat
+                label="Taux Pro (promo vs non)"
+                value={`${stats.promoProRate}% vs ${stats.nonPromoProRate}%`}
+                sub="conversion en compte Pro"
+              />
+            </div>
+            <PromoManager />
           </div>
 
           {/* ═══ 9. DERNIERS COURRIERS ═══ */}

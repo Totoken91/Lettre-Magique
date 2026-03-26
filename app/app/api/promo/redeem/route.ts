@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
-type PromoCode = { code: string; credits: number; max_uses: number | null; used_count: number; active: boolean };
+type PromoCode = { code: string; credits: number; max_uses: number | null; used_count: number; active: boolean; expires_at: string | null };
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,6 +31,10 @@ export async function POST(req: NextRequest) {
 
     if (promoErr || !promo) {
       return NextResponse.json({ error: "Code invalide ou expiré" }, { status: 400 });
+    }
+
+    if (promo.expires_at && new Date(promo.expires_at) < new Date()) {
+      return NextResponse.json({ error: "Ce code a expiré" }, { status: 400 });
     }
 
     if (promo.max_uses !== null && promo.used_count >= promo.max_uses) {

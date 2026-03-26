@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LETTER_TYPES } from "@/data/letter-types";
 import HeroCTA from "@/components/landing/HeroCTA";
+import PromoBanner from "@/components/landing/PromoBanner";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import LetterTypeIcon from "@/components/ui/LetterTypeIcon";
 
@@ -20,19 +21,8 @@ export default async function Home() {
   return (
     <div className="pt-16">
 
-      {/* ═══ PROMO TOP BANNER ═══ */}
-      <a href="/generateur" className="block w-full no-underline" style={{ textDecoration: "none" }}>
-        <div className="promo-banner-sunset w-full flex items-center justify-center gap-3 py-3 px-4">
-          <span style={{ fontSize: "16px" }}>🎁</span>
-          <span className="text-white font-bold uppercase tracking-[1px] sm:tracking-[1.5px] text-center leading-[1.6]" style={{ fontFamily: "var(--font-dm-mono)", fontSize: "10px" }}>
-            Code{" "}
-            <span className="px-1.5 py-0.5 mx-0.5" style={{ background: "rgba(255,255,255,0.2)", letterSpacing: "2px" }}>PROMO!</span>
-            {" "}= 5 courriers offerts{" "}
-            <span className="hidden sm:inline">lors de l&apos;inscription</span>{" "}
-            <span style={{ opacity: 0.8, fontWeight: 400 }}>— Essayer →</span>
-          </span>
-        </div>
-      </a>
+      {/* ═══ PROMO TOP BANNER (dynamique depuis DB) ═══ */}
+      <PromoBanner />
 
       {/* ═══ HERO ═══ */}
       <section
