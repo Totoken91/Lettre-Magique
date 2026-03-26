@@ -382,7 +382,7 @@ function Stat({ label, value, sub }: { label: string; value: number | string; su
   return (
     <div className="p-4 md:p-6 border-[2px]" style={{ borderColor: "var(--rule)", background: "var(--white-warm)" }}>
       <div
-        className="text-[9px] md:text-[10px] uppercase tracking-[1.5px] md:tracking-[2px] mb-2 md:mb-3"
+        className="text-[9px] md:text-[10px] uppercase tracking-[1.5px] md:tracking-[2px] mb-2 md:mb-3 min-h-[28px] md:min-h-[20px] flex items-end"
         style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
       >
         {label}
