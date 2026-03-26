@@ -272,16 +272,18 @@ Route `/blog/[slug]` — même stack que les pages SEO, contenu dans un fichier 
 
 ### Mots-clés prioritaires (Search Ads)
 
-Cibler des requêtes transactionnelles à forte intention :
+Cibler des requêtes transactionnelles à forte intention. **Les CPC ci-dessous sont des estimations basses** — la concurrence peut les pousser à 0,80-1,20 € sur les termes les plus disputés. Commencer avec un budget test et ajuster selon les CPC réels.
 
-| Mot-clé | CPC estimé | Intention |
-|---|---|---|
-| "lettre résiliation" | 0,30-0,50 € | Très forte |
-| "modèle mise en demeure" | 0,20-0,40 € | Très forte |
-| "lettre type gratuite" | 0,10-0,30 € | Forte |
-| "contester amende" | 0,30-0,50 € | Forte |
-| "résilier assurance auto" | 0,40-0,60 € | Forte |
-| "lettre préavis logement" | 0,20-0,40 € | Forte |
+| Mot-clé | CPC estimé | Intention | Note |
+|---|---|---|---|
+| "lettre résiliation" | 0,50-1,20 € | Très forte | Concurrence élevée |
+| "modèle mise en demeure" | 0,40-0,80 € | Très forte | Moins concurrentiel |
+| "lettre type gratuite" | 0,20-0,60 € | Forte | Gros volume, CPC variable |
+| "contester amende" | 0,50-1,00 € | Forte | Niche juridique |
+| "résilier assurance auto" | 0,60-1,20 € | Forte | Concurrence assureurs |
+| "lettre préavis logement" | 0,30-0,70 € | Forte | Moins concurrentiel |
+
+> **Stratégie CPC** : commencer large, couper les mots-clés au-dessus de 1 € qui ne convertissent pas, et doubler sur ceux qui ont le meilleur ratio CPC/conversion. Le Quality Score est boosté par le fait qu'on dirige vers des landing pages SEO ultra-pertinentes (pas la homepage).
 
 ### Landing pages Ads
 
