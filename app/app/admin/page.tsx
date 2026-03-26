@@ -380,21 +380,21 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 function Stat({ label, value, sub }: { label: string; value: number | string; sub?: string }) {
   return (
-    <div className="p-6 border-[2px]" style={{ borderColor: "var(--rule)", background: "var(--white-warm)" }}>
+    <div className="p-4 md:p-6 border-[2px]" style={{ borderColor: "var(--rule)", background: "var(--white-warm)" }}>
       <div
-        className="text-[10px] uppercase tracking-[2px] mb-3"
+        className="text-[9px] md:text-[10px] uppercase tracking-[1.5px] md:tracking-[2px] mb-2 md:mb-3"
         style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}
       >
         {label}
       </div>
       <div
-        className="text-5xl font-extrabold tracking-[-2px] leading-none"
+        className="text-2xl md:text-5xl font-extrabold tracking-[-1px] md:tracking-[-2px] leading-none break-words"
         style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}
       >
         {value}
       </div>
       {sub && (
-        <div className="text-[11px] mt-2" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
+        <div className="text-[10px] md:text-[11px] mt-1.5 md:mt-2" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
           {sub}
         </div>
       )}
