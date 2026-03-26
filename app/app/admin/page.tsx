@@ -477,21 +477,17 @@ export default async function AdminPage() {
           {/* ═══ 3. COURRIERS PAR TYPE ═══ */}
           <div>
             <SectionLabel>Courriers par type</SectionLabel>
-            <div className="border-[2px] overflow-x-auto" style={{ borderColor: "var(--rule)" }}>
+            <div className="border-[2px]" style={{ borderColor: "var(--rule)" }}>
               {/* Header row */}
               <div
-                className="grid grid-cols-[minmax(100px,1fr)_50px_40px_40px_80px] md:grid-cols-[1fr_70px_70px_60px_120px] px-4 md:px-5 py-2"
-                style={{ background: "var(--ink)", minWidth: 0 }}
+                className="grid grid-cols-[1fr_45px_35px] md:grid-cols-[1fr_70px_70px_60px_120px] px-4 md:px-5 py-2 gap-2"
+                style={{ background: "var(--ink)" }}
               >
-                {["Type", "Total", "7j", "%", ""].map((h) => (
-                  <div
-                    key={h}
-                    className="text-[9px] uppercase tracking-[1px]"
-                    style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}
-                  >
-                    {h}
-                  </div>
-                ))}
+                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Type</div>
+                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Total</div>
+                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>7j</div>
+                <div className="hidden md:block text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>%</div>
+                <div className="hidden md:block text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }} />
               </div>
               {stats.lettersByType.length === 0 ? (
                 <div className="px-5 py-4 text-sm" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}>
@@ -503,7 +499,7 @@ export default async function AdminPage() {
                   return (
                     <div
                       key={lt.type}
-                      className="grid grid-cols-[minmax(100px,1fr)_50px_40px_40px_80px] md:grid-cols-[1fr_70px_70px_60px_120px] items-center px-4 md:px-5 py-2.5"
+                      className="grid grid-cols-[1fr_45px_35px] md:grid-cols-[1fr_70px_70px_60px_120px] items-center px-4 md:px-5 py-2.5 gap-2"
                       style={{
                         borderTop: "1px solid var(--rule)",
                         background: i % 2 === 0 ? "var(--white-warm)" : "var(--paper2)",
@@ -518,10 +514,10 @@ export default async function AdminPage() {
                       <div className="text-[12px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
                         {lt.last7}
                       </div>
-                      <div className="text-[11px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
+                      <div className="hidden md:block text-[11px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
                         {pct}%
                       </div>
-                      <div className="h-3 relative" style={{ background: "#f0ece4" }}>
+                      <div className="hidden md:block h-3 relative" style={{ background: "#f0ece4" }}>
                         <div
                           className="h-full"
                           style={{ width: `${Math.max(pct, 3)}%`, background: "var(--accent)" }}
@@ -537,27 +533,22 @@ export default async function AdminPage() {
           {/* ═══ 4. SOURCES DE TRAFIC (7j) ═══ */}
           <div>
             <SectionLabel>Sources de trafic (7j)</SectionLabel>
-            <div className="border-[2px] overflow-x-auto" style={{ borderColor: "var(--rule)" }}>
+            <div className="border-[2px]" style={{ borderColor: "var(--rule)" }}>
               <div
-                className="grid grid-cols-[minmax(90px,1fr)_60px_70px_50px] md:grid-cols-[1fr_90px_90px_90px] px-4 md:px-5 py-2"
-                style={{ background: "var(--ink)", minWidth: 0 }}
+                className="grid grid-cols-[1fr_50px_45px_40px] md:grid-cols-[1fr_90px_90px_90px] px-4 md:px-5 py-2 gap-2"
+                style={{ background: "var(--ink)" }}
               >
-                {["Source", "Visites", "Conv.", "Taux"].map((h) => (
-                  <div
-                    key={h}
-                    className="text-[9px] uppercase tracking-[1px]"
-                    style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}
-                  >
-                    {h}
-                  </div>
-                ))}
+                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Source</div>
+                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Visites</div>
+                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Conv.</div>
+                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Taux</div>
               </div>
               {stats.trafficSources.map((src, i) => {
                 const rate = src.visits > 0 ? Math.round((src.conversions / src.visits) * 100) : 0;
                 return (
                   <div
                     key={src.source}
-                    className="grid grid-cols-[minmax(90px,1fr)_60px_70px_50px] md:grid-cols-[1fr_90px_90px_90px] items-center px-4 md:px-5 py-2.5"
+                    className="grid grid-cols-[1fr_50px_45px_40px] md:grid-cols-[1fr_90px_90px_90px] items-center px-4 md:px-5 py-2.5 gap-2"
                     style={{
                       borderTop: "1px solid var(--rule)",
                       background: i % 2 === 0 ? "var(--white-warm)" : "var(--paper2)",
@@ -566,13 +557,13 @@ export default async function AdminPage() {
                     <div className="text-xs md:text-sm truncate" style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}>
                       {src.source}
                     </div>
-                    <div className="text-[12px] font-bold" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}>
+                    <div className="text-[11px] md:text-[12px] font-bold" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}>
                       {src.visits}
                     </div>
-                    <div className="text-[12px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
+                    <div className="text-[11px] md:text-[12px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
                       {src.conversions}
                     </div>
-                    <div className="text-[12px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
+                    <div className="text-[11px] md:text-[12px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
                       {rate}%
                     </div>
                   </div>
