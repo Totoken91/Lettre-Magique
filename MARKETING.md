@@ -160,11 +160,15 @@ Format : vidéos courtes (30-60s) montrant un problème → solution LettreMagiq
 
 ---
 
-## 5. Viralité produit
+## 5. Watermark PDF — Viralité conditionnelle
 
-### Watermark PDF (à implémenter)
+> **Principe :** watermark uniquement sur les courriers gratuits, pas sur les payants. Ça évite de décrédibiliser un courrier formel (le destinataire voit "LettreMagique.fr" → il pense "auto-généré"). Et ça devient un argument de vente : "passez en payant pour retirer le watermark".
 
-Chaque PDF généré contient "Créé avec LettreMagique.fr" en pied de page. Quand l'utilisateur envoie son courrier, le destinataire (entreprise, propriétaire, etc.) voit la marque → bouche à oreille gratuit.
+| Type de courrier | Watermark |
+|---|---|
+| Essai gratuit (anonyme) | ✅ "Créé avec LettreMagique.fr" en pied de page |
+| Crédits payants (1,99 €) | ❌ Aucun watermark |
+| Abonné Pro | ❌ Aucun watermark |
 
 ### Partage social
 
@@ -196,21 +200,121 @@ La bannière en haut de la landing page est **dynamique** :
 
 ---
 
-## 7. Métriques à suivre
+## 7. Blog / SEO éditorial (haut de funnel)
+
+> Les 55 pages SEO existantes sont **transactionnelles** (l'utilisateur veut agir). Il faut aussi des pages **informationnelles** qui attirent des gens en amont — ils ne savent pas encore qu'ils ont besoin de l'outil.
+
+### Format
+
+Articles de 800-1500 mots, optimisés pour une requête informationnelle, avec CTA vers le générateur en fin d'article.
+
+### Idées d'articles prioritaires
+
+| Mot-clé cible | Titre article |
+|---|---|
+| "droits caution logement" | Dépôt de garantie : vos droits si le propriétaire ne rend pas la caution |
+| "délai résiliation assurance auto" | Résiliation assurance auto en 2026 : délais, loi Hamon, tout savoir |
+| "contester amende stationnement" | Amende de stationnement injustifiée : comment contester étape par étape |
+| "droits locataire réparations" | Quelles réparations sont à la charge du propriétaire ? Guide complet |
+| "lettre mise en demeure comment" | Mise en demeure : quand l'envoyer, que doit-elle contenir ? |
+| "loi chatel résiliation" | Loi Chatel : comment résilier sans frais un contrat reconduit |
+| "contester licenciement délai" | Licenciement abusif : délais et recours aux prud'hommes |
+| "droit rétractation 14 jours" | Droit de rétractation 14 jours : ce que la loi prévoit vraiment |
+
+### Structure type d'un article
+
+1. Introduction (problème relatable)
+2. Ce que dit la loi (articles + explication simple)
+3. Étapes concrètes (que faire, dans quel ordre)
+4. Modèle de courrier → **CTA : "Générez votre courrier en 2 min"**
+5. FAQ (2-3 questions, schema.org)
+
+### Hébergement
+
+Route `/blog/[slug]` — même stack que les pages SEO, contenu dans un fichier `data/blog-posts.ts` ou en Markdown.
+
+---
+
+## 8. Rétention & Email marketing
+
+> On capture des comptes mais on ne fait rien avec après. Un email automatique peut relancer des utilisateurs dormants.
+
+### Emails automatisés (via Resend)
+
+| Déclencheur | Délai | Contenu |
+|---|---|---|
+| Inscription | Immédiat | Bienvenue + rappel crédits disponibles + code promo si applicable |
+| 1er courrier généré | +1 jour | "Votre courrier a été généré — besoin d'un autre ?" |
+| Compte inactif | +7 jours | "Vous avez X crédits restants. Voici les courriers les plus populaires ce mois-ci." |
+| Crédits épuisés | Immédiat | "Vos crédits sont épuisés — recharger ou passer Pro" |
+| Abandon panier Stripe | +1 heure | "Vous n'avez pas finalisé votre achat" (si Stripe le supporte) |
+
+### Newsletter mensuelle (manuel)
+
+- Top 3 courriers les plus générés du mois
+- Nouveau type de courrier / nouvelle fonctionnalité
+- Conseil juridique du mois
+- CTA vers le générateur
+
+---
+
+## 9. Google Ads — Budget minimum viable
+
+> Le SEO met 6-8 semaines à porter ses fruits. Google Ads peut ramener du trafic qualifié dès le jour 1, même avec 5 €/jour.
+
+### Budget recommandé
+
+| Phase | Budget/jour | Durée | Total |
+|---|---|---|---|
+| Test (mots-clés) | 5 € | 2 semaines | 70 € |
+| Optimisation | 5-10 € | 2 semaines | 70-140 € |
+| Scaling (si ROI positif) | 10-20 € | continu | — |
+
+### Mots-clés prioritaires (Search Ads)
+
+Cibler des requêtes transactionnelles à forte intention :
+
+| Mot-clé | CPC estimé | Intention |
+|---|---|---|
+| "lettre résiliation" | 0,30-0,50 € | Très forte |
+| "modèle mise en demeure" | 0,20-0,40 € | Très forte |
+| "lettre type gratuite" | 0,10-0,30 € | Forte |
+| "contester amende" | 0,30-0,50 € | Forte |
+| "résilier assurance auto" | 0,40-0,60 € | Forte |
+| "lettre préavis logement" | 0,20-0,40 € | Forte |
+
+### Landing pages Ads
+
+Diriger chaque groupe d'annonces vers la page SEO correspondante (pas la page d'accueil) :
+- Annonce "résiliation" → `/generateur/seo/resiliation-free-mobile`
+- Annonce "mise en demeure" → `/generateur/seo/mise-en-demeure-artisan`
+- Annonce "amende" → `/generateur/seo/contestation-pv-radar`
+
+Avec `utm_source=google&utm_medium=cpc&utm_campaign=...` pour le tracking.
+
+### Conversion tracking
+
+Déjà en place : Google Ads conversion tag (AW-18033703584). Événements trackés : génération de courrier, inscription, achat.
+
+---
+
+## 10. Métriques à suivre
 
 ### KPIs principaux (dashboard admin)
 
+> Objectifs réalistes — le SEO met 6-8 semaines, le trafic organique sera faible au début. Les réseaux sociaux et Google Ads compensent en attendant.
+
 | Métrique | Objectif J30 | Objectif J90 |
 |---|---|---|
-| Visiteurs uniques (30j) | 500 | 5 000 |
-| Courriers générés | 200 | 1 000 |
-| Comptes créés | 50 | 300 |
-| Taux conversion visiteur → courrier | > 10% | > 15% |
-| Taux conversion gratuit → payant | > 5% | > 10% |
-| Abonnés Pro | 5 | 30 |
-| MRR | 25 € | 150 € |
-| Pages SEO indexées | 55 | 100+ |
-| Trafic Google organique | 50 visites/j | 200 visites/j |
+| Visiteurs uniques (30j) | 200 | 2 000 |
+| Courriers générés | 50 | 500 |
+| Comptes créés | 20 | 150 |
+| Taux conversion visiteur → courrier | > 8% | > 12% |
+| Taux conversion gratuit → payant | > 3% | > 8% |
+| Abonnés Pro | 2 | 15 |
+| MRR | 10 € | 75 € |
+| Pages SEO indexées | 30/55 | 55+ |
+| Trafic Google organique | 5 visites/j | 50 visites/j |
 
 ### KPIs par canal (via UTM)
 
@@ -220,35 +324,51 @@ Suivre pour chaque source :
 - Taux de conversion
 - Courriers générés
 - Inscriptions
+- Coût par acquisition (pour Ads)
 
 ---
 
-## 8. Calendrier de lancement
+## 11. Calendrier de lancement
 
-### Semaine 1 (26-31 mars 2026)
+### Semaine 1 (26-31 mars 2026) — Fondations
 - [x] 55 pages SEO live
 - [x] Tracking UTM opérationnel
 - [x] Codes promo admin fonctionnel
-- [ ] Soumettre sitemap à Search Console
-- [ ] Premier post Reddit (r/france)
+- [ ] Soumettre sitemap à Google Search Console
 - [ ] Créer compte TikTok LettreMagique
+- [ ] Configurer Google Ads (5 €/jour, 3 groupes d'annonces)
+- [ ] Premier commentaire Reddit utile avec lien (r/conseiljuridique ou r/france)
 
-### Semaine 2 (1-7 avril)
-- [ ] Première vidéo TikTok (résiliation)
-- [ ] Posts dans 3 groupes Facebook
-- [ ] Vérifier indexation Google (55 pages)
-- [ ] Créer 2 codes promo par canal (REDDIT, TIKTOK, INSTA)
+### Semaine 2 (1-7 avril) — Premiers contenus
+- [ ] Première vidéo TikTok (résiliation opérateur)
+- [ ] Posts dans 3 groupes Facebook (locataires, consommateurs)
+- [ ] Créer codes promo par canal (REDDIT, TIKTOK, INSTA, FACEBOOK)
+- [ ] Vérifier indexation Google (combien de pages sur 55)
+- [ ] Premier article blog informatif (si route blog en place)
 
-### Semaine 3 (8-14 avril)
-- [ ] 3 vidéos TikTok supplémentaires
-- [ ] Analyser les sources de trafic admin → doubler sur ce qui marche
-- [ ] Product Hunt : préparer la page
+### Semaine 3 (8-14 avril) — Itération
+- [ ] 2-3 vidéos TikTok supplémentaires
+- [ ] Analyser sources de trafic admin → doubler sur ce qui marche
+- [ ] Optimiser Google Ads (couper les mots-clés non rentables)
+- [ ] Email de relance aux comptes inactifs (7j+)
 
-### Semaine 4 (15-21 avril)
-- [ ] Lancement Product Hunt
-- [ ] Newsletter aux premiers inscrits
+### Semaine 4 (15-21 avril) — Bilan J30
 - [ ] Bilan J30 : KPIs vs objectifs
+- [ ] Newsletter aux premiers inscrits
+- [ ] Décider : scaler Ads ou pivoter vers un autre canal
+
+### Mois 2-3 — Croissance
+- [ ] SEO éditorial : 4-8 articles blog
+- [ ] Continuer TikTok (1-2 vidéos/semaine)
+- [ ] Implémenter emails automatisés (Resend)
+- [ ] Watermark PDF conditionnel (gratuit uniquement)
+- [ ] Préparer Product Hunt (attendre 200+ utilisateurs actifs + témoignages)
+
+### Mois 4+ — Product Hunt & LM Mail
+- [ ] Lancement Product Hunt (quand base utilisateurs solide)
+- [ ] Beta LM Mail (envoi postal)
+- [ ] Programme parrainage
 
 ---
 
-*Document créé le 26 mars 2026*
+*Document créé le 26 mars 2026 — dernière mise à jour 26 mars 2026*
