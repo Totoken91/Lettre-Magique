@@ -55,7 +55,6 @@ export default function LetterViewer({
   const [recipientEmail, setRecipientEmail] = useState("");
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailResult, setEmailResult] = useState<"idle" | "sent" | "error">("idle");
-  const [includeSender, setIncludeSender] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -131,7 +130,7 @@ export default function LetterViewer({
         body: JSON.stringify({
           recipientEmail,
           ...pdfPayload,
-          senderEmail: includeSender ? senderEmail : undefined,
+          senderEmail,
         }),
       });
       if (!res.ok) throw new Error("Send failed");
@@ -294,10 +293,16 @@ export default function LetterViewer({
             <p className="text-sm mb-3" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}>
               Le PDF sera envoyé en pièce jointe à l&apos;adresse indiquée.
             </p>
-            <div className="flex items-center gap-2 mb-4 px-3 py-2 text-xs" style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1px solid var(--rule)", color: "var(--muted-lm)" }}>
+            <div className="flex items-center gap-2 mb-2 px-3 py-2 text-xs" style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1px solid var(--rule)", color: "var(--muted-lm)" }}>
               <span style={{ color: "var(--accent)" }}>✦</span>
               Expédié depuis <strong style={{ color: "var(--ink)" }}>courrier@lm-justice.com</strong>
             </div>
+            {senderEmail && (
+              <div className="flex items-center gap-2 mb-4 px-3 py-2 text-xs" style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1px solid var(--rule)", color: "var(--muted-lm)" }}>
+                <span style={{ color: "var(--green, #2d6a4f)" }}>↩</span>
+                Les réponses seront redirigées vers <strong style={{ color: "var(--ink)" }}>{senderEmail}</strong>
+              </div>
+            )}
             <input
               type="email"
               value={recipientEmail}
@@ -308,22 +313,6 @@ export default function LetterViewer({
               onKeyDown={(e) => e.key === "Enter" && handleSendEmail()}
               autoFocus
             />
-            {senderEmail && (
-              <label className="flex items-center gap-2 mb-4 cursor-pointer select-none" style={{ fontFamily: "var(--font-dm-mono)" }}>
-                <input
-                  type="checkbox"
-                  checked={includeSender}
-                  onChange={(e) => setIncludeSender(e.target.checked)}
-                  className="w-4 h-4 accent-[var(--accent)] cursor-pointer"
-                />
-                <span className="text-xs" style={{ color: "var(--muted-lm)" }}>
-                  Inclure mon adresse pour être recontacté
-                  {includeSender && senderEmail && (
-                    <span style={{ color: "var(--ink)" }}> ({senderEmail})</span>
-                  )}
-                </span>
-              </label>
-            )}
             {emailResult === "sent" && (
               <div className="mb-4 p-3 text-sm" style={{ fontFamily: "var(--font-dm-mono)", background: "#e8f5e9", color: "var(--green)" }}>
                 ✓ Email envoyé avec succès

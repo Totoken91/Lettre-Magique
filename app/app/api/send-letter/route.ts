@@ -32,24 +32,15 @@ export async function POST(req: Request) {
     });
 
     const typeLabel = capitalize(typeName || "Courrier");
-    const senderBlock = senderEmail
-      ? `
-        <tr>
-          <td style="padding: 16px 24px; background: #f9f6f1; border-top: 1px solid #e8e0d4;">
-            <p style="margin: 0; font-size: 13px; color: #555;">
-              L'expéditeur souhaite être recontacté :
-              <a href="mailto:${senderEmail}" style="color: #c84b2f; font-weight: 600;">${senderEmail}</a>
-            </p>
-          </td>
-        </tr>`
-      : "";
+    // Reply-to is always the user's email so recipients reply directly to them
+    const replyTo = senderEmail || user.email;
 
     // Send via Resend
     const sendOptions: Parameters<ReturnType<typeof getResend>["emails"]["send"]>[0] = {
       from: fromCourrier(),
       to: recipientEmail,
       subject: `LM Mail › ${typeLabel}`,
-      ...(senderEmail ? { replyTo: senderEmail } : {}),
+      ...(replyTo ? { replyTo } : {}),
       html: `
         <div style="font-family: Helvetica, Arial, sans-serif; color: #1d1d1b; max-width: 600px; margin: 0 auto;">
           <!-- Header -->
@@ -74,7 +65,6 @@ export async function POST(req: Request) {
                 </p>
               </td>
             </tr>
-            ${senderBlock}
             <!-- Footer -->
             <tr>
               <td style="padding: 16px 24px; border-top: 1px solid #e8e0d4;">
