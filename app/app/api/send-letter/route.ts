@@ -32,8 +32,8 @@ export async function POST(req: Request) {
     });
 
     const typeLabel = capitalize(typeName || "Courrier");
-    // Reply-to is always the user's email so recipients reply directly to them
-    const replyTo = senderEmail || user.email;
+    // Reply-to set only if user opted in (senderEmail is sent only when allowReply is checked)
+    const replyTo = senderEmail || undefined;
 
     // Send via Resend
     const sendOptions: Parameters<ReturnType<typeof getResend>["emails"]["send"]>[0] = {

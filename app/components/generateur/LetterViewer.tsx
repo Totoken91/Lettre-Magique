@@ -55,6 +55,7 @@ export default function LetterViewer({
   const [recipientEmail, setRecipientEmail] = useState("");
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailResult, setEmailResult] = useState<"idle" | "sent" | "error">("idle");
+  const [allowReply, setAllowReply] = useState(true);
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -130,7 +131,7 @@ export default function LetterViewer({
         body: JSON.stringify({
           recipientEmail,
           ...pdfPayload,
-          senderEmail,
+          senderEmail: allowReply ? senderEmail : undefined,
         }),
       });
       if (!res.ok) throw new Error("Send failed");
@@ -298,10 +299,18 @@ export default function LetterViewer({
               Expédié depuis <strong style={{ color: "var(--ink)" }}>courrier@lm-justice.com</strong>
             </div>
             {senderEmail && (
-              <div className="flex items-center gap-2 mb-4 px-3 py-2 text-xs" style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1px solid var(--rule)", color: "var(--muted-lm)" }}>
-                <span style={{ color: "var(--green, #2d6a4f)" }}>↩</span>
-                Les réponses seront redirigées vers <strong style={{ color: "var(--ink)" }}>{senderEmail}</strong>
-              </div>
+              <label className="flex items-start gap-2 mb-4 px-3 py-2 cursor-pointer select-none" style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1px solid var(--rule)" }}>
+                <input
+                  type="checkbox"
+                  checked={allowReply}
+                  onChange={(e) => setAllowReply(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 accent-[var(--accent)] cursor-pointer shrink-0"
+                />
+                <span className="text-xs" style={{ color: "var(--muted-lm)", lineHeight: "1.5" }}>
+                  Autoriser le destinataire à me répondre sur{" "}
+                  <strong style={{ color: "var(--ink)" }}>{senderEmail}</strong>
+                </span>
+              </label>
             )}
             <input
               type="email"
