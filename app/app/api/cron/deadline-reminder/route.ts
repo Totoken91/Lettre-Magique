@@ -11,10 +11,11 @@ const BUFFER_DAYS = 2;
 const SECOND_REMINDER_DAYS = 15;
 
 function buildEmailHtml(
-  letter: { type_name: string; form_data: Record<string, string>; created_at: string; deadline_at: string },
+  letter: { id: string; user_id: string; type_name: string; form_data: Record<string, string>; created_at: string; deadline_at: string },
   authorities: EscalationAuthority[],
   isSecondReminder: boolean,
 ): string {
+  const resolveUrl = `${BASE_URL}/api/letter/resolve?id=${letter.id}&token=${letter.user_id.slice(0, 8)}`;
   const destinataire = letter.form_data?.destinataire || letter.form_data?.creancier || letter.form_data?.employeur || "le destinataire";
   const dateEnvoi = new Date(letter.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   const dateDeadline = new Date(letter.deadline_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
@@ -85,8 +86,11 @@ function buildEmailHtml(
 
         <tr>
           <td style="padding: 16px 24px; border-top: 1px solid #e8e0d4; background: #f9f6f1;">
-            <p style="margin: 0; font-size: 11px; color: #aaa;">
+            <p style="margin: 0 0 8px; font-size: 11px; color: #aaa;">
               <a href="${BASE_URL}" style="color: #c84b2f;">LM Legal</a> · Suivi automatique de vos courriers
+            </p>
+            <p style="margin: 0; font-size: 11px;">
+              <a href="${resolveUrl}" style="color: #888;">J'ai déjà reçu une réponse — ne plus me rappeler</a>
             </p>
           </td>
         </tr>
