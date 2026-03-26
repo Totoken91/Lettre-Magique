@@ -45,18 +45,27 @@ export async function POST(req: Request) {
       return Response.json({ ok: true, skipped: true });
     }
 
-    const { sessionId, path } = await req.json();
+    const { sessionId, path, referrer, utm_source, utm_medium, utm_campaign, utm_content } = await req.json();
     if (!sessionId || typeof sessionId !== "string") {
       return Response.json({ error: "sessionId manquant" }, { status: 400 });
     }
 
     const admin = getSupabaseAdmin();
 
-    // Met à jour last_seen_at à chaque revisite (permet de compter les visiteurs récurrents dans la fenêtre 30j)
-    await (admin.from("page_views") as any).upsert(
-      { session_id: sessionId, path: path ?? "/", user_agent: userAgent, created_at: new Date().toISOString() },
-      { onConflict: "session_id,path" }
-    );
+    const row: Record<string, unknown> = {
+      session_id: sessionId,
+      path: path ?? "/",
+      user_agent: userAgent,
+      created_at: new Date().toISOString(),
+    };
+    // N'écrire les champs UTM/referrer que s'ils sont présents (évite d'écraser avec null lors d'un upsert)
+    if (utm_source) row.utm_source = String(utm_source).slice(0, 200);
+    if (utm_medium) row.utm_medium = String(utm_medium).slice(0, 200);
+    if (utm_campaign) row.utm_campaign = String(utm_campaign).slice(0, 200);
+    if (utm_content) row.utm_content = String(utm_content).slice(0, 200);
+    if (referrer) row.referrer = String(referrer).slice(0, 500);
+
+    await (admin.from("page_views") as any).upsert(row, { onConflict: "session_id,path" });
 
     return Response.json({ ok: true });
   } catch (err) {

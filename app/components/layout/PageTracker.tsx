@@ -13,22 +13,32 @@ function getOrCreateSessionId(): string {
   return sid;
 }
 
+function getUtmParams(): Record<string, string> {
+  const params = new URLSearchParams(window.location.search);
+  const utm: Record<string, string> = {};
+  for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
+    const val = params.get(key);
+    if (val) utm[key] = val;
+  }
+  return utm;
+}
+
 export default function PageTracker() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Ne pas tracker les routes admin ou API
     if (pathname.startsWith("/admin") || pathname.startsWith("/api")) return;
-
-    // Ignorer les navigateurs headless (CI, Playwright, Puppeteer, Vercel warmup…)
     if (navigator.webdriver) return;
 
     try {
       const sessionId = getOrCreateSessionId();
+      const utm = getUtmParams();
+      const referrer = document.referrer || undefined;
+
       fetch("/api/track", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId, path: pathname }),
+        body: JSON.stringify({ sessionId, path: pathname, referrer, ...utm }),
       }).catch(() => {});
     } catch {
       // localStorage peut être bloqué (mode privé strict)

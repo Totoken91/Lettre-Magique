@@ -269,34 +269,45 @@ async function getStats(): Promise<Stats | null> {
   const promoProRate = promoUsersCount > 0 ? Math.round((promoUsers.filter((p: { is_pro: boolean }) => p.is_pro).length / promoUsersCount) * 100) : 0;
   const nonPromoProRate = nonPromoUsersCount > 0 ? Math.round((nonPromoUsers.filter((p: { is_pro: boolean }) => p.is_pro).length / nonPromoUsersCount) * 100) : 0;
 
-  // ── Traffic sources (from UTM or path-based heuristic) ──
-  // For now, use page_views paths as a proxy. Full UTM tracking requires migration.
+  // ── Traffic sources (UTM + referrer based) ──
   const { data: allPageViews } = await (admin.from("page_views") as any)
-    .select("session_id, path, user_agent")
+    .select("session_id, path, utm_source, utm_medium, referrer")
     .gte("created_at", sevenDaysAgo);
-  const sessions: Record<string, { paths: Set<string>; ua: string }> = {};
+
+  // Classify each session by its best-known source (first non-null UTM or referrer wins)
+  const sessions: Record<string, { source: string; paths: Set<string> }> = {};
   for (const pv of allPageViews ?? []) {
-    if (!sessions[pv.session_id]) sessions[pv.session_id] = { paths: new Set(), ua: pv.user_agent ?? "" };
+    if (!sessions[pv.session_id]) {
+      sessions[pv.session_id] = { source: "Direct", paths: new Set() };
+    }
     sessions[pv.session_id].paths.add(pv.path);
+    // Only classify if not already classified (keep first source)
+    if (sessions[pv.session_id].source !== "Direct") continue;
+    if (pv.utm_source) {
+      const src = pv.utm_source.toLowerCase();
+      if (src.includes("google")) sessions[pv.session_id].source = "Google (organique)";
+      else if (src.includes("facebook") || src.includes("instagram") || src.includes("tiktok") || src.includes("twitter") || src.includes("linkedin") || src.includes("youtube")) sessions[pv.session_id].source = "Réseaux sociaux";
+      else sessions[pv.session_id].source = `UTM: ${pv.utm_source}`;
+    } else if (pv.referrer) {
+      const ref = pv.referrer.toLowerCase();
+      if (ref.includes("google.")) sessions[pv.session_id].source = "Google (organique)";
+      else if (ref.includes("bing.")) sessions[pv.session_id].source = "Bing";
+      else if (ref.includes("facebook.com") || ref.includes("instagram.com") || ref.includes("tiktok.com") || ref.includes("twitter.com") || ref.includes("x.com") || ref.includes("linkedin.com") || ref.includes("youtube.com")) sessions[pv.session_id].source = "Réseaux sociaux";
+      else if (ref.includes("lettre-magique") || ref.includes("localhost")) { /* same site, keep Direct */ }
+      else sessions[pv.session_id].source = "Autres";
+    }
   }
-  // Classify sources by user_agent and referrer heuristic
-  const sourceCounts: Record<string, { visits: number; conversions: number }> = {
-    "Direct": { visits: 0, conversions: 0 },
-    "Google (organique)": { visits: 0, conversions: 0 },
-    "Réseaux sociaux": { visits: 0, conversions: 0 },
-    "Autres": { visits: 0, conversions: 0 },
-  };
+  const sourceCounts: Record<string, { visits: number; conversions: number }> = {};
   for (const [, sess] of Object.entries(sessions)) {
-    const hasGenerateur = sess.paths.has("/generateur");
-    // Simple heuristic — full UTM tracking will improve this
-    sourceCounts["Direct"].visits++;
-    if (hasGenerateur) sourceCounts["Direct"].conversions++;
+    const src = sess.source;
+    if (!sourceCounts[src]) sourceCounts[src] = { visits: 0, conversions: 0 };
+    sourceCounts[src].visits++;
+    if (sess.paths.has("/generateur")) sourceCounts[src].conversions++;
   }
-  const trafficSources = Object.entries(sourceCounts).map(([source, d]) => ({
-    source,
-    visits: d.visits,
-    conversions: d.conversions,
-  }));
+  // Sort: Direct first, then by visits desc
+  const trafficSources = Object.entries(sourceCounts)
+    .map(([source, d]) => ({ source, visits: d.visits, conversions: d.conversions }))
+    .sort((a, b) => (a.source === "Direct" ? -1 : b.source === "Direct" ? 1 : b.visits - a.visits));
 
   // ── Funnel ──
   const funnelVisitors = uniqueVisits30d;
@@ -565,7 +576,7 @@ export default async function AdminPage() {
               })}
             </div>
             <div className="text-[10px] mt-2" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
-              Tracking simplifié — tout le trafic est classé en « Direct » pour le moment. Pour un suivi par source, ajouter ?utm_source=... aux liens de campagne.
+              Sources détectées via referrer et paramètres UTM. Ajouter ?utm_source=...&amp;utm_medium=... aux liens de campagne pour un suivi précis.
             </div>
           </div>
 
