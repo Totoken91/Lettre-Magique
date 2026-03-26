@@ -296,7 +296,7 @@ export default function LetterViewer({
             </p>
             <div className="flex items-center gap-2 mb-4 px-3 py-2 text-xs" style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1px solid var(--rule)", color: "var(--muted-lm)" }}>
               <span style={{ color: "var(--accent)" }}>✦</span>
-              Expédié depuis <strong style={{ color: "var(--ink)" }}>courrier@lettre-magique.com</strong>
+              Expédié depuis <strong style={{ color: "var(--ink)" }}>courrier@lm-justice.com</strong>
             </div>
             <input
               type="email"

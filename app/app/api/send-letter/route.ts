@@ -52,8 +52,8 @@ export async function POST(req: Request) {
 
     // Send via Resend
     const sendOptions: Parameters<ReturnType<typeof getResend>["emails"]["send"]>[0] = {
-      from: process.env.RESEND_FROM_EMAIL
-        ? `LM Mail <${process.env.RESEND_FROM_EMAIL}>`
+      from: process.env.RESEND_FROM_EMAIL_COURRIER
+        ? `LM Mail <${process.env.RESEND_FROM_EMAIL_COURRIER}>`
         : "onboarding@resend.dev",
       to: recipientEmail,
       subject: `LM Mail › ${typeLabel}`,

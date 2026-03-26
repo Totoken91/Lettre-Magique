@@ -366,7 +366,8 @@ STRIPE_PRICE_SUB=price_...          # 4,99 €/mois
 
 # Resend (Email)
 RESEND_API_KEY=...
-RESEND_FROM_EMAIL=noreply@lm-justice.com
+RESEND_FROM_EMAIL_COURRIER=courrier@lm-justice.com
+RESEND_FROM_EMAIL_NOREPLY=noreply@lm-justice.com
 
 # Application
 NEXT_PUBLIC_BASE_URL=https://lettre-magique.vercel.app
