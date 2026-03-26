@@ -478,16 +478,15 @@ export default async function AdminPage() {
           <div>
             <SectionLabel>Courriers par type</SectionLabel>
             <div className="border-[2px]" style={{ borderColor: "var(--rule)" }}>
-              {/* Header row */}
               <div
                 className="grid grid-cols-[1fr_45px_35px] md:grid-cols-[1fr_70px_70px_60px_120px] px-4 md:px-5 py-2 gap-2"
                 style={{ background: "var(--ink)" }}
               >
                 <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Type</div>
-                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Total</div>
-                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>7j</div>
-                <div className="hidden md:block text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>%</div>
-                <div className="hidden md:block text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }} />
+                <div className="text-[9px] uppercase tracking-[1px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Total</div>
+                <div className="text-[9px] uppercase tracking-[1px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>7j</div>
+                <div className="hidden md:block text-[9px] uppercase tracking-[1px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>%</div>
+                <div className="hidden md:block" />
               </div>
               {stats.lettersByType.length === 0 ? (
                 <div className="px-5 py-4 text-sm" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}>
@@ -508,20 +507,17 @@ export default async function AdminPage() {
                       <div className="text-xs md:text-sm font-bold truncate" style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}>
                         {lt.type_name}
                       </div>
-                      <div className="text-[12px] font-bold" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}>
+                      <div className="text-[12px] font-bold text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}>
                         {lt.total}
                       </div>
-                      <div className="text-[12px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
+                      <div className="text-[12px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
                         {lt.last7}
                       </div>
-                      <div className="hidden md:block text-[11px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
+                      <div className="hidden md:block text-[11px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
                         {pct}%
                       </div>
                       <div className="hidden md:block h-3 relative" style={{ background: "#f0ece4" }}>
-                        <div
-                          className="h-full"
-                          style={{ width: `${Math.max(pct, 3)}%`, background: "var(--accent)" }}
-                        />
+                        <div className="h-full" style={{ width: `${Math.max(pct, 3)}%`, background: "var(--accent)" }} />
                       </div>
                     </div>
                   );
@@ -539,9 +535,9 @@ export default async function AdminPage() {
                 style={{ background: "var(--ink)" }}
               >
                 <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Source</div>
-                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Visites</div>
-                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Conv.</div>
-                <div className="text-[9px] uppercase tracking-[1px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Taux</div>
+                <div className="text-[9px] uppercase tracking-[1px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Visites</div>
+                <div className="text-[9px] uppercase tracking-[1px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Conv.</div>
+                <div className="text-[9px] uppercase tracking-[1px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--white-warm)" }}>Taux</div>
               </div>
               {stats.trafficSources.map((src, i) => {
                 const rate = src.visits > 0 ? Math.round((src.conversions / src.visits) * 100) : 0;
@@ -557,13 +553,13 @@ export default async function AdminPage() {
                     <div className="text-xs md:text-sm truncate" style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}>
                       {src.source}
                     </div>
-                    <div className="text-[11px] md:text-[12px] font-bold" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}>
+                    <div className="text-[11px] md:text-[12px] font-bold text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}>
                       {src.visits}
                     </div>
-                    <div className="text-[11px] md:text-[12px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
+                    <div className="text-[11px] md:text-[12px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
                       {src.conversions}
                     </div>
-                    <div className="text-[11px] md:text-[12px]" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
+                    <div className="text-[11px] md:text-[12px] text-right" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
                       {rate}%
                     </div>
                   </div>
