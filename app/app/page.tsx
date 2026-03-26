@@ -98,7 +98,7 @@ export default async function Home() {
           >
             Quel courrier avez-vous besoin ?
           </h2>
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-[2px] border-[2px]" style={{ borderColor: "var(--ink)" }}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-[2px] border-[2px]" style={{ borderColor: "var(--ink)" }}>
             {LETTER_TYPES.slice(0, 5).map((type, i) => (
               <Link
                 key={type.id}
@@ -359,8 +359,8 @@ export default async function Home() {
       <section className="px-4 md:px-16 reveal" style={{ background: "var(--ink)" }}>
         <div className="max-w-[980px] mx-auto">
           <blockquote
-            className="relative px-6 sm:px-10 md:px-16 overflow-hidden"
-            style={{ borderLeft: "4px solid var(--accent)", paddingTop: 48, paddingBottom: 48 }}
+            className="relative px-6 sm:px-10 md:px-16 py-8 sm:py-10 md:py-12 overflow-hidden"
+            style={{ borderLeft: "4px solid var(--accent)" }}
           >
             {/* Guillemets décoratifs */}
             <div

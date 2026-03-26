@@ -195,7 +195,7 @@ export default function LetterViewer({
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopy}
-              className="text-[10px] uppercase tracking-[1px] px-2.5 py-1 cursor-pointer border transition-colors duration-200"
+              className="text-[10px] uppercase tracking-[1px] px-3 py-2 cursor-pointer border transition-colors duration-200"
               style={{
                 fontFamily: "var(--font-dm-mono)",
                 background: copied ? "var(--ink)" : "transparent",
@@ -208,7 +208,7 @@ export default function LetterViewer({
             <button
               onClick={generatePdfPreview}
               disabled={loadingPreview}
-              className="text-[10px] uppercase tracking-[1px] px-2.5 py-1 cursor-pointer border transition-colors duration-200 disabled:opacity-50"
+              className="text-[10px] uppercase tracking-[1px] px-3 py-2 cursor-pointer border transition-colors duration-200 disabled:opacity-50"
               style={{
                 fontFamily: "var(--font-dm-mono)",
                 background: "transparent",

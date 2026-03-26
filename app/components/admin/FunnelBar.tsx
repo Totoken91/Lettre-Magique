@@ -30,7 +30,7 @@ export default function FunnelBar({ steps }: { steps: FunnelStep[] }) {
             )}
             <div className="flex items-center gap-3">
               <div
-                className="shrink-0 w-[130px] text-[10px] text-right uppercase tracking-[1px]"
+                className="shrink-0 w-[90px] md:w-[130px] text-[9px] md:text-[10px] text-right uppercase tracking-[1px]"
                 style={{ fontFamily: "var(--font-dm-mono)", color: "var(--ink)" }}
               >
                 {step.label}
