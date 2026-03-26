@@ -15,7 +15,11 @@ CREATE TABLE IF NOT EXISTS letters (
   stripe_session_id TEXT,
   email TEXT,
   user_id UUID REFERENCES auth.users(id),
-  is_favorite BOOLEAN NOT NULL DEFAULT false
+  is_favorite BOOLEAN NOT NULL DEFAULT false,
+  deadline_at TIMESTAMPTZ,
+  reminder_count INTEGER NOT NULL DEFAULT 0,
+  last_reminder_at TIMESTAMPTZ,
+  status TEXT NOT NULL DEFAULT 'pending'
 );
 
 -- Table des profils utilisateurs (statut pro)

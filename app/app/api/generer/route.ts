@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { buildPrompt } from "@/lib/prompts";
+import { calculateDeadline } from "@/data/escalation-authorities";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
@@ -96,6 +97,7 @@ export async function POST(req: Request) {
     }
 
     // Sauvegarder le courrier (anonyme ou authentifié)
+    const deadlineAt = calculateDeadline(type, formData, new Date());
     await (getSupabaseAdmin().from("letters") as any).insert({
       user_id: user?.id ?? null,
       email: user ? user.email : "free try",
@@ -104,6 +106,7 @@ export async function POST(req: Request) {
       form_data: formData,
       generated_text: text,
       sender_name: senderName,
+      deadline_at: deadlineAt?.toISOString() ?? null,
     });
 
     const response = Response.json({ text });
