@@ -1,7 +1,7 @@
 # LettreMagique — Plan d'attaque
 
 > Stack : Next.js 16 (App Router) · Tailwind CSS 4 · shadcn/ui · Supabase · Stripe · API Claude (Haiku) · pdf-lib · Vercel
-> *Dernière mise à jour : 22 mars 2026*
+> *Dernière mise à jour : 26 mars 2026*
 
 ---
 
@@ -13,99 +13,83 @@
 |---------|--------|
 | Setup Next.js 16 + Tailwind 4 + shadcn | Stack complète opérationnelle |
 | Design system | Palette, typo (Syne/DM Mono/Lora), CSS vars, composants |
-| Landing page | Hero, catégories, comment ça marche, exemples, tarifs, CTA |
+| Landing page | Hero, catégories, comment ça marche, exemples, tarifs, CTA, bannière promo dynamique |
 | Générateur formulaire | 10 types de courriers, questions dynamiques, DynamicForm |
 | API génération Claude | `POST /api/generer` → claude-haiku-4-5-20251001 |
 | Génération PDF | pdf-lib, format A4, header/footer LettreMagique, multi-page |
 | Page résultat | Aperçu + bouton téléchargement PDF |
-| Auth Supabase | Signup/login pages + **modale inline au moment de générer** |
+| Auth Supabase | Signup/login pages + modale inline au moment de générer |
 | Middleware session | Refresh session Supabase sur /generateur |
-| Fix page blanche | ScrollReveal `.js-ready` (opacity:0 only si JS actif) + fallback 2s |
 | Deploy Vercel | lettre-magique.vercel.app ✓ |
-| Navbar auth | NavAuth client : email + déconnexion si connecté, sinon login/signup |
+| Navbar responsive | Logo + burger mobile, liens desktop cachés, shrink-0, h-16 |
+| Stripe paiement | Checkout 1,99€ unité + 4,99€/mois Pro, webhooks, pages succès/annulé |
+| Essai gratuit anonyme | 1 courrier gratuit par appareil (cookie), pas d'inscription requise |
+| Espace compte | Profil, crédits, codes promo, gestion abonnement |
+| Historique courriers | `/mes-courriers` avec re-téléchargement PDF |
+| Pages légales | CGU, confidentialité, mentions légales, politique cookies |
+| **55 pages SEO** | Résiliation, réclamation, logement, mise en demeure, contestation, travail, rétractation, délai paiement |
+| Schema.org SEO | FAQPage + HowTo JSON-LD sur chaque page SEO |
+| Sitemap.xml | Généré automatiquement avec toutes les pages SEO (priorité 0.8) |
+| Codes promo admin | CRUD complet, expiration, bannière dynamique, comparaison promo/non-promo |
+| Tracking UTM/referrer | PageTracker capture referrer + utm_*, classification auto dans l'admin |
+| Dashboard admin | Funnel, rétention, timeline, sources trafic, gestion promos, responsive mobile |
+| Envoi email | Resend — courrier PDF en pièce jointe |
+| Auto-complétion | 50+ entreprises françaises avec adresses postales |
 
 ---
 
 ### 🔲 RESTE À FAIRE — Par priorité
 
-#### PRIORITÉ 1 — Monétisation (bloquant revenue)
+#### PRIORITÉ 1 — SEO & indexation
 
-- [ ] **Supabase : créer les tables** `letters` + `free_uses` (SQL ci-dessous)
-- [ ] **Logique 1er courrier gratuit** : vérifier via `user_id` en Supabase si déjà utilisé
-- [ ] **Stripe checkout** : `POST /api/stripe/checkout` → session paiement 1,99€
-- [ ] **Stripe webhook** : `POST /api/stripe/webhook` → marquer `paid = true` dans Supabase
-- [ ] **Pages paiement** : `/paiement/success` et `/paiement/cancel`
-- [ ] **Flow UX complet** : générer → gratuit ou Stripe selon `free_uses`
-
-#### PRIORITÉ 2 — SEO (traffic organique)
-
-- [ ] **Pages SEO long-tail** : `/lettre/[slug]` avec `generateStaticParams`
-- [ ] **Data SEO** : `data/seo-pages.ts` avec 20 pages prioritaires (résiliation Free, SFR, EDF...)
-- [ ] **Schema.org** : FAQPage + HowTo sur chaque page SEO
-- [ ] **Sitemap.xml** : `app/sitemap.ts` avec toutes les URLs
 - [ ] **robots.txt** : `app/robots.ts`
+- [ ] **Search Console** : soumission sitemap, suivi indexation
+- [ ] **Liens internes** : depuis la landing vers les pages SEO les plus stratégiques
 
-#### PRIORITÉ 3 — Compte utilisateur
+#### PRIORITÉ 2 — Monétisation avancée
 
-- [ ] **Dashboard `/compte`** : historique des courriers générés (depuis Supabase)
-- [ ] **Sauvegarde courriers** : stocker le texte généré dans `letters` table liée au `user_id`
-- [ ] **Abonnement Stripe** : plan 4,99€/mois, vérification statut dans le flow
+- [ ] **MRR/ARPU Stripe** : connecter les données Stripe au dashboard admin
+- [ ] **Upgrade in-app** : bouton upgrade Pro depuis `/compte`
 
-#### PRIORITÉ 4 — Croissance
+#### PRIORITÉ 3 — Croissance
 
-- [ ] **Watermark PDF** : "Créé avec LettreMagique.fr" (viral)
-- [ ] **Core Web Vitals** : audit Lighthouse, optimisation images/fonts
-- [ ] **Mobile responsive** : vérifier tous les breakpoints
-- [ ] **Mentions légales / CGU** : pages `/cgu` et `/confidentialite`
+- [ ] **Watermark PDF** : "Créé avec LettreMagique.fr" (viralité)
+- [ ] **Core Web Vitals** : audit Lighthouse, optimisation fonts/images
+- [ ] **Export CSV admin** : export des données utilisateurs/courriers
 
----
+#### PRIORITÉ 4 — LM Mail (avantage concurrentiel)
 
-## Tables Supabase à créer
-
-```sql
--- Courriers générés (liés au user Supabase Auth)
-CREATE TABLE letters (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  user_id UUID REFERENCES auth.users(id),
-  type TEXT NOT NULL,
-  form_data JSONB,
-  generated_text TEXT,
-  paid BOOLEAN DEFAULT false,
-  stripe_session_id TEXT
-);
-
--- Tracking 1er courrier gratuit par user
-CREATE TABLE free_uses (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) UNIQUE NOT NULL,
-  used_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- RLS (Row Level Security)
-ALTER TABLE letters ENABLE ROW LEVEL SECURITY;
-ALTER TABLE free_uses ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users see own letters" ON letters
-  FOR ALL USING (auth.uid() = user_id);
-
-CREATE POLICY "Users see own free_use" ON free_uses
-  FOR ALL USING (auth.uid() = user_id);
-```
+- [ ] **Intégration envoi postal** (Maileva, Merci Facteur)
+- [ ] **Prix** : +0,50 € par courrier envoyé
+- [ ] **Tracking AR** : suivi accusé de réception
 
 ---
 
-## Flow UX cible (avec paiement)
+## Architecture base de données
+
+Toutes les tables sont créées et opérationnelles dans Supabase. Voir `PROJECT_OVERVIEW.md` pour le schéma complet. Tables principales :
+
+- `profiles` — utilisateurs (crédits, is_pro, Stripe IDs, infos perso)
+- `letters` — courriers générés (type, form_data, generated_text, user_id/fingerprint)
+- `promo_codes` — codes promo (crédits, max_uses, expiration, show_banner)
+- `promo_redemptions` — rédemptions (user_id + code, unique)
+- `page_views` — tracking pages vues (session_id, path, UTM, referrer)
+- `events` — événements custom analytics
+
+---
+
+## Flow UX actuel
 
 ```
-1. Landing → "Essayer gratuitement" → /generateur
-2. Formulaire (libre, sans connexion)
-3. Clic "Générer mon courrier"
-   ├─ Non connecté → modale signup/login → retour étape 3
+1. Landing → "Générer un courrier" → /generateur
+2. Choix du type → /generateur/[type] → réponse aux questions
+3. Clic "Générer"
+   ├─ Non connecté + cookie lm_anon_used absent → génère gratuitement + cookie posé
+   ├─ Non connecté + déjà utilisé → modale signup/login
    └─ Connecté :
-       ├─ Jamais utilisé le gratuit → génère + sauvegarde free_use → PDF direct
-       └─ Déjà utilisé → Stripe Checkout 1,99€ → webhook → PDF
-4. /resultat → aperçu + téléchargement PDF
+       ├─ is_pro ou crédits > 0 → génère (crédit -1 si pas pro)
+       └─ 0 crédits → redirection Stripe (1,99€ unité ou 4,99€/mois Pro)
+4. /resultat → aperçu + téléchargement PDF + envoi email
 ```
 
 ---
@@ -113,19 +97,19 @@ CREATE POLICY "Users see own free_use" ON free_uses
 ## Variables d'environnement Vercel
 
 ```bash
-# ✅ Configurées
+# ✅ Toutes configurées
 ANTHROPIC_API_KEY=sk-ant-...
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-NEXT_PUBLIC_BASE_URL=https://lettre-magique.vercel.app
-
-# 🔲 À configurer (pour le paiement)
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
+NEXT_PUBLIC_BASE_URL=https://lettre-magique.vercel.app
 STRIPE_SECRET_KEY=sk_live_...
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 STRIPE_PRICE_ONETIME=price_...     # 1,99€ one-time
 STRIPE_PRICE_SUB=price_...         # 4,99€/mois
+RESEND_API_KEY=...
+RESEND_FROM_EMAIL=...
 ```
 
 ---
@@ -188,4 +172,4 @@ STRIPE_PRICE_SUB=price_...         # 4,99€/mois
 
 ---
 
-*Plan créé le 21 mars 2026 — MVP en cours — dernière mise à jour 24 mars 2026*
+*Plan créé le 21 mars 2026 — MVP live — dernière mise à jour 26 mars 2026*

@@ -109,11 +109,14 @@ Base de données de **50+ entreprises françaises** (EDF, Orange, SFR, Free, Ama
 
 ### 8. Système de codes promo
 
-- Table `promo_codes` administrable (code, crédits offerts, nombre max d'utilisations)
-- Rédemption via `/api/promo/redeem`
+- Table `promo_codes` administrable depuis `/admin` (code, crédits, max utilisations, expiration, bannière)
+- **CRUD complet depuis l'admin** : créer, modifier, activer/désactiver, supprimer des codes
+- **Bannière dynamique** : un code peut être affiché en bannière sur la landing page (toggle depuis l'admin, un seul code actif en bannière à la fois)
+- **Expiration** : date d'expiration optionnelle, vérifiée automatiquement à la rédemption
+- Rédemption via `/api/promo/redeem` (vérifie actif, non expiré, max uses, déjà utilisé)
 - Tracking dans `promo_redemptions` (1 utilisation par utilisateur)
 - Saisie du code promo lors de l'inscription ou dans `/compte`
-- Bannière promo sur le site
+- API publique `/api/promo/banner` pour la bannière dynamique
 
 ### 9. Envoi de courrier par email (Resend)
 
@@ -124,21 +127,26 @@ Base de données de **50+ entreprises françaises** (EDF, Orange, SFR, Free, Ama
 
 ### 10. Panneau d'administration (`/admin`)
 
-- **Métriques clés :** nombre d'utilisateurs, nombre de courriers, activité journalière
-- **Timeline :** graphique Recharts sur 7 ou 30 jours
-- **Funnel de conversion :** Visiteurs → Générateur → Génération → Inscription → Paiement
-- **Rétention :** utilisateurs ayant généré 1+, 2+, 5+ courriers
-- **Répartition par type** de courrier + comparaison hebdomadaire
-- **Derniers utilisateurs et courriers** en temps réel
-- **Suivi des codes promo :** rédemptions, comparaison usage promo vs non-promo
+- **Métriques clés :** inscrits, abonnés pro, courriers générés (total + 7j), visiteurs (30j + 7j), MRR, ARPU
+- **Funnel de conversion :** Visiteurs → Page générateur → Génération → Inscription → Pro
+- **Timeline :** graphique Recharts courriers & inscriptions sur 30 jours
+- **Rétention :** utilisateurs 1+, 2+, 5+ courriers, taux de retour 30j
+- **Répartition par type** de courrier (tableau responsive avec total, 7j, %)
+- **Sources de trafic :** classification automatique par referrer + UTM (Google, réseaux sociaux, direct, custom)
+- **Funnel freemium :** courriers gratuits → comptes créés → actifs → upgrade Pro
+- **Gestion des codes promo :** CRUD complet (créer, modifier, activer/désactiver, supprimer, toggle bannière, expiration)
+- **Comparaison promo vs non-promo :** engagement et taux de conversion Pro
+- **Derniers courriers et inscrits** en temps réel
 - **Actions utilisateur :** panel détaillé par utilisateur
+- **Responsive mobile** : tableaux et stats adaptés aux petits écrans
 
 ### 11. Analytics & tracking
 
 - Google Ads Conversion (ID: AW-18033703584)
 - Événements custom enregistrés dans la table `events` : `page_view`, `generate_letter`, `signup`, `purchase`
-- Composant `PageTracker` pour le suivi des pages vues
-- API `/api/track` pour l'enregistrement d'événements
+- Composant `PageTracker` pour le suivi des pages vues avec **capture automatique du referrer et des paramètres UTM** (`utm_source`, `utm_medium`, `utm_campaign`, `utm_content`)
+- API `/api/track` : stocke session_id, path, user_agent, referrer, UTM dans `page_views`
+- Classification automatique des sources de trafic dans l'admin (Google, réseaux sociaux, Bing, UTM custom, direct)
 
 ### 12. Pages légales
 
@@ -147,12 +155,32 @@ Base de données de **50+ entreprises françaises** (EDF, Orange, SFR, Free, Ama
 - `/mentions-legales` — Mentions légales
 - `/politique-cookies` — Politique des cookies
 
-### 13. Pages marketing
+### 13. Pages marketing & SEO
 
-- `/` — Landing page (hero, catégories, fonctionnement, témoignages, tarifs, CTA)
+- `/` — Landing page (hero, catégories, fonctionnement, témoignages, tarifs, CTA, bannière promo dynamique)
 - `/tarifs` — Page de tarification détaillée
 - `/comment-ca-marche` — Explication pas à pas
-- `/generateur/seo/[slug]` — Pages SEO longue traîne (ex: "resiliation-free-mobile")
+- `/generateur/seo/[slug]` — **55 pages SEO longue traîne** générées statiquement (SSG) avec :
+  - Hero + CTA pré-rempli par type/entreprise
+  - Bloc juridique (articles de loi spécifiques)
+  - FAQ structurée (schema.org FAQPage + HowTo JSON-LD)
+  - Maillage interne via `relatedSlugs`
+  - Sitemap.xml automatique (priorité 0.8)
+
+**Catégories SEO couvertes (55 pages) :**
+| Catégorie | Nb | Exemples |
+|---|---|---|
+| Télécom/Internet | 11 | Free, SFR, Orange, Bouygues, Sosh, RED, B&You, Canal+ |
+| Streaming/Sport | 5 | Netflix, Amazon Prime, Disney+, Spotify, DAZN |
+| Salles de sport | 2 | Basic-Fit, Fitness Park |
+| Assurance | 3 | Auto, habitation, mutuelle |
+| Réclamations | 6 | Amazon colis, La Poste, SNCF, facture abusive, produit défectueux, garantie |
+| Logement | 6 | Préavis 1/3 mois, caution, voisinage, réparations, état des lieux |
+| Mise en demeure | 4 | Loyer impayé, remboursement, artisan, travaux non conformes |
+| Contestation | 6 | Stationnement, radar, SNCF, RATP, impôts, URSSAF |
+| Travail | 4 | Démission, sanction, salaire impayé, licenciement |
+| Rétractation | 3 | Achat en ligne 14j, démarchage téléphonique, contrat à domicile |
+| Délai de paiement | 3 | Impôts, loyer, crédit |
 
 ### 14. Essai gratuit anonyme
 
@@ -229,11 +257,15 @@ Base de données de **50+ entreprises françaises** (EDF, Orange, SFR, Free, Ama
 ### Table `promo_codes`
 | Colonne | Type | Description |
 |---------|------|-------------|
-| code | text | Code promo (unique) |
+| code | text | Code promo (clé primaire) |
 | credits | integer | Crédits offerts |
 | used_count | integer | Nombre d'utilisations |
-| max_uses | integer | Limite d'utilisations |
+| max_uses | integer | Limite d'utilisations (null = illimité) |
 | active | boolean | Actif ou non |
+| show_banner | boolean | Affiché en bannière sur la landing page |
+| expires_at | timestamptz | Date d'expiration (null = jamais) |
+| description | text | Texte descriptif pour la bannière |
+| created_at | timestamptz | Date de création |
 
 ### Table `promo_redemptions`
 | Colonne | Type | Description |
@@ -241,6 +273,20 @@ Base de données de **50+ entreprises françaises** (EDF, Orange, SFR, Free, Ama
 | user_id | UUID | Utilisateur |
 | code | text | Code utilisé |
 | created_at | timestamp | Date de rédemption |
+
+### Table `page_views`
+| Colonne | Type | Description |
+|---------|------|-------------|
+| id | UUID | Identifiant unique |
+| session_id | text | ID session (localStorage) |
+| path | text | Chemin de la page |
+| user_agent | text | User-agent du navigateur |
+| utm_source | text | Source UTM (google, facebook, etc.) |
+| utm_medium | text | Medium UTM (cpc, social, email, etc.) |
+| utm_campaign | text | Nom de la campagne UTM |
+| utm_content | text | Contenu UTM |
+| referrer | text | URL du referrer (document.referrer) |
+| created_at | timestamptz | Date |
 
 ### Table `events`
 | Colonne | Type | Description |
@@ -264,11 +310,13 @@ Base de données de **50+ entreprises françaises** (EDF, Orange, SFR, Free, Ama
 | `/api/stripe/checkout` | POST | Création session de paiement Stripe | User |
 | `/api/stripe/webhook` | POST | Réception événements Stripe | Signature Stripe |
 | `/api/stripe/apply-session` | POST | Application manuelle d'une session | User |
-| `/api/promo/redeem` | POST | Application d'un code promo | User |
+| `/api/promo/redeem` | POST | Application d'un code promo (vérifie expiration) | User |
+| `/api/promo/banner` | GET | Code promo actif pour la bannière landing | Non |
 | `/api/user/quota` | GET | Vérification des crédits restants | User |
 | `/api/lead` | POST | Capture email (waitlist) | Non |
-| `/api/track` | POST | Enregistrement d'événements analytics | Non |
+| `/api/track` | POST | Tracking pages vues + referrer + UTM | Non |
 | `/api/admin/stats` | GET | Données du dashboard admin | Admin |
+| `/api/admin/promo` | GET/POST/PUT/DELETE | CRUD complet codes promo | Admin |
 | `/api/admin/user-action` | POST | Actions de modération | Admin |
 | `/auth/callback` | GET | Callback OAuth (Google) | Provider OAuth |
 
@@ -367,10 +415,10 @@ Lettre-Magique/
 │   │   └── compte-active/              # Activation compte
 │   ├── components/
 │   │   ├── generateur/                 # DynamicForm, ResultatClient, LetterViewer, etc.
-│   │   ├── landing/                    # HeroCTA, WaitlistForm, ScrollReveal
+│   │   ├── landing/                    # HeroCTA, PromoBanner, WaitlistForm, ScrollReveal
 │   │   ├── layout/                     # Navbar, Footer, CheckoutButton, PageTracker
-│   │   ├── ui/                         # Composants shadcn/ui
-│   │   └── admin/                      # TimelineChart, FunnelBar, UserDetailPanel
+│   │   ├── ui/                         # Composants shadcn/ui, PromoInput
+│   │   └── admin/                      # TimelineChart, FunnelBar, UserDetailPanel, PromoManager
 │   ├── lib/
 │   │   ├── supabase/                   # Clients Supabase (browser, server, admin)
 │   │   ├── prompts/index.ts            # Prompts Claude par type de courrier
@@ -378,6 +426,7 @@ Lettre-Magique/
 │   │   └── utils.ts                    # Utilitaires
 │   └── data/
 │       ├── letter-types.ts             # 10 types + questions dynamiques
+│       ├── seo-pages.ts                # 55 pages SEO longue traîne
 │       └── company-addresses.ts        # 50+ adresses entreprises françaises
 ├── supabase/
 │   └── migrations/                     # Migrations schema BDD
@@ -390,19 +439,27 @@ Lettre-Magique/
 ## Ce qui reste à faire (roadmap)
 
 ### SEO
-- [ ] 20 pages longue traîne SEO (routes dynamiques)
-- [ ] Schema.org (FAQPage, HowTo)
-- [ ] Sitemap.xml
+- [x] 55 pages longue traîne SEO (routes dynamiques `generateStaticParams`)
+- [x] Schema.org (FAQPage, HowTo JSON-LD)
+- [x] Sitemap.xml automatique
 - [ ] robots.txt
+- [ ] Soumission Search Console + suivi indexation
 
 ### Fonctionnalités utilisateur
 - [ ] Upgrade abonnement (4,99 €/mois) dans l'espace compte
 - [ ] Favoris / templates de courriers
 
+### Admin
+- [x] Gestion codes promo (CRUD, expiration, bannière dynamique)
+- [x] Tracking UTM + referrer fonctionnel
+- [x] Tableaux responsive mobile
+- [ ] Connexion Stripe → MRR/ARPU temps réel
+- [ ] Export CSV des données
+
 ### Croissance
 - [ ] Watermark PDF ("Créé avec LettreMagique.fr") pour viralité
 - [ ] Optimisation Lighthouse
-- [ ] Polish responsive mobile
+- [x] Responsive mobile navbar (burger visible, logo aéré)
 
 ### Futur — LM Mail (avantage concurrentiel)
 - [ ] Intégration envoi postal (Maileva, Merci Facteur)
