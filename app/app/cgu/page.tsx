@@ -43,7 +43,7 @@ export default function CguPage() {
             </h2>
             <p>
               Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation du service
-              LettreMagique accessible sur <strong>lettre-magique.com</strong>. Le service est une plateforme d'aide à la
+              LM Justice accessible sur <strong>lm-justice.com</strong>. Le service est une plateforme d'aide à la
               rédaction permettant de générer des courriers administratifs (réclamations, demandes, résiliations, etc.)
               à l'aide de l'intelligence artificielle.
             </p>

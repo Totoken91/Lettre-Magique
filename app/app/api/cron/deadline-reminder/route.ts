@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { getEscalationAuthorities } from "@/data/escalation-authorities";
 import type { EscalationAuthority } from "@/data/escalation-authorities";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lettre-magique.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lm-justice.com";
 
 // Buffer: send reminder 2 days after deadline (not the same day)
 const BUFFER_DAYS = 2;
@@ -87,7 +87,7 @@ function buildEmailHtml(
         <tr>
           <td style="padding: 16px 24px; border-top: 1px solid #e8e0d4; background: #f9f6f1;">
             <p style="margin: 0 0 8px; font-size: 11px; color: #aaa;">
-              <a href="${BASE_URL}" style="color: #c84b2f;">LM Legal</a> · Suivi automatique de vos courriers
+              <a href="${BASE_URL}" style="color: #c84b2f;">LM Justice</a> · Suivi automatique de vos courriers
             </p>
             <p style="margin: 0; font-size: 11px;">
               <a href="${resolveUrl}" style="color: #888;">J'ai déjà reçu une réponse — ne plus me rappeler</a>

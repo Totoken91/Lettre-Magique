@@ -10,7 +10,7 @@ export async function POST() {
     const { error } = await getResend().emails.send({
       from: fromNoreply(),
       to: user.email,
-      subject: "Bienvenue sur LM Legal — votre compte est prêt",
+      subject: "Bienvenue sur LM Justice — votre compte est prêt",
       html: `
         <div style="font-family: Helvetica, Arial, sans-serif; color: #1d1d1b; max-width: 560px; margin: 0 auto;">
           <table width="100%" cellpadding="0" cellspacing="0" style="background: #1d1d1b; border-radius: 4px 4px 0 0;">
@@ -26,7 +26,7 @@ export async function POST() {
             <tr>
               <td style="padding: 32px 24px;">
                 <h1 style="margin: 0 0 16px; font-size: 22px; font-weight: 700; color: #1d1d1b;">
-                  Bienvenue sur LM Legal
+                  Bienvenue sur LM Justice
                 </h1>
                 <p style="margin: 0 0 20px; font-size: 15px; color: #444; line-height: 1.7;">
                   Votre compte est maintenant actif. Vous pouvez générer des courriers juridiquement solides en quelques clics : résiliation, mise en demeure, réclamation, contestation…
@@ -64,7 +64,7 @@ export async function POST() {
               <td style="padding: 16px 24px; border-top: 1px solid #e8e0d4; background: #f9f6f1;">
                 <p style="margin: 0; font-size: 11px; color: #aaa;">
                   Vous recevez cet email car vous venez de créer un compte sur
-                  <a href="${process.env.NEXT_PUBLIC_BASE_URL}" style="color: #c84b2f;">LM Legal</a>.
+                  <a href="${process.env.NEXT_PUBLIC_BASE_URL}" style="color: #c84b2f;">LM Justice</a>.
                 </p>
               </td>
             </tr>

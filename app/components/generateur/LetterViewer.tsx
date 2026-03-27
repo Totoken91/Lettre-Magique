@@ -276,7 +276,7 @@ export default function LetterViewer({
             background: "transparent",
           }}
         >
-          ✉ Envoyer par LM Mail
+          ✉ Envoyer par LM Justice
         </button>
       </div>
 
@@ -289,7 +289,7 @@ export default function LetterViewer({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-[10px] uppercase tracking-[2px] mb-4" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>
-              Envoyer par LM Mail
+              Envoyer par LM Justice
             </div>
             <p className="text-sm mb-3" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}>
               Le PDF sera envoyé en pièce jointe à l&apos;adresse indiquée.

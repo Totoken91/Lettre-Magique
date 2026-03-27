@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     const sendOptions: Parameters<ReturnType<typeof getResend>["emails"]["send"]>[0] = {
       from: fromCourrier(),
       to: recipientEmail,
-      subject: `LM Mail › ${typeLabel}`,
+      subject: `LM Justice › ${typeLabel}`,
       ...(replyTo ? { replyTo } : {}),
       html: `
         <div style="font-family: Helvetica, Arial, sans-serif; color: #1d1d1b; max-width: 600px; margin: 0 auto;">
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
           <table width="100%" cellpadding="0" cellspacing="0" style="background: #1d1d1b; border-radius: 4px 4px 0 0;">
             <tr>
               <td style="padding: 20px 24px;">
-                <span style="font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #fff; text-transform: uppercase;">LM Mail</span>
+                <span style="font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #fff; text-transform: uppercase;">LM Justice</span>
                 <span style="color: #c84b2f; margin: 0 8px;">›</span>
                 <span style="font-size: 13px; color: #ccc; letter-spacing: 1px;">${typeLabel}</span>
               </td>
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
               <td style="padding: 16px 24px; border-top: 1px solid #e8e0d4;">
                 <p style="margin: 0; font-size: 11px; color: #aaa;">
                   Ce courrier a été généré et envoyé depuis
-                  <a href="https://lettre-magique.com" style="color: #c84b2f;">lettre-magique.com</a>
+                  <a href="https://lm-justice.com" style="color: #c84b2f;">lm-justice.com</a>
                 </p>
               </td>
             </tr>

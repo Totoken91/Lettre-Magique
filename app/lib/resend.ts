@@ -13,10 +13,10 @@ export function getResend(): Resend {
 
 export function fromCourrier(): string {
   const email = process.env.RESEND_FROM_EMAIL_COURRIER;
-  return email ? `LM Legal <${email}>` : "onboarding@resend.dev";
+  return email ? `LM Justice <${email}>` : "onboarding@resend.dev";
 }
 
 export function fromNoreply(): string {
   const email = process.env.RESEND_FROM_EMAIL_NOREPLY;
-  return email ? `LM Legal <${email}>` : "onboarding@resend.dev";
+  return email ? `LM Justice <${email}>` : "onboarding@resend.dev";
 }

@@ -390,9 +390,9 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
 
     const headerBarY = A4_H - MT;
 
-    // Logo: "LM Legal" — LM in black, Legal in accent orange
+    // Logo: "LM Justice" — LM in black, Justice in accent orange
     const logoLM = "LM";
-    const logoLegal = "Legal";
+    const logoLegal = "Justice";
     const logoSize = 13;
     const lmWidth = fontBold.widthOfTextAtSize(logoLM, logoSize);
     page.drawText(logoLM, { x: ML, y: headerBarY + 2, size: logoSize, font: fontBold, color: C_INK });
@@ -423,7 +423,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     const footerY = MB;
     page.drawRectangle({ x: ML, y: footerY + FOOTER_H - 2, width: BODY_W, height: 0.4, color: C_RULE });
     page.drawText(
-      "Document généré par LM Legal · Outil d'aide à la rédaction -- ne constitue pas un conseil juridique.",
+      "Document généré par LM Justice · Outil d'aide à la rédaction -- ne constitue pas un conseil juridique.",
       { x: ML, y: footerY + 10, size: 6, font: fontReg, color: C_LIGHT }
     );
     if (totalPages > 1) {
@@ -587,7 +587,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   // ── Metadata ──────────────────────────────────────────────────────────────
   pdfDoc.setTitle(`${typeName} — LettreMagique`);
   pdfDoc.setAuthor(senderName);
-  pdfDoc.setCreator("LM Legal · lettre-magique.com");
+  pdfDoc.setCreator("LM Justice · lm-justice.com");
   pdfDoc.setSubject(`Courrier : ${typeName}${refNumber ? ` · ${refNumber}` : ''}`);
 
   return pdfDoc.save();
