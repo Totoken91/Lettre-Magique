@@ -319,7 +319,8 @@ export default function MesCourriersPage() {
                     senderAddress={senderAddress}
                     senderPhone={profile?.phone}
                     senderEmail={profile?.email_contact}
-                    signatureMode="print"
+                    signatureMode={(selectedLetter.form_data?._signatureMode as "typed" | "print") || "print"}
+                    signatureImageBase64={selectedLetter.form_data?._signatureImageBase64 as string | undefined}
                     isLoggedIn={true}
                   />
                 ) : (

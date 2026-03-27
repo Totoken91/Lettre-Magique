@@ -162,7 +162,11 @@ export default function DynamicForm({ letterType }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: letterType.id,
-          formData: values,
+          formData: {
+            ...values,
+            _signatureMode: signatureMode,
+            _signatureImageBase64: signatureMode === "typed" ? signatureImageBase64 : undefined,
+          },
           senderName,
           senderAddress,
           senderPhone,

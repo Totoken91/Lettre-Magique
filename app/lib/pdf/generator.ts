@@ -541,8 +541,8 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     ensureSpace(SIG_BLOCK_H);
     y -= 8;
 
-    // 1. "Fait à [city], le [date]" (9pt, grey) — BEFORE closing formula
-    curPage.drawText(faitAText, { x: ML, y, size: 8, font: fontReg, color: C_MUTED });
+    // 1. "Fait à [city], le [date]" — same size/color as body text
+    curPage.drawText(faitAText, { x: ML, y, size: SZ_BODY, font: fontReg, color: C_INK });
     y -= LH_BODY + 4;
 
     // 2. Closing formula (extracted during pre-processing)
