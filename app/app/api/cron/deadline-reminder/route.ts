@@ -43,8 +43,7 @@ function buildEmailHtml(
       <table width="100%" cellpadding="0" cellspacing="0" style="background: #1d1d1b; border-radius: 4px 4px 0 0;">
         <tr>
           <td style="padding: 20px 24px;">
-            <span style="font-size: 15px; font-weight: 700; color: #fff;">LM</span>
-            <span style="font-size: 15px; font-weight: 700; color: #c84b2f;">Legal</span>
+            <span style="font-size: 15px; font-weight: 700; color: #fff;">Lettre</span><span style="font-size: 15px; font-weight: 700; color: #c84b2f;">Magique</span>
             <span style="color: #555; margin: 0 8px;">·</span>
             <span style="font-size: 12px; color: #888; letter-spacing: 1px;">SUIVI</span>
           </td>
@@ -87,7 +86,7 @@ function buildEmailHtml(
         <tr>
           <td style="padding: 16px 24px; border-top: 1px solid #e8e0d4; background: #f9f6f1;">
             <p style="margin: 0 0 8px; font-size: 11px; color: #aaa;">
-              <a href="${BASE_URL}" style="color: #c84b2f;">LM Justice</a> · Suivi automatique de vos courriers
+              <a href="${BASE_URL}" style="color: #c84b2f;">LettreMagique</a> · Suivi automatique de vos courriers
             </p>
             <p style="margin: 0; font-size: 11px;">
               <a href="${resolveUrl}" style="color: #888;">J'ai déjà reçu une réponse — ne plus me rappeler</a>

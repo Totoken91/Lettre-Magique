@@ -58,11 +58,11 @@ function page(title: string, message: string): string {
   const base = process.env.NEXT_PUBLIC_BASE_URL || "https://lettre-magique.com";
   return `<!DOCTYPE html>
 <html lang="fr">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} — LM Justice</title></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} — LettreMagique</title></head>
 <body style="font-family:Helvetica,Arial,sans-serif;background:#f5f0e8;color:#1d1d1b;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:20px;">
   <div style="max-width:420px;text-align:center;">
     <div style="font-size:15px;font-weight:700;margin-bottom:24px;">
-      <span style="color:#1d1d1b;">LM</span><span style="color:#c84b2f;">Legal</span>
+      <span style="color:#1d1d1b;">Lettre</span><span style="color:#c84b2f;">Magique</span>
     </div>
     <h1 style="font-size:22px;font-weight:700;margin:0 0 12px;">${title}</h1>
     <p style="font-size:15px;color:#555;line-height:1.6;margin:0 0 24px;">${message}</p>

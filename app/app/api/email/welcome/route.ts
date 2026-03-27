@@ -1,5 +1,6 @@
 import { getResend, fromNoreply } from "@/lib/resend";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export async function POST() {
   try {
@@ -7,17 +8,32 @@ export async function POST() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user?.email) return Response.json({ error: "Non authentifié" }, { status: 401 });
 
+    // Only send welcome email for accounts created in the last 5 minutes (new signups only)
+    const createdAt = new Date(user.created_at);
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    if (createdAt < fiveMinutesAgo) {
+      return Response.json({ ok: true, skipped: "not a new account" });
+    }
+
+    // Check we haven't already sent a welcome email (check letters count as proxy)
+    const admin = getSupabaseAdmin();
+    const { count } = await (admin.from("letters") as any)
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id);
+    if ((count ?? 0) > 0) {
+      return Response.json({ ok: true, skipped: "user already active" });
+    }
+
     const { error } = await getResend().emails.send({
       from: fromNoreply(),
       to: user.email,
-      subject: "Bienvenue sur LM Justice — votre compte est prêt",
+      subject: "Bienvenue sur LettreMagique — votre compte est prêt",
       html: `
         <div style="font-family: Helvetica, Arial, sans-serif; color: #1d1d1b; max-width: 560px; margin: 0 auto;">
           <table width="100%" cellpadding="0" cellspacing="0" style="background: #1d1d1b; border-radius: 4px 4px 0 0;">
             <tr>
               <td style="padding: 20px 24px;">
-                <span style="font-size: 15px; font-weight: 700; color: #fff;">LM</span>
-                <span style="font-size: 15px; font-weight: 700; color: #c84b2f;">Legal</span>
+                <span style="font-size: 15px; font-weight: 700; color: #fff;">Lettre</span><span style="font-size: 15px; font-weight: 700; color: #c84b2f;">Magique</span>
               </td>
             </tr>
           </table>
@@ -26,7 +42,7 @@ export async function POST() {
             <tr>
               <td style="padding: 32px 24px;">
                 <h1 style="margin: 0 0 16px; font-size: 22px; font-weight: 700; color: #1d1d1b;">
-                  Bienvenue sur LM Justice
+                  Bienvenue sur LettreMagique
                 </h1>
                 <p style="margin: 0 0 20px; font-size: 15px; color: #444; line-height: 1.7;">
                   Votre compte est maintenant actif. Vous pouvez générer des courriers juridiquement solides en quelques clics : résiliation, mise en demeure, réclamation, contestation…
@@ -64,7 +80,7 @@ export async function POST() {
               <td style="padding: 16px 24px; border-top: 1px solid #e8e0d4; background: #f9f6f1;">
                 <p style="margin: 0; font-size: 11px; color: #aaa;">
                   Vous recevez cet email car vous venez de créer un compte sur
-                  <a href="${process.env.NEXT_PUBLIC_BASE_URL}" style="color: #c84b2f;">LM Justice</a>.
+                  <a href="${process.env.NEXT_PUBLIC_BASE_URL}" style="color: #c84b2f;">LettreMagique</a>.
                 </p>
               </td>
             </tr>

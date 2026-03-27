@@ -65,17 +65,17 @@ export async function GET(req: Request) {
     let ctaUrl: string;
 
     if (credits > 0) {
-      subject = `Vous avez encore ${credits} crédit${credits > 1 ? "s" : ""} sur LM Justice`;
+      subject = `Vous avez encore ${credits} crédit${credits > 1 ? "s" : ""} sur LettreMagique`;
       mainMessage = `Vous avez <strong>${credits} crédit${credits > 1 ? "s" : ""}</strong> disponible${credits > 1 ? "s" : ""} sur votre compte. ${lettersGenerated > 0 ? `Vous avez déjà généré ${lettersGenerated} courrier${lettersGenerated > 1 ? "s" : ""} — ` : ""}N'hésitez pas à les utiliser pour vos démarches administratives.`;
       ctaText = "Utiliser mes crédits →";
       ctaUrl = `${baseUrl}/generateur`;
     } else if (lettersGenerated === 0) {
-      subject = "Vous n'avez pas encore généré de courrier sur LM Justice";
+      subject = "Vous n'avez pas encore généré de courrier sur LettreMagique";
       mainMessage = "Vous avez créé votre compte il y a 7 jours mais vous n'avez pas encore généré de courrier. Résiliation, réclamation, mise en demeure… notre outil fait le travail en 2 minutes.";
       ctaText = "Générer mon premier courrier →";
       ctaUrl = `${baseUrl}/generateur`;
     } else {
-      subject = "Besoin d'un autre courrier ? LM Justice est là";
+      subject = "Besoin d'un autre courrier ? LettreMagique est là";
       mainMessage = `Vous avez déjà généré ${lettersGenerated} courrier${lettersGenerated > 1 ? "s" : ""}. Besoin d'une autre démarche ? Résiliation, contestation d'amende, mise en demeure — tout est prêt.`;
       ctaText = "Générer un courrier →";
       ctaUrl = `${baseUrl}/generateur`;
@@ -91,8 +91,7 @@ export async function GET(req: Request) {
             <table width="100%" cellpadding="0" cellspacing="0" style="background: #1d1d1b; border-radius: 4px 4px 0 0;">
               <tr>
                 <td style="padding: 20px 24px;">
-                  <span style="font-size: 15px; font-weight: 700; color: #fff;">LM</span>
-                  <span style="font-size: 15px; font-weight: 700; color: #c84b2f;">Legal</span>
+                  <span style="font-size: 15px; font-weight: 700; color: #fff;">Lettre</span><span style="font-size: 15px; font-weight: 700; color: #c84b2f;">Magique</span>
                 </td>
               </tr>
             </table>
@@ -130,7 +129,7 @@ export async function GET(req: Request) {
               <tr>
                 <td style="padding: 16px 24px; border-top: 1px solid #e8e0d4; background: #f9f6f1;">
                   <p style="margin: 0; font-size: 11px; color: #aaa;">
-                    <a href="${baseUrl}" style="color: #c84b2f;">LM Justice</a> · Courriers administratifs générés par IA
+                    <a href="${baseUrl}" style="color: #c84b2f;">LettreMagique</a> · Courriers administratifs générés par IA
                   </p>
                 </td>
               </tr>
