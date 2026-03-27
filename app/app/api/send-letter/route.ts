@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       return Response.json({ error: "Non autorisé" }, { status: 401 });
     }
 
-    const { recipientEmail, text, senderName, senderAddress, senderPhone, senderEmail, typeName } = await req.json();
+    const { recipientEmail, text, senderName, senderAddress, senderPhone, senderEmail, typeName, signatureMode, signatureImageBase64 } = await req.json();
 
     if (!recipientEmail || !text) {
       return Response.json({ error: "Email et texte requis" }, { status: 400 });
@@ -29,6 +29,8 @@ export async function POST(req: Request) {
       senderPhone,
       senderEmail,
       typeName: typeName || "Courrier",
+      signatureMode,
+      signatureImageBase64,
     });
 
     const typeLabel = capitalize(typeName || "Courrier");
