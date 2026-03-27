@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 import LetterViewer from "@/components/generateur/LetterViewer";
+import { getEscalationAuthorities } from "@/data/escalation-authorities";
 
 interface Letter {
   id: string;
@@ -292,21 +293,48 @@ export default function MesCourriersPage() {
               {/* Main viewer */}
               <div className="flex-1 min-w-0">
                 {selectedLetter && selectedLetter.deadline_at && (selectedLetter.status || "pending") !== "resolved" && (
-                  <div className="flex items-center justify-between gap-3 px-4 py-3 mb-3 border-[2px]" style={{ borderColor: "var(--rule)", background: "var(--white-warm)" }}>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <StatusBadge status={selectedLetter.status || "pending"} />
-                      <DeadlineInfo letter={selectedLetter} />
+                  <div className="mb-3 border-[2px]" style={{ borderColor: "var(--rule)", background: "var(--white-warm)" }}>
+                    <div className="flex items-center justify-between gap-3 px-4 py-3">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <StatusBadge status={selectedLetter.status || "pending"} />
+                        <DeadlineInfo letter={selectedLetter} />
+                      </div>
+                      <button
+                        onClick={async () => {
+                          await supabase.from("letters").update({ status: "resolved", reminder_count: 2 }).eq("id", selectedLetter.id);
+                          setLetters((prev) => prev.map((l) => l.id === selectedLetter.id ? { ...l, status: "resolved", reminder_count: 2 } : l));
+                        }}
+                        className="shrink-0 px-3 py-1.5 text-[10px] uppercase tracking-[1px] cursor-pointer"
+                        style={{ fontFamily: "var(--font-dm-mono)", border: "1px solid var(--green, #2d6a4f)33", background: "#2d6a4f18", color: "var(--green, #2d6a4f)" }}
+                      >
+                        ✓ Marquer résolu
+                      </button>
                     </div>
-                    <button
-                      onClick={async () => {
-                        await supabase.from("letters").update({ status: "resolved", reminder_count: 2 }).eq("id", selectedLetter.id);
-                        setLetters((prev) => prev.map((l) => l.id === selectedLetter.id ? { ...l, status: "resolved", reminder_count: 2 } : l));
-                      }}
-                      className="shrink-0 px-3 py-1.5 text-[10px] uppercase tracking-[1px] cursor-pointer"
-                      style={{ fontFamily: "var(--font-dm-mono)", border: "1px solid var(--green, #2d6a4f)33", background: "#2d6a4f18", color: "var(--green, #2d6a4f)" }}
-                    >
-                      ✓ Marquer résolu
-                    </button>
+                    {/* Authorities to escalate to */}
+                    {(selectedLetter.status === "deadline_expired" || selectedLetter.status === "escalated") && (() => {
+                      const authorities = getEscalationAuthorities(selectedLetter.type);
+                      if (authorities.length === 0) return null;
+                      return (
+                        <div className="px-4 pb-4">
+                          <div className="text-[9px] uppercase tracking-[1.5px] mb-2" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>
+                            Autorités compétentes à saisir
+                          </div>
+                          <div className="space-y-2">
+                            {authorities.map((a) => (
+                              <div key={a.name} className="px-3 py-2" style={{ background: "var(--paper2)", border: "1px solid var(--rule)" }}>
+                                <div className="text-xs font-bold" style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}>{a.name}</div>
+                                <div className="text-[11px] mt-0.5" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)", lineHeight: "1.5" }}>{a.description}</div>
+                                {a.url && (
+                                  <a href={a.url} target="_blank" rel="noopener noreferrer" className="text-[10px] mt-1 inline-block no-underline" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--accent)" }}>
+                                    {a.url.replace("https://", "")} →
+                                  </a>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 )}
                 {selectedLetter ? (
@@ -319,6 +347,7 @@ export default function MesCourriersPage() {
                     senderAddress={senderAddress}
                     senderPhone={profile?.phone}
                     senderEmail={profile?.email_contact}
+                    refNumber={selectedLetter.form_data?._refNumber as string | undefined}
                     signatureMode={(selectedLetter.form_data?._signatureMode as "typed" | "print") || "print"}
                     signatureImageBase64={selectedLetter.form_data?._signatureImageBase64 as string | undefined}
                     isLoggedIn={true}

@@ -166,6 +166,7 @@ export default function DynamicForm({ letterType }: Props) {
             ...values,
             _signatureMode: signatureMode,
             _signatureImageBase64: signatureMode === "typed" ? signatureImageBase64 : undefined,
+            _refNumber: refNumber,
           },
           senderName,
           senderAddress,

@@ -398,18 +398,19 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
     page.drawText(logoLM, { x: ML, y: headerBarY + 2, size: logoSize, font: fontBold, color: C_INK });
     page.drawText(logoLegal, { x: ML + lmWidth + 2, y: headerBarY + 2, size: logoSize, font: fontBold, color: C_ACCENT });
 
-    // Type badge (top-right)
+    // Type badge (top-right) — dark background, white text
     const typeLabel = typeName.toUpperCase();
-    const typeLabelW = fontReg.widthOfTextAtSize(typeLabel, SZ_TINY);
-    const badgeW = typeLabelW + 14;
+    const typeBadgeSize = 7;
+    const typeLabelW = fontBold.widthOfTextAtSize(typeLabel, typeBadgeSize);
+    const badgeW = typeLabelW + 16;
     const badgeX = A4_W - MR - badgeW;
     const badgeY = headerBarY + 3;
-    page.drawRectangle({ x: badgeX, y: badgeY, width: badgeW, height: 15, color: C_BG_LIGHT });
-    page.drawText(typeLabel, { x: badgeX + 7, y: badgeY + 4.5, size: SZ_TINY, font: fontReg, color: C_MUTED });
+    page.drawRectangle({ x: badgeX, y: badgeY, width: badgeW, height: 16, color: C_INK });
+    page.drawText(typeLabel, { x: badgeX + 8, y: badgeY + 5, size: typeBadgeSize, font: fontBold, color: C_WHITE });
 
-    // Ref number under badge (DM Mono style — Helvetica approximation, 7pt grey)
+    // Ref number under badge
     if (refNumber) {
-      drawTextRight(page, `Réf. ${refNumber}`, A4_W - MR, badgeY - 10, fontReg, 6.5, C_MUTED);
+      drawTextRight(page, `Réf. ${refNumber}`, A4_W - MR, badgeY - 10, fontReg, 7, C_MUTED);
     }
 
     // Header separator
