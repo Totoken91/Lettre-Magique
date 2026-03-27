@@ -587,7 +587,7 @@ export async function generateLetterPDF(params: PDFParams): Promise<Uint8Array> 
   // ── Metadata ──────────────────────────────────────────────────────────────
   pdfDoc.setTitle(`${typeName} — LettreMagique`);
   pdfDoc.setAuthor(senderName);
-  pdfDoc.setCreator("LettreMagique · lettre-magique.com");
+  pdfDoc.setCreator("LM Legal · lettre-magique.com");
   pdfDoc.setSubject(`Courrier : ${typeName}${refNumber ? ` · ${refNumber}` : ''}`);
 
   return pdfDoc.save();
