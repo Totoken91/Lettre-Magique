@@ -278,6 +278,9 @@ export default function LetterViewer({
         >
           ✉ Envoyer par LM Justice
         </button>
+        <p className="text-[10px] mt-2 text-center" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
+          Envoi depuis courrier@lm-justice.com · Suivi des délais et relances automatiques
+        </p>
       </div>
 
       {/* Email dialog */}
@@ -292,12 +295,8 @@ export default function LetterViewer({
               Envoyer par LM Justice
             </div>
             <p className="text-sm mb-3" style={{ fontFamily: "var(--font-lora)", color: "var(--muted-lm)" }}>
-              Le PDF sera envoyé en pièce jointe à l&apos;adresse indiquée.
+              Le PDF sera envoyé en pièce jointe depuis <strong style={{ color: "var(--ink)" }}>courrier@lm-justice.com</strong>. Un suivi automatique est activé : vous serez notifié à l&apos;expiration du délai avec les autorités compétentes à saisir.
             </p>
-            <div className="flex items-center gap-2 mb-2 px-3 py-2 text-xs" style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1px solid var(--rule)", color: "var(--muted-lm)" }}>
-              <span style={{ color: "var(--accent)" }}>✦</span>
-              Expédié depuis <strong style={{ color: "var(--ink)" }}>courrier@lm-justice.com</strong>
-            </div>
             {senderEmail && (
               <label className="flex items-start gap-2 mb-4 px-3 py-2 cursor-pointer select-none" style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1px solid var(--rule)" }}>
                 <input
