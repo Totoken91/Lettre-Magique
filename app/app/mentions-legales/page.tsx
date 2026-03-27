@@ -41,7 +41,7 @@ export default function MentionsLegalesPage() {
             <h2 className="text-lg font-bold mb-3 tracking-tight" style={{ fontFamily: "var(--font-syne)" }}>
               1. Éditeur du site
             </h2>
-            <p>Le site <strong>lm-justice.com</strong> est édité par :</p>
+            <p>Le site <strong>lettre-magique.com</strong> est édité par :</p>
             <ul className="mt-3 space-y-1 text-sm" style={{ fontFamily: "var(--font-dm-mono)", color: "var(--muted-lm)" }}>
               <li><strong style={{ color: "var(--ink)" }}>Entreprise :</strong> totoken (Entreprise individuelle)</li>
               <li><strong style={{ color: "var(--ink)" }}>Adresse :</strong> 21 Domaine de Montvoisin, 91400 Gometz-la-Ville</li>

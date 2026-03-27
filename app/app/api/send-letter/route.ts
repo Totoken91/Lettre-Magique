@@ -70,7 +70,7 @@ export async function POST(req: Request) {
               <td style="padding: 16px 24px; border-top: 1px solid #e8e0d4;">
                 <p style="margin: 0; font-size: 11px; color: #aaa;">
                   Ce courrier a été généré et envoyé depuis
-                  <a href="https://lm-justice.com" style="color: #c84b2f;">lm-justice.com</a>
+                  <a href="https://lettre-magique.com" style="color: #c84b2f;">lettre-magique.com</a>
                 </p>
               </td>
             </tr>

@@ -9,7 +9,7 @@ export async function GET(req: Request) {
   }
 
   const admin = getSupabaseAdmin();
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://lm-justice.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://lettre-magique.com";
 
   // Find users created 7 days ago (±12h window to avoid duplicates with daily cron)
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);

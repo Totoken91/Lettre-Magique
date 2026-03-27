@@ -55,7 +55,7 @@ export async function GET(req: Request) {
 }
 
 function page(title: string, message: string): string {
-  const base = process.env.NEXT_PUBLIC_BASE_URL || "https://lm-justice.com";
+  const base = process.env.NEXT_PUBLIC_BASE_URL || "https://lettre-magique.com";
   return `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} — LM Justice</title></head>

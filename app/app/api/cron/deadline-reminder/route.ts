@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { getEscalationAuthorities } from "@/data/escalation-authorities";
 import type { EscalationAuthority } from "@/data/escalation-authorities";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lm-justice.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lettre-magique.com";
 
 // Buffer: send reminder 2 days after deadline (not the same day)
 const BUFFER_DAYS = 2;
