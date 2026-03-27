@@ -319,6 +319,7 @@ export default function MesCourriersPage() {
                     senderAddress={senderAddress}
                     senderPhone={profile?.phone}
                     senderEmail={profile?.email_contact}
+                    signatureMode="print"
                     isLoggedIn={true}
                   />
                 ) : (
