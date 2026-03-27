@@ -15,6 +15,9 @@ interface Letter {
   sender_name: string | null;
   form_data: Record<string, string> | null;
   is_favorite: boolean;
+  status: string;
+  deadline_at: string | null;
+  reminder_count: number;
 }
 
 interface Profile {
@@ -24,6 +27,63 @@ interface Profile {
   city: string;
   phone: string;
   email_contact: string;
+}
+
+const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
+  pending: { label: "En attente", color: "var(--gold, #f59e0b)", bg: "#f59e0b18" },
+  deadline_expired: { label: "Délai expiré", color: "var(--accent)", bg: "#c84b2f18" },
+  escalated: { label: "À escalader", color: "#c0392b", bg: "#c0392b18" },
+  resolved: { label: "Résolu", color: "var(--green, #2d6a4f)", bg: "#2d6a4f18" },
+};
+
+function StatusBadge({ status, small }: { status: string; small?: boolean }) {
+  const cfg = STATUS_CONFIG[status];
+  if (!cfg || status === "pending") return null;
+  return (
+    <span
+      className={small ? "text-[8px] px-1 py-0.5" : "text-[9px] px-1.5 py-0.5"}
+      style={{
+        fontFamily: "var(--font-dm-mono)",
+        textTransform: "uppercase",
+        letterSpacing: "0.5px",
+        color: cfg.color,
+        background: cfg.bg,
+        border: `1px solid ${cfg.color}33`,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {cfg.label}
+    </span>
+  );
+}
+
+function DeadlineInfo({ letter }: { letter: Letter }) {
+  if (!letter.deadline_at) return null;
+  const now = new Date();
+  const deadline = new Date(letter.deadline_at);
+  const diffDays = Math.ceil((deadline.getTime() - now.getTime()) / 86_400_000);
+  const dateStr = deadline.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+
+  if (letter.status === "resolved") return null;
+
+  let text: string;
+  let color: string;
+  if (diffDays > 3) {
+    text = `Délai : ${dateStr} (${diffDays}j)`;
+    color = "var(--muted-lm)";
+  } else if (diffDays > 0) {
+    text = `⚠ Expire dans ${diffDays}j`;
+    color = "var(--gold, #f59e0b)";
+  } else {
+    text = `Expiré depuis ${Math.abs(diffDays)}j`;
+    color = "var(--accent)";
+  }
+
+  return (
+    <div className="text-[9px] mt-0.5" style={{ fontFamily: "var(--font-dm-mono)", color }}>
+      {text}
+    </div>
+  );
 }
 
 function extractRecipient(formData: Record<string, string> | null): string {
@@ -46,6 +106,7 @@ export default function MesCourriersPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [showFavOnly, setShowFavOnly] = useState(false);
 
   useEffect(() => {
@@ -54,7 +115,7 @@ export default function MesCourriersPage() {
 
       const [profileRes, lettersRes] = await Promise.all([
         supabase.from("profiles").select("full_name, address, postal_code, city, phone, email_contact").eq("id", session.user.id).single(),
-        supabase.from("letters").select("id, created_at, type_name, type, generated_text, sender_name, form_data, is_favorite").eq("user_id", session.user.id).order("created_at", { ascending: false }),
+        supabase.from("letters").select("id, created_at, type_name, type, generated_text, sender_name, form_data, is_favorite, status, deadline_at, reminder_count").eq("user_id", session.user.id).order("created_at", { ascending: false }),
       ]);
 
       if (profileRes.data) setProfile(profileRes.data as unknown as Profile);
@@ -84,6 +145,7 @@ export default function MesCourriersPage() {
     return letters.filter((l) => {
       if (showFavOnly && !l.is_favorite) return false;
       if (filterType !== "all" && (l.type_name || l.type) !== filterType) return false;
+      if (filterStatus !== "all" && (l.status || "pending") !== filterStatus) return false;
       if (search.trim()) {
         const q = search.toLowerCase();
         const title = extractTitle(l).toLowerCase();
@@ -92,7 +154,7 @@ export default function MesCourriersPage() {
       }
       return true;
     });
-  }, [letters, search, filterType, showFavOnly]);
+  }, [letters, search, filterType, filterStatus, showFavOnly]);
 
   const selectedLetter = letters.find((l) => l.id === selectedId) ?? null;
 
@@ -150,6 +212,18 @@ export default function MesCourriersPage() {
                     <option value="all">Tous les types</option>
                     {types.map((t) => <option key={t} value={t}>{t}</option>)}
                   </select>
+                  <select
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    className="px-2 py-1.5 text-[10px] uppercase tracking-[1px] outline-none"
+                    style={{ fontFamily: "var(--font-dm-mono)", background: "var(--paper2)", border: "1.5px solid var(--rule)", color: "var(--ink)" }}
+                  >
+                    <option value="all">Tous les statuts</option>
+                    <option value="pending">En attente</option>
+                    <option value="deadline_expired">Délai expiré</option>
+                    <option value="escalated">À escalader</option>
+                    <option value="resolved">Résolu</option>
+                  </select>
                   <button
                     onClick={() => setShowFavOnly((v) => !v)}
                     className="px-2.5 py-1.5 text-[10px] uppercase tracking-[1px] cursor-pointer"
@@ -182,12 +256,16 @@ export default function MesCourriersPage() {
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <div className="text-sm font-bold leading-tight truncate" style={{ fontFamily: "var(--font-syne)", color: selectedId === letter.id ? "var(--white-warm)" : "var(--ink)" }}>
-                            {extractTitle(letter)}
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <div className="text-sm font-bold leading-tight truncate" style={{ fontFamily: "var(--font-syne)", color: selectedId === letter.id ? "var(--white-warm)" : "var(--ink)" }}>
+                              {extractTitle(letter)}
+                            </div>
+                            <StatusBadge status={letter.status || "pending"} small />
                           </div>
                           <div className="text-[10px] mt-1" style={{ fontFamily: "var(--font-dm-mono)", color: selectedId === letter.id ? "var(--rule)" : "var(--muted-lm)" }}>
                             {new Date(letter.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
                           </div>
+                          <DeadlineInfo letter={letter} />
                         </div>
                         <button
                           onClick={(e) => { e.stopPropagation(); toggleFavorite(letter.id); }}
@@ -213,6 +291,24 @@ export default function MesCourriersPage() {
 
               {/* Main viewer */}
               <div className="flex-1 min-w-0">
+                {selectedLetter && selectedLetter.deadline_at && (selectedLetter.status || "pending") !== "resolved" && (
+                  <div className="flex items-center justify-between gap-3 px-4 py-3 mb-3 border-[2px]" style={{ borderColor: "var(--rule)", background: "var(--white-warm)" }}>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <StatusBadge status={selectedLetter.status || "pending"} />
+                      <DeadlineInfo letter={selectedLetter} />
+                    </div>
+                    <button
+                      onClick={async () => {
+                        await supabase.from("letters").update({ status: "resolved", reminder_count: 2 }).eq("id", selectedLetter.id);
+                        setLetters((prev) => prev.map((l) => l.id === selectedLetter.id ? { ...l, status: "resolved", reminder_count: 2 } : l));
+                      }}
+                      className="shrink-0 px-3 py-1.5 text-[10px] uppercase tracking-[1px] cursor-pointer"
+                      style={{ fontFamily: "var(--font-dm-mono)", border: "1px solid var(--green, #2d6a4f)33", background: "#2d6a4f18", color: "var(--green, #2d6a4f)" }}
+                    >
+                      ✓ Marquer résolu
+                    </button>
+                  </div>
+                )}
                 {selectedLetter ? (
                   <LetterViewer
                     key={selectedLetter.id}

@@ -17,6 +17,7 @@ Règles OBLIGATOIRES :
 - Longueur : 150–250 mots maximum
 - INTERDIT : Ne jamais utiliser de crochets [] ou de texte placeholder. Si une information manque (adresse, numéro, etc.), ne pas l'inclure dans le courrier plutôt que mettre un placeholder
 - Ne jamais écrire [Adresse], [Nom], [Numéro] ou toute forme de [texte entre crochets]
+- INTERDIT : Ne jamais écrire "Envoyé par voie électronique", "Par voie électronique", "Lettre recommandée avec accusé de réception" ou toute mention relative au mode d'envoi. Le mode d'envoi n'est pas à préciser dans le courrier.
 - RÉFÉRENCES LÉGALES OBLIGATOIRES : Tu DOIS citer au moins 2 articles de loi pertinents avec leur numéro exact (ex : art. L217-4 du Code de la consommation, art. 1231-1 du Code civil, art. L113-5 du Code des assurances). Ces références doivent être intégrées naturellement dans le texte, jamais en note de bas de page.
 `.trim();
 
