@@ -6,6 +6,7 @@ import TimelineChart from "@/components/admin/TimelineChart";
 import FunnelBar from "@/components/admin/FunnelBar";
 import UserDetailPanel from "@/components/admin/UserDetailPanel";
 import PromoManager from "@/components/admin/PromoManager";
+import FeedbackPanel from "@/components/admin/FeedbackPanel";
 
 export const metadata: Metadata = {
   title: "Admin — LettreMagique",
@@ -693,6 +694,12 @@ export default async function AdminPage() {
           <div>
             <SectionLabel>Derniers inscrits</SectionLabel>
             <UserDetailPanel users={stats.recentUsers} />
+          </div>
+
+          {/* ═══ 11. FEEDBACKS ═══ */}
+          <div>
+            <SectionLabel>Feedbacks utilisateurs</SectionLabel>
+            <FeedbackPanel />
           </div>
 
         </div>
