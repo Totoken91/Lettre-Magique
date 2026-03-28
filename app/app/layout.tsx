@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import FooterWrapper from "@/components/layout/FooterWrapper";
 import ScrollReveal from "@/components/landing/ScrollReveal";
 import PageTracker from "@/components/layout/PageTracker";
+import FeedbackButton from "@/components/layout/FeedbackButton";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -59,6 +60,7 @@ export default function RootLayout({
         <Navbar />
         <ScrollReveal />
         <PageTracker />
+        <FeedbackButton />
         <main className="flex-1">{children}</main>
         <FooterWrapper />
         {/* Cookie banner script */}
