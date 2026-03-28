@@ -380,6 +380,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 function Stat({ label, value, sub }: { label: string; value: number | string; sub?: string }) {
+  const isLong = typeof value === "string" && value.length > 6;
   return (
     <div className="p-4 md:p-6 border-[2px]" style={{ borderColor: "var(--rule)", background: "var(--white-warm)" }}>
       <div
@@ -389,7 +390,7 @@ function Stat({ label, value, sub }: { label: string; value: number | string; su
         {label}
       </div>
       <div
-        className="text-2xl md:text-5xl font-extrabold tracking-[-1px] md:tracking-[-2px] leading-none break-words"
+        className={`${isLong ? "text-lg md:text-2xl" : "text-2xl md:text-5xl"} font-extrabold tracking-[-1px] md:tracking-[-2px] leading-none break-words`}
         style={{ fontFamily: "var(--font-syne)", color: "var(--ink)" }}
       >
         {value}
