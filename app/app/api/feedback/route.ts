@@ -40,7 +40,7 @@ export async function POST(req: Request) {
 
     getResend().emails.send({
       from: fromNoreply(),
-      to: "support@lm-justice.com",
+      to: "kennydsf91@gmail.com",
       subject: `${typeLabels[type] || type} — Feedback LettreMagique`,
       html: `
         <div style="font-family: Helvetica, Arial, sans-serif; color: #1d1d1b; max-width: 560px;">
