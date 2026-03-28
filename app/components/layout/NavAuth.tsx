@@ -244,6 +244,14 @@ export default function NavAuth() {
                   Admin
                 </Link>
               )}
+              <Link
+                href="/contact"
+                onClick={() => setMenuOpen(false)}
+                className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
+              >
+                Support
+              </Link>
               <button
                 onClick={handleSignOut}
                 className="px-6 py-4 text-left text-[11px] uppercase tracking-[1.5px]"
@@ -277,6 +285,14 @@ export default function NavAuth() {
                 style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
               >
                 Tarifs
+              </Link>
+              <Link
+                href="/contact"
+                onClick={() => setMenuOpen(false)}
+                className="px-6 py-4 text-[11px] uppercase tracking-[1.5px] no-underline border-b"
+                style={{ fontFamily: "var(--font-dm-mono)", color: "var(--rule)", borderColor: "#333" }}
+              >
+                Support
               </Link>
               <Link
                 href="/login"
